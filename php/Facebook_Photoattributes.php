@@ -1,8 +1,10 @@
 <?php
 set_time_limit(0);
 include 'DbWrapper.php';
+include '../APi/api.php';
+
 $startAttId = 1;
-$endAttId = 100;
+$endAttId = 2;
 
 
 function update_attributes($id) {
@@ -18,6 +20,15 @@ function update_attributes($id) {
 	echo "pic url: ".$picUrl. "<br>";
 	
 	// run in betaface
+	$api = new betaFaceApi();
+	$face = $api->get_Image_attributes($picUrl);
+	if($face == 1){
+		$dbWrapper->update($api);
+		$updateQuery = 'UPDATE `photos` SET `IsValidPhoto` = 1 WHERE `Id` = '. $id;
+		echo $updateQuery."<br>";
+		$result = $dbWrapper->execute($updateQuery);
+	}
+
 
 } 
 

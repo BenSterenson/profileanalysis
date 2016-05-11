@@ -191,9 +191,6 @@ class DbWrapper {
 		return NULL;
 	}
 	
-	
-	
-
 	public function filterBy_JSON($FacebookId, $FirstName, $LastName, 	// User properties
 						 $PhotoUpdatedDate, $NumOfLikes, 		// Photo properties
 						 $Gender, $EyeColor, $HasBeard,			// Attributes properties
@@ -261,7 +258,9 @@ class DbWrapper {
 				}
 				$string = $string . " AND PhotoAttributes.Gender = " . $gender;				
 			}
-			if ($HasGlasses != NULL)	 	{ }
+			if ($HasGlasses != NULL) {
+				$string = $string . " AND PhotoAttributes.HasGlasses = " . $HasGlasses;				
+			}
 			if ($HasSmile != NULL) 			{ }
 			if ($Age != NULL) 				{ }
 			if ($AttUpdateDate != NULL) 	{ }

@@ -87,57 +87,55 @@ class DbWrapper {
 		return $this->connection->query($sql_string);
 	}
 	
-	function ColorTXTtoNUM($txt) {
+	public function ColorTXTtoNUM($txt) {
 		switch(strtolower($txt)) {
 			case "red":
-				return 0;
+				return 0xFF0000;
 			case "green":
-				return 1;
+				return 0x00FF00;
 			case "yellow":
-				return 2;
+				return 0xFFFF00;
 			case "blue":
-				return 3;
+				return 0x0000FF;
 			case "orange":
-				return 4;
+				return 0xFFA500;
 			case "purple":
-				return 5;
+				return 0x800080;
 			case "pink":
-				return 6;
+				return 0xFFC0CB;
 			case "brown":
-				return 7;
+				return 0x964B00;
 			case "black":
-				return 8;
+				return 0x000000;
 			case "gray":
-				return 9;
+				return 0x808080;
 			case "white":
-				return 10;
+				return 0xFFFFFF;
 		}
 	}
-	function ColorNUMtoTXT($num) {
-		switch ($num) {
-			case 0:
-				return "red";
-			case 1:
-				return "green";
-			case 2:
-				return "yellow";
-			case 3:
-				return "blue";
-			case 4:
-				return "orange";
-			case 5:
-				return "purple";
-			case 6:
-				return "pink";
-			case 7:
-				return "brown";
-			case 8:
-				return "black";
-			case 9:
-				return "gray";
-			case 10:
-				return "white";
+	
+	public function ColorNUMtoTXT($num) {
+		$colors = array ("red", "green", "yellow", "blue", "orange", "purple", "pink", "brown", "black", "gray", "white");
+		$minDist = 0xFFFFFFF;
+		$bestFit = "white"; // assuming given black as input
+		
+		$inR = ($num & 0xFF0000) >> 16;
+		$inG = ($num & 0x00FF00) >> 8;
+		$inB = ($num & 0x0000FF);
+		
+		foreach ($colors as $color) {
+			$colorHex = $this->ColorTXTtoNUM($color);
+			$curR = ($colorHex & 0xFF0000) >> 16;
+			$curG = ($colorHex & 0x00FF00) >> 8;
+			$curB = ($colorHex & 0x0000FF);		
+			
+			$curDist = sqrt(($curR - $inR)**2 + ($curG - $inG)**2 + ($curB - $inB)**2);
+			if ($curDist < $minDist) {
+				$minDist = $curDist;
+				$bestFit = $color;
+			}
 		}
+		return $bestFit;
 	}
 					
 	// function overrides database information with object's fields.
@@ -202,6 +200,19 @@ class DbWrapper {
 		
 		// find a specific person
 		if ($FacebookId != NULL) {
+			$personExist = "SELECT * FROM Users WHERE Users.FacebookId = " . $FacebookId;
+			
+			$myUser = new Facebook_user($FacebookId);
+			if ($myUser != NULL) {
+				$this->update($myUser);
+			}
+			
+			$myPhoto = new Facebook_photo($FacebookId);
+			if ($myPhoto != NULL) {
+				$this->update($myPhoto);
+			}
+			
+			$this->update($myUser);
 			
 			// if person is in DB
 				// update and return

@@ -38,15 +38,7 @@ function update_attributes($id) {
 	// run in betaface
 	$api = new betaFaceApi();
 	$face = $api->get_Image_attributes($picUrl);
-	echo $api->image_Attributes->UpdateDate;
-	echo "<br>";
-	echo $api->image_Attributes->EyeColor;
-	echo "<br>";
-	echo $api->image_Attributes->HasGlasses;
-	echo "<br>";
-	echo $api->image_Attributes->Age;
-	echo "<br>";
-	echo $api->image_Attributes->Gender;
+	echo $api->image_Attributes ."<br>";
 
 	if($face == 1){
 		$dbWrapper->update($api);

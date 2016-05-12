@@ -25,9 +25,8 @@
 		// Age			int
 		// UpdateDate 	date		// text format: date("Y-m-d:H:i:s")
 
-include 'Facebook_user.php';
-include 'Facebook_user.php';
-		
+//include 'Facebook_user.php';
+include 'Facebook_photo.php';
 class DbWrapper {
 	
 	#region Fields
@@ -193,7 +192,7 @@ class DbWrapper {
 	}
 	
 	public function filterBy_JSON($FacebookId, $FirstName, $LastName,
-						 $PhotoUpdatedDateFROM, $PhotoUpdatedDateTO, $NumOfLikesFROM, $NumOfLikesTO
+						 $PhotoUpdatedDateFROM, $PhotoUpdatedDateTO, $NumOfLikesFROM, $NumOfLikesTO,
 						 $Gender, $EyeColor, $HasBeard, $HasGlasses, $HasSmile, $AgeFROM, $AgeTO,
 						 $AttUpdateDateFROM, $AttUpdateDateTO) {
 

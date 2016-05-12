@@ -1,7 +1,7 @@
 <?php
 set_time_limit(0);
-include 'dbWrapper.php';
 #region Global Functions
+
 function get_html($url) {
 	$ch = curl_init($url);
 	curl_setopt($ch, CURLOPT_HEADER, false);
@@ -62,15 +62,16 @@ class Facebook_user implements JsonSerializable {
 		$this->extract_profile_info();
     }
 
-	public function __construct2($row, $num) {
+	public function __construct2($row, $update) {
 		if ($row->num_rows == 1) {
 			$row = ($row->fetch_assoc());
 			$this->FacebookId = $row['FacebookId'];
 			$FirstName = $row['FirstName'];
 			$LastName = $row['LastName'];
 
-			if($FirstName == "" || $LastName == ""){
+			if($FirstName == "" || $LastName == "" || $update == 1){
 				$this->extract_profile_info();
+				return;
 			}
 
 			self::__construct3($this->FacebookId, $FirstName, $LastName);
@@ -128,7 +129,7 @@ class Facebook_user implements JsonSerializable {
 	
 	function extract_profile_info() {
 		$profile_url =  "http://www.facebook.com/".$this->FacebookId;
-	
+
 		if (strcmp($profile_url,'http://www.facebook.com/') == 0){
 			echo "to delete - no data";
 			return;
@@ -152,9 +153,4 @@ class Facebook_user implements JsonSerializable {
     } 
 	#endregion Methods
 } 
-
-$row = 'SELECT * FROM `users` WHERE `FacebookId` = 502424842';
-$dbWrapper = new DbWrapper();
-$result = $dbWrapper->execute($row);
-
 ?> 

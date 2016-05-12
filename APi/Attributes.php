@@ -2,14 +2,14 @@
 
 class Attributes {
     
-    var $Gender; //female/male;
-    var $EyeColor; // RGB hex color value
-    var $HairColor; // RGB hex color value
-    var $HasBeard; //yes/no
-    var $HasGlasses; //yes/no
-    var $HasSmile; //yes/no
-    var $Age;
-    var $UpdateDate; //date of api check
+    private $Gender; //female/male;
+    private $EyeColor; // RGB hex color value
+    private $HairColor; // RGB hex color value
+    private $HasBeard; //yes/no
+    private $HasGlasses; //yes/no
+    private $HasSmile; //yes/no
+    private $Age;
+    private $UpdateDate; //date of api check
 
 	#region Setters
 	function setGender($Gender) {
@@ -65,7 +65,6 @@ class Attributes {
 	}
 	#endregion Getters
 	
-
 	function __toString() { 
         return "Gender : " . $this->Gender . " <br>
         Eye Color : " . $this->EyeColor . " <br>

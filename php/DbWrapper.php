@@ -25,6 +25,9 @@
 		// Age			int
 		// UpdateDate 	date		// text format: date("Y-m-d:H:i:s")
 
+include 'Facebook_user.php';
+include 'Facebook_user.php';
+		
 class DbWrapper {
 	
 	#region Fields
@@ -189,124 +192,158 @@ class DbWrapper {
 		return NULL;
 	}
 	
-	public function filterBy_JSON($FacebookId, $FirstName, $LastName, 	// User properties
-						 $PhotoUpdatedDate, $NumOfLikes, 		// Photo properties
-						 $Gender, $EyeColor, $HasBeard,			// Attributes properties
-						 $HasGlasses, $HasSmile, $Age,
-						 $AttUpdateDate) {
+	public function filterBy_JSON($FacebookId, $FirstName, $LastName,
+						 $PhotoUpdatedDateFROM, $PhotoUpdatedDateTO, $NumOfLikesFROM, $NumOfLikesTO
+						 $Gender, $EyeColor, $HasBeard, $HasGlasses, $HasSmile, $AgeFROM, $AgeTO,
+						 $AttUpdateDateFROM, $AttUpdateDateTO) {
+
+		#region find a specific person
+		if ($FacebookId != NULL) {
+	
+			$myUser = new Facebook_user($FacebookId);
+			$myPhoto = new Facebook_photo($FacebookId);
+	
+			$personExist = $this->execute("SELECT * FROM Users WHERE Users.FacebookId = " . $FacebookId);
+			
+			// user exists, only update and return
+			if ($personExist->num_rows > 0) {
+				
+				if ($myUser != NULL) {
+					$this->update($myUser);
+				}
+				
+				if ($myPhoto != NULL) {
+					$photoExist = $this->execute("SELECT PhotoId as pi FROM " . $personExist . " WHERE pi = " . $myPhoto->getPhotoId();
+					if ($photoExist->num_rows > 0) {
+						$this->update($myPhoto);
+					}
+					else {
+						$this->insert($myPhoto);
+					}
+				}
+			}
+			
+			// user doesn't exist, insert and return
+			else {
+				
+				if ($myUser != NULL) {
+					$this->insert($myUser);
+				}
+				
+				if ($myPhoto != NULL) {
+					$this->insert($myPhoto);
+				}				
+			}
+			
+			return json_encode(array ($myUser->jsonSerialize(), $myPhoto->jsonSerialize()), JSON_NUMERIC_CHECK );
+		}
+		#endregion specific person
+		
+		#region else: filter by parameters
 		$string = " SELECT *
 					FROM Users, Photos, PhotoAttributes
 					WHERE Users.FacebookId = Photos.FacebookId AND Photos.FacebookPhotoId = PhotoAttributes.PhotoId ";
-		
-		// find a specific person
-		if ($FacebookId != NULL) {
-			$personExist = "SELECT * FROM Users WHERE Users.FacebookId = " . $FacebookId;
-			
-			$myUser = new Facebook_user($FacebookId);
-			if ($myUser != NULL) {
-				$this->update($myUser);
-			}
-			
-			$myPhoto = new Facebook_photo($FacebookId);
-			if ($myPhoto != NULL) {
-				$this->update($myPhoto);
-			}
-			
-			$this->update($myUser);
-			
-			// if person is in DB
-				// update and return
-				
-			// else 
-				// create and return
+					
+		if ($FirstName != NULL) {
+			$string = $string . " AND Users.FirstName = " . "\"" . $FirstName . "\"";
+		}
+		if ($LastName != NULL) {
+			$string = $string . " AND Users.LastName = " . "\"". $LastName . "\"";
 		}
 		
-		// filter by parameters
-		else {
-			
-			if ($FirstName != NULL) {
-				$string = $string . " AND Users.FirstName" . "\"" . $FirstName . "\"";
-			}
-			if ($LastName != NULL) {
-				$string = $string . " AND Users.LastName" . "\"". $LastName . "\"";
-			}
-			
-			if ($PhotoUpdatedDate != NULL) {
-				// $comp = $PhotoUpdatedDate[0]; // > < =
-				// $date = substr($PhotoUpdatedDate, 1);
-				
-				$string = $string . " AND Photos.UpdateDate " . $PhotoUpdatedDate;
-			}
-			
-			if ($NumOfLikes != NULL) {
-				$string = $string . " AND Photos.NumOfLikes " . $NumOfLikes;
-			}
+		if ($PhotoUpdatedDateFROM != NULL) {
+			$string = $string . " AND Photos.UpdateDate >= " . $PhotoUpdatedDateFROM;
+		}
+		
+		if ($PhotoUpdatedDateTO != NULL) {
+			$string = $string . " AND Photos.UpdateDate <= " . $PhotoUpdatedDateTO;
+		}
+		
+		if ($NumOfLikesFROM != NULL) {
+			$string = $string . " AND Photos.NumOfLikes >= " . $NumOfLikesFROM;
+		}
+		
+		if ($NumOfLikesTO != NULL) {
+			$string = $string . " AND Photos.NumOfLikes <= " . $NumOfLikesTO;
+		}
 
-			if ($Gender != NULL) {
-				switch ($Gender[0]) {
-					case 'f':
-					$gender = false;
-					break;
-					default:
-					$gender = true;
-					break;
-				}
-				$string = $string . " AND PhotoAttributes.Gender = " . $gender;
+		if ($Gender != NULL) {
+			switch (strtolower($Gender[0])) {
+				case 'f':
+				$gender = false;
+				break;
+				
+				default:
+				$gender = true;
+				break;
 			}
-			
-			if ($EyeColor != NULL) {
-				$string = $string . " AND PhotoAttributes.EyeColor = ". ColorTXTtoNUM($EyeColor);
-			}
-			
-			if ($HasBeard != NULL) {
-				switch ($HasBeard[0]) {
-					case 'f':
-					$gender = false;
-					break;
-					default:
-					$gender = true;
-					break;
-				}
-				$string = $string . " AND PhotoAttributes.Gender = " . $gender;				
-			}
-			if ($HasGlasses != NULL) {
-				$string = $string . " AND PhotoAttributes.HasGlasses = " . $HasGlasses;				
-			}
-			if ($HasSmile != NULL) 			{ }
-			if ($Age != NULL) 				{ }
-			if ($AttUpdateDate != NULL) 	{ }
-		}					 
+			$string = $string . " AND PhotoAttributes.Gender = " . $gender;
+		}
+		
+		if ($EyeColor != NULL) {
+			$string = $string . " AND PhotoAttributes.EyeColor = " . "\"". $LastName . "\"";
+		}
+		
+		if ($HasBeard != NULL) {
+			$string = $string . " AND PhotoAttributes.HasBeard = " . $HasBeard;	
+		}
+		
+		if ($HasGlasses != NULL) {
+			$string = $string . " AND PhotoAttributes.HasGlasses = " . $HasGlasses;
+		}
+		
+		if ($HasSmile != NULL) {
+			$string = $string . " AND PhotoAttributes.HasSmile = " . $HasSmile;
+		}
+		
+		if ($AgeFROM != NULL) {
+			$string = $string . " AND Photos.Age >= " . $AgeFROM;
+		}
+		
+		if ($AgeTO != NULL) {
+			$string = $string . " AND Photos.Age <= " . $AgeTO;
+		}
+		
+		if ($AttUpdateDateFROM != NULL) {
+			$string = $string . " AND Photos.AttUpdateDate >= " . $AttUpdateDateFROM;
+		}
+		
+		if ($AttUpdateDateTO != NULL) {
+			$string = $string . " AND Photos.AttUpdateDate >= " . $AttUpdateDateTO;
+		}
+
+		$result = $this->execute($string);
+		
+		$rows = array();
+		while($r = mysqli_fetch_assoc($result)) {
+			$rows[] = $r;
+		}
+		return json_encode($rows, JSON_NUMERIC_CHECK );
+		#endregion else
 	}
 
-
-
-
-						 
-	/*
-	function build_insert_row_string($tableName, $FacebookId, $FirstName, $LastName, $PhotoId) {
+	public function insert($object) {
 		$string = "INSERT INTO " . $tableName;
 		
 		switch ($tableName) {
 			case "Users":
 				$string = $string . " (FacebookId, FirstName, LastName) VALUES ";
+				$string = $string . " (" . $object->getUserID() . ", " . $object->getFirstName() . ", " . $object->getLastName() . ")";
+				break;
+				
+			case "Photos":
+				$string = $string . " (FacebookPhotoId, FacebookId, UpdateDate, PhotoLink, NumOfLikes, IsValidPhoto) VALUES ";
+				$string = $string . " (" . $object->getPhotoId() . ", " . $object->getUserID() . ", " . $object->getUpdateDate() . ", " .
+										$object->getPhotoLink . ", " . $object->getNumOfLikes  . ", " . getisValidPhoto() . ")";
 				break;
 			
-			case "Photos":
-			
-			break;
-			
-			case "PhotoAttributes":
-			
-			break;
+			//case "PhotoAttributes":
+				//$string = $string . " (Id, PhotoId, Gender, EyeColor, HairColor, HasBeard, HasGlasses, HasSmile, Age, UpdateDate) VALUES ";
+				//break;
 		}
-		$allowed_tables_array                     = array('Users', 'Photos', 'PhotoAttributes');
-		$allowed_columns_array['Users']           = array('FacebookId', 'FirstName', 'LastName');
-		$allowed_columns_array['Photos']          = array('Id', 'FacebookPhotoId', 'FacebookId','UpdateDate', 'PhotoLink', 'NumOfLikes', 'IsValidPhoto');
-		$allowed_columns_array['PhotoAttributes'] = array('Id', 'PhotoId', 'Gender', 'EyeColor', 'HasBeard', 'HasGlasses', 'HasSmile', 'Age', 'UpdateDate');	
-	$sql = "INSERT INTO MyGuests (firstname, lastname, email)
-	VALUES ('John', 'Doe', 'john@example.com')";
+		
+		$this->execute($string);
 	}
-	*/
 	#endregion Methods (public)
 	
 }

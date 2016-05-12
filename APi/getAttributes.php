@@ -8,6 +8,7 @@ $api = new betaFaceApi();
 $face = $api->get_Image_attributes("http://www.math.tau.ac.il/~milo/design/images/tova11.jpg");
 
 /*Example- how to print the Attributes*/
+
 echo $api->image_Attributes->UpdateDate;
 echo "<br>";
 echo $api->image_Attributes->EyeColor;

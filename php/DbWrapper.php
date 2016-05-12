@@ -343,6 +343,31 @@ class DbWrapper {
 		
 		$this->execute($string);
 	}
+
+	public function desableDupPhotos() {
+		// finds all users with same FacebookPhotoId
+
+		$sqlFindDup = 'SELECT * FROM `photos` WHERE `FacebookPhotoId` IN (
+    SELECT `FacebookPhotoId` FROM `photos` GROUP BY `FacebookPhotoId` HAVING count(*) > 1
+	)';
+
+		$result = $this->execute(sqlFindDup);
+		$row = ($result->fetch_assoc());
+		$FacebookPhotoId = $row['FacebookPhotoId'];
+
+	}
+	public function addDupToNoProfilePic() {
+
+		$sqlFindDup = 'SELECT `FacebookPhotoId`, COUNT(*) `c` FROM `photos` GROUP BY `FacebookPhotoId` HAVING c > 1';
+		$result = $this->execute($sqlFindDup);
+		while ($row = ($result->fetch_assoc())) {
+			$FacebookPhotoId = $row['FacebookPhotoId'];
+			echo "adding $FacebookPhotoId to noprofilepic <br>";
+			$sqladdDupNoPic = 'INSERT INTO `noprofilepic` (`FakePhotoId`) SELECT '. $FacebookPhotoId .' FROM dual WHERE NOT EXISTS (SELECT * FROM `noprofilepic` WHERE `FakePhotoId`= ' . $FacebookPhotoId .')';
+			$this->execute($sqladdDupNoPic);
+		}
+	}
+
 	#endregion Methods (public)
 	
 }

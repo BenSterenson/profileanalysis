@@ -13,4 +13,9 @@ $foo = new Facebook_user($result, 0);
 echo $foo;
 //## end test 1 ###
 
+//## test 2 ###
+$dbWrapper = new DbWrapper();
+$dbWrapper->addDupToNoProfilePic();
+//## end test 2 ###
+
 ?> 

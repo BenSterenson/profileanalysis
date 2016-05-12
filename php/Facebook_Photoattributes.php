@@ -40,16 +40,22 @@ function update_attributes($id) {
 	$face = $api->get_Image_attributes($picUrl);
 	echo $api->image_Attributes ."<br>";
 
-	if($face == 1){
-		$dbWrapper->update($api);
-		$updateQuery = 'UPDATE `photos` SET `IsValidPhoto` = 1 WHERE `Id` = '. $id;
+	if($face == -1) {
+		// no face found set to 0 IsValidPhoto
+		echo "no face";
+		$updateQuery = 'UPDATE `photos` SET `IsValidPhoto` = 0 WHERE `Id` = '. $id;
 		echo $updateQuery."<br>";
 		$result = $dbWrapper->execute($updateQuery);
-	}
-	else{
-		echo "no output";
+		return;
 	}
 
+	$dbWrapper->update($api->image_Attributes);
+
+	$updateQuery = 'UPDATE `photos` SET `IsValidPhoto` = 1 WHERE `Id` = '. $id;
+	echo $updateQuery."<br>";
+	$result = $dbWrapper->execute($updateQuery);
+	
+	return;
 } 
 
 function update_all_pictures() {

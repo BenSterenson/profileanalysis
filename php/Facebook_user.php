@@ -1,19 +1,11 @@
 <?php
 set_time_limit(0);
-
+include 'dbWrapper.php';
 #region Global Functions
 function get_html($url) {
-	$proxy = '117.135.250.133';
-
 	$ch = curl_init($url);
 	curl_setopt($ch, CURLOPT_HEADER, false);
-	
 	curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
-	curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, TRUE);
-	curl_setopt ($ch, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
-	curl_setopt($ch, CURLOPT_PROXY, $proxy);
-    curl_setopt($ch, CURLOPT_PROXYPORT, "8081"); // your proxy port number
-
 	curl_setopt($ch, CURLOPT_USERAGENT,'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.13) Gecko/20080311 Firefox/2.0.0.13');
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 	curl_setopt($ch, CURLOPT_BINARYTRANSFER, true);
@@ -54,8 +46,14 @@ class Facebook_user {
             case 1:
                 self::__construct1($argv[0]);
                 break;
+
+            case 2:
+            	self::__construct2($argv[0], $argv[1]);
+            	break;
+
             case 3:
-                self::__construct2( $argv[0], $argv[1], $argv[2] );
+                self::__construct3( $argv[0], $argv[1], $argv[2] );
+                break;
          }
     }
  
@@ -63,12 +61,36 @@ class Facebook_user {
         $this->FacebookId = $userID;
 		$this->extract_profile_info();
     }
-	
-	public function __construct2($userID, $FirstName, $LastName) {
+
+	public function __construct2($row, $num) {
+		if ($row->num_rows == 1) {
+			$row = ($row->fetch_assoc());
+			$this->FacebookId = $row['FacebookId'];
+			$FirstName = $row['FirstName'];
+			$LastName = $row['LastName'];
+
+			if($FirstName == "" || $LastName == ""){
+				$this->extract_profile_info();
+			}
+
+			self::__construct3($this->FacebookId, $FirstName, $LastName);
+		}
+		return;
+
+    }
+
+	public function __construct3($userID, $FirstName, $LastName) {
         $this->FacebookId = $userID;
 		$this->FirstName = $FirstName;
 		$this->LastName = $LastName;
     }
+
+   	public function __destruct() {
+        $this->FacebookId = NULL;
+		$this->FirstName = NULL;
+		$this->LastName = NULL;
+   	}
+
 	#endregion Constructors
 	
 	#region Setters
@@ -100,16 +122,18 @@ class Facebook_user {
 		$profile_url =  "http://www.facebook.com/".$this->FacebookId;
 	
 		if (strcmp($profile_url,'http://www.facebook.com/') == 0){
-			echo "to delete - no data - insert null";
-			// insert to db
+			echo "to delete - no data";
+			return;
 		}
-		echo $profile_url;
 		$html = get_html($profile_url);
 		$name_tag = '"name":';
 		$full_name = extract_tag($name_tag, $html);
 
 		list($first_name, $last_name)  = array_pad(explode(" ", $full_name, 2),2 ,null);
 		
+		if (($first_name == 'CanvasToBlobBundle"') || ( $first_name == 'FileHashWorkerBundle"'))
+			return;
+
 		$this->FirstName = $first_name;
 		$this->LastName = $last_name;
 	}
@@ -121,6 +145,10 @@ class Facebook_user {
 	#endregion Methods
 } 
 
-#$foo = new Facebook_user(607909292); 
-#echo $foo;
+$row = 'SELECT * FROM `users` WHERE `FacebookId` = 502424842';
+$dbWrapper = new DbWrapper();
+$result = $dbWrapper->execute($row);
+
+$foo = new Facebook_user($result,1);
+echo $foo;
 ?> 

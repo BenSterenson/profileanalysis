@@ -82,7 +82,7 @@ class Facebook_photo {
 	
 	#region Methods
 	function get_redirectURL($url) {
-			$ch = curl_init();
+		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL,$url);
 		curl_setopt($ch, CURLOPT_HEADER, false);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

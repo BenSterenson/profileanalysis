@@ -196,10 +196,7 @@ class DbWrapper {
 						 $PhotoUpdatedDateFROM, $PhotoUpdatedDateTO, $NumOfLikesFROM, $NumOfLikesTO
 						 $Gender, $EyeColor, $HasBeard, $HasGlasses, $HasSmile, $AgeFROM, $AgeTO,
 						 $AttUpdateDateFROM, $AttUpdateDateTO) {
-		$string = " SELECT *
-					FROM Users, Photos, PhotoAttributes
-					WHERE Users.FacebookId = Photos.FacebookId AND Photos.FacebookPhotoId = PhotoAttributes.PhotoId ";
-		
+
 		// find a specific person
 		if ($FacebookId != NULL) {
 	
@@ -234,77 +231,81 @@ class DbWrapper {
 			return json_encode(array ($myUser, $myPhoto));
 		}
 		
-		// filter by parameters
-		else {
-			
-			if ($FirstName != NULL) {
-				$string = $string . " AND Users.FirstName = " . "\"" . $FirstName . "\"";
-			}
-			if ($LastName != NULL) {
-				$string = $string . " AND Users.LastName = " . "\"". $LastName . "\"";
-			}
-			
-			if ($PhotoUpdatedDateFROM != NULL) {
-				$string = $string . " AND Photos.UpdateDate >= " . $PhotoUpdatedDateFROM;
-			}
-			
-			if ($PhotoUpdatedDateTO != NULL) {
-				$string = $string . " AND Photos.UpdateDate <= " . $PhotoUpdatedDateTO;
-			}
-			
-			if ($NumOfLikesFROM != NULL) {
-				$string = $string . " AND Photos.NumOfLikes >= " . $NumOfLikesFROM;
-			}
-			
-			if ($NumOfLikesTO != NULL) {
-				$string = $string . " AND Photos.NumOfLikes <= " . $NumOfLikesTO;
-			}
-
-			if ($Gender != NULL) {
-				switch (strtolower($Gender[0])) {
-					case 'f':
-					$gender = false;
-					break;
+		// else: filter by parameters
+		$string = " SELECT *
+					FROM Users, Photos, PhotoAttributes
+					WHERE Users.FacebookId = Photos.FacebookId AND Photos.FacebookPhotoId = PhotoAttributes.PhotoId ";
 					
-					default:
-					$gender = true;
-					break;
-				}
-				$string = $string . " AND PhotoAttributes.Gender = " . $gender;
-			}
-			
-			if ($EyeColor != NULL) {
-				$string = $string . " AND PhotoAttributes.EyeColor = " . "\"". $LastName . "\"";
-			}
-			
-			if ($HasBeard != NULL) {
-				$string = $string . " AND PhotoAttributes.HasBeard = " . $HasBeard;	
-			}
-			
-			if ($HasGlasses != NULL) {
-				$string = $string . " AND PhotoAttributes.HasGlasses = " . $HasGlasses;
-			}
-			
-			if ($HasSmile != NULL) {
-				$string = $string . " AND PhotoAttributes.HasSmile = " . $HasSmile;
-			}
-			
-			if ($AgeFROM != NULL) {
-				$string = $string . " AND Photos.Age >= " . $AgeFROM;
-			}
-			
-			if ($AgeTO != NULL) {
-				$string = $string . " AND Photos.Age <= " . $AgeTO;
-			}
-			
-			if ($AttUpdateDateFROM != NULL) {
-				$string = $string . " AND Photos.AttUpdateDate >= " . $AttUpdateDateFROM;
-			}
-			
-			if ($AttUpdateDateTO != NULL) {
-				$string = $string . " AND Photos.AttUpdateDate >= " . $AttUpdateDateTO;
-			}
+		if ($FirstName != NULL) {
+			$string = $string . " AND Users.FirstName = " . "\"" . $FirstName . "\"";
 		}
+		if ($LastName != NULL) {
+			$string = $string . " AND Users.LastName = " . "\"". $LastName . "\"";
+		}
+		
+		if ($PhotoUpdatedDateFROM != NULL) {
+			$string = $string . " AND Photos.UpdateDate >= " . $PhotoUpdatedDateFROM;
+		}
+		
+		if ($PhotoUpdatedDateTO != NULL) {
+			$string = $string . " AND Photos.UpdateDate <= " . $PhotoUpdatedDateTO;
+		}
+		
+		if ($NumOfLikesFROM != NULL) {
+			$string = $string . " AND Photos.NumOfLikes >= " . $NumOfLikesFROM;
+		}
+		
+		if ($NumOfLikesTO != NULL) {
+			$string = $string . " AND Photos.NumOfLikes <= " . $NumOfLikesTO;
+		}
+
+		if ($Gender != NULL) {
+			switch (strtolower($Gender[0])) {
+				case 'f':
+				$gender = false;
+				break;
+				
+				default:
+				$gender = true;
+				break;
+			}
+			$string = $string . " AND PhotoAttributes.Gender = " . $gender;
+		}
+		
+		if ($EyeColor != NULL) {
+			$string = $string . " AND PhotoAttributes.EyeColor = " . "\"". $LastName . "\"";
+		}
+		
+		if ($HasBeard != NULL) {
+			$string = $string . " AND PhotoAttributes.HasBeard = " . $HasBeard;	
+		}
+		
+		if ($HasGlasses != NULL) {
+			$string = $string . " AND PhotoAttributes.HasGlasses = " . $HasGlasses;
+		}
+		
+		if ($HasSmile != NULL) {
+			$string = $string . " AND PhotoAttributes.HasSmile = " . $HasSmile;
+		}
+		
+		if ($AgeFROM != NULL) {
+			$string = $string . " AND Photos.Age >= " . $AgeFROM;
+		}
+		
+		if ($AgeTO != NULL) {
+			$string = $string . " AND Photos.Age <= " . $AgeTO;
+		}
+		
+		if ($AttUpdateDateFROM != NULL) {
+			$string = $string . " AND Photos.AttUpdateDate >= " . $AttUpdateDateFROM;
+		}
+		
+		if ($AttUpdateDateTO != NULL) {
+			$string = $string . " AND Photos.AttUpdateDate >= " . $AttUpdateDateTO;
+		}
+
+		$result = $this->execute($string);
+		return json_encode($result);
 	}
 
 	public function insert($object) {

@@ -39,7 +39,7 @@ function extract_tag($tag, $html){
 
 #endregion Global Functions
 
-class Facebook_user { 
+class Facebook_user implements JsonSerializable { 
 
 	#region Fields
     private $FacebookId = NULL;
@@ -96,6 +96,14 @@ class Facebook_user {
 	#endregion Getters
 	
 	#region Methods
+	public function jsonSerialize() {
+        return Array(
+           'FacebookId'	=> $this->FacebookId + 0,
+           'FirstName'  => $this->FirstName,
+           'LastName' 	=> $this->LastName
+        );
+    }
+	
 	function extract_profile_info() {
 		$profile_url =  "http://www.facebook.com/".$this->FacebookId;
 	
@@ -121,6 +129,4 @@ class Facebook_user {
 	#endregion Methods
 } 
 
-#$foo = new Facebook_user(607909292); 
-#echo $foo;
 ?> 

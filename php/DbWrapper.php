@@ -197,7 +197,7 @@ class DbWrapper {
 						 $Gender, $EyeColor, $HasBeard, $HasGlasses, $HasSmile, $AgeFROM, $AgeTO,
 						 $AttUpdateDateFROM, $AttUpdateDateTO) {
 
-		// find a specific person
+		#region find a specific person
 		if ($FacebookId != NULL) {
 	
 			$myUser = new Facebook_user($FacebookId);
@@ -213,7 +213,13 @@ class DbWrapper {
 				}
 				
 				if ($myPhoto != NULL) {
-					$this->update($myPhoto);
+					$photoExist = $this->execute("SELECT PhotoId as pi FROM " . $personExist . " WHERE pi = " . $myPhoto->getPhotoId();
+					if ($photoExist->num_rows > 0) {
+						$this->update($myPhoto);
+					}
+					else {
+						$this->insert($myPhoto);
+					}
 				}
 			}
 			
@@ -228,10 +234,12 @@ class DbWrapper {
 					$this->insert($myPhoto);
 				}				
 			}
-			return json_encode(array ($myUser, $myPhoto));
+			
+			return json_encode(array ($myUser->jsonSerialize(), $myPhoto->jsonSerialize()), JSON_NUMERIC_CHECK );
 		}
+		#endregion specific person
 		
-		// else: filter by parameters
+		#region else: filter by parameters
 		$string = " SELECT *
 					FROM Users, Photos, PhotoAttributes
 					WHERE Users.FacebookId = Photos.FacebookId AND Photos.FacebookPhotoId = PhotoAttributes.PhotoId ";
@@ -305,7 +313,13 @@ class DbWrapper {
 		}
 
 		$result = $this->execute($string);
-		return json_encode($result);
+		
+		$rows = array();
+		while($r = mysqli_fetch_assoc($result)) {
+			$rows[] = $r;
+		}
+		return json_encode($rows, JSON_NUMERIC_CHECK );
+		#endregion else
 	}
 
 	public function insert($object) {

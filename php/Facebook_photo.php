@@ -2,7 +2,7 @@
 include 'Facebook_user.php';
 set_time_limit(0);
 
-class Facebook_photo { 
+class Facebook_photo implements JsonSerializable { 
 
 	#region Fields
     private $FacebookId = NULL;
@@ -81,6 +81,17 @@ class Facebook_photo {
 	#endregion Getters
 	
 	#region Methods
+		public function jsonSerialize() {
+        return Array(
+           'FacebookId'			=> $this->FacebookId + 0,
+           'FacebookPhotoId' 	=> $this->FacebookPhotoId + 0,
+           'UpdateDate' 		=> $this->UpdateDate + 0,
+		   'PhotoLink' 			=> $this->PhotoLink,
+		   'NumOfLikes'			=> $this->NumOfLikes + 0,
+		   'isValidPhoto'		=> $this->isValidPhoto
+        );
+    }
+	
 	function get_redirectURL($url) {
 			$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL,$url);
@@ -143,6 +154,4 @@ class Facebook_photo {
 	#endregion Methods
 } 
 
-#$foo = new Facebook_photo(4); 
-#echo $foo;
 ?> 

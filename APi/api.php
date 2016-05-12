@@ -6,6 +6,13 @@ define("DEFAULT_API_SECRET", '171e8465-f548-401d-b63b-caf0dc28df5f');
 define("DEFAULT_API_URL",'http://www.betafaceapi.com/service.svc');
 define("DEFAULT_POLL_INTERVAL",1);
 
+
+function convertTextToBool($value){
+    if(!(strcmp($value,"no")))
+        return 0;
+    return 1;
+}
+
 class betaFaceApi
 {
     var $api_key;
@@ -279,7 +286,7 @@ class betaFaceApi
         $result['face_uid'] = trim($face_uids[0]);
         return $result;
     }
-    
+
     /**
      * Parse the response from API for GetFaceImage method call.
      * @param type $response
@@ -292,47 +299,37 @@ class betaFaceApi
         
         $tags = $response_xml->xpath(".//face_info/tags/TagInfo");
         
-        $date = getDate();
+        $UpdateDate = date("Y-m-d:H:i:s");
         
-        $UpdateDate = $date['mon'] . "." . $date['mday'] . "." . $date['year'];
+        //$UpdateDate = $date['mon'] . "." . $date['mday'] . "." . $date['year'];
 
         for($x=0; $x < count($tags); $x++){
             $name = trim($tags[$x]->name);
         
             $value = trim($tags[$x]->value);
             
-            $this->image_Attributes->UpdateDate = $UpdateDate;
+            $this->image_Attributes->setUpdateDate($UpdateDate);
             switch($name){
                 case "age":
-                    $this->image_Attributes->Age = $value;
+                    $this->image_Attributes->setAge($value);
                     break;
                 case "gender":
-                    $this->image_Attributes->Gender = $value;
+                    $this->image_Attributes->setGender($value);
                     break;
                 case "color hair":
-                    $this->image_Attributes->HairColor = $value;
+                    $this->image_Attributes->setHairColor($value);
                     break;
                 case "color eyes":
-                    $this->image_Attributes->EyeColor = $value;
+                    $this->image_Attributes->setEyeColor($value);
                     break;
                 case "beard":
-                    if(!(strcmp($value,"no"))){
-                        $this->image_Attributes->HasBeard = 0;
-                    }
-                    else{
-                        $this->image_Attributes->HasBeard = 1;
-                    }
+                    $this->image_Attributes->setHasBeard(convertTextToBool($value));
                     break;
                 case "glasses":
-                    if(!(strcmp($value,"no"))){
-                        $this->image_Attributes->HasGlasses = 0;
-                    }
-                    else{
-                        $this->image_Attributes->HasGlasses = 1;
-                    }
+                        $this->image_Attributes->setHasGlasses(convertTextToBool($value));
                     break;
                 case "expression":
-                    $this->image_Attributes->HasSmile = $value;
+                    $this->image_Attributes->setHasSmile($value);
                     break;
             }
          

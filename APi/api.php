@@ -83,6 +83,9 @@ class betaFaceApi
 
         $img_uid = $result['img_uid'];
         $result = $this->api_call('GetImageInfo', array('image_uid' => $img_uid));
+        if($result == -1){
+            return -1;
+        }
         while(!$result['ready'])
         {
             sleep($this->poll_interval);
@@ -122,6 +125,7 @@ class betaFaceApi
         // Step 2: keep polling the GetImageInfo endpoint until the processing of the uploaded image is ready.
         $img_uid = $result['img_uid'];
         $result = $this->api_call('GetImageInfo', array('image_uid' => $img_uid));
+        
         while(!$result['ready'])
         {
             sleep($this->poll_interval);
@@ -281,7 +285,7 @@ class betaFaceApi
         if (count($face_uids) == 0)
         {
             $this->logger("No faces found in image!");
-            return $result;
+            return -1;
         }
         $result['face_uid'] = trim($face_uids[0]);
         return $result;
@@ -300,15 +304,14 @@ class betaFaceApi
         $tags = $response_xml->xpath(".//face_info/tags/TagInfo");
         
         $UpdateDate = date("Y-m-d:H:i:s");
-        
-        //$UpdateDate = $date['mon'] . "." . $date['mday'] . "." . $date['year'];
+       
+        $this->image_Attributes->setUpdateDate($UpdateDate);
 
         for($x=0; $x < count($tags); $x++){
             $name = trim($tags[$x]->name);
         
             $value = trim($tags[$x]->value);
             
-            $this->image_Attributes->setUpdateDate($UpdateDate);
             switch($name){
                 case "age":
                     $this->image_Attributes->setAge($value);

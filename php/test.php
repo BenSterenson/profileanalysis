@@ -14,9 +14,14 @@ echo $foo;
 //## end test 1 ###
 
 //## test 2 ###
-$dbWrapper = new DbWrapper();
 $dbWrapper->addDupToNoProfilePic();
 $dbWrapper->desableDupPhotos();
 //## end test 2 ###
 
+//## test 3 ###
+$dbWrapper = new DbWrapper();
+echo "test color identification";
+$res=$dbWrapper->ColorNUMtoTXT(0xf7e92a);
+echo $res;
+//## end test 2 ###
 ?> 

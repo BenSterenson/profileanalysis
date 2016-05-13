@@ -1,6 +1,6 @@
 <?php
 
-class Attributes {
+class Attributes implements JsonSerializable {
     
     private $Gender; //female/male;
     private $EyeColor; // RGB hex color value
@@ -10,6 +10,7 @@ class Attributes {
     private $HasSmile; //yes/no
     private $Age;
     private $UpdateDate; //date of api check
+	private $UpdatedByUser; //yes/no
 
 	#region Setters
 	function setGender($Gender) {
@@ -35,6 +36,9 @@ class Attributes {
 	}
 	function setUpdateDate($UpdateDate) {
 		$this->UpdateDate = $UpdateDate;
+	}
+	function setUpdatedByUser($UpdatedByUsed) {
+		$this->UpdatedByUsed = $UpdatedByUsed;
 	}
 	#endregion Setters
 
@@ -63,7 +67,23 @@ class Attributes {
 	function getUpdateDate() {
 		return $this->UpdateDate;
 	}
+	function getUpdatedByUser() {
+		return $this->UpdatedByUser;
+	}
 	#endregion Getters
+	public function jsonSerialize() {
+        return Array(
+           'Gender'			=> $this->Gender,
+           'EyeColor'  		=> $this->EyeColor,
+           'HairColor' 		=> $this->HairColor,
+		   'HasBeard' 		=> $this->HasBeard,
+		   'HasGlasses' 	=> $this->HasGlasses,
+		   'HasSmile' 		=> $this->HasSmile,
+		   'Age' 			=> $this->Age + 0,
+		   'UpdateDate' 	=> $this->UpdateDate + 0,
+		   'UpdatedByUser' 	=> $this->UpdatedByUser
+        );
+    }
 	
 	function __toString() { 
         return "Gender : " . $this->Gender . " <br>

@@ -27,6 +27,7 @@
 
 //include 'Facebook_user.php';
 include 'Facebook_photo.php';
+
 class DbWrapper {
 	
 	#region Fields

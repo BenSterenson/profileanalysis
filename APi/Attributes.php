@@ -10,7 +10,8 @@ class Attributes {
     private $HasSmile; //yes/no
     private $Age;
     private $UpdateDate; //date of api check
-
+	private $UpdatedByUser;
+	
 	#region Setters
 	function setGender($Gender) {
 		$this->Gender = $Gender;
@@ -35,6 +36,9 @@ class Attributes {
 	}
 	function setUpdateDate($UpdateDate) {
 		$this->UpdateDate = $UpdateDate;
+	}
+	function setUpdatedByUser($UpdatedByUser) {
+		$this->UpdatedByUser = $UpdatedByUser;
 	}
 	#endregion Setters
 
@@ -63,6 +67,9 @@ class Attributes {
 	function getUpdateDate() {
 		return $this->UpdateDate;
 	}
+	function getUpdatedByUser() {
+		return $this->UpdatedByUser;
+	}
 	#endregion Getters
 	
 	function __toString() { 
@@ -73,7 +80,8 @@ class Attributes {
         Has Glasses : " . $this->HasGlasses . " <br>
         Has Smile : " . $this->HasSmile . " <br>
         Age : " . $this->Age . " <br>
-        Update Date : " . $this->UpdateDate . " <br>";
+        Update Date : " . $this->UpdateDate . " <br>
+        Updated By User : " . $this->UpdatedByUser . " <br>";
     } 
 }
 

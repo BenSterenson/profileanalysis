@@ -306,6 +306,8 @@ class betaFaceApi
         $UpdateDate = date("Y-m-d:H:i:s");
        
         $this->image_Attributes->setUpdateDate($UpdateDate);
+        $this->image_Attributes->setUpdatedByUser(0);
+
 
         for($x=0; $x < count($tags); $x++){
             $name = trim($tags[$x]->name);

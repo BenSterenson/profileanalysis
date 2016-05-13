@@ -1,5 +1,4 @@
 <?php
-#region Comments
 		// Users:
 // KEY	// FacebookId 	int
 		// FirstName 	string
@@ -15,21 +14,19 @@
 		// IsValidPhoto		bool
 		
 		// PhotoAttributes:
-// KEY	// Id 				int
-		// PhotoId 			int
-		// Gender 			bool	// true => male, false => female
-		// EyeColor 		int
-		// HairColor		int
-		// HasBeard 		bool
-		// HasGlasses 		bool
-		// HasSmile 		bool
-		// Age				int
-		// UpdateDate	 	date	// text format: date("Y-m-d:H:i:s")
-		// UpdatedByUser	bool
-#endregion Comments
+// KEY	// Id 			int
+		// PhotoId 		int
+		// Gender 		bool		// true => male, false => female
+		// EyeColor 	int			// [0,Red],  [1,Green], [2,Yellow], [3,Blue], [4,Orange], [5,Purple],
+		// HairColor	int			// [6,Pink], [7,Brown], [8,Black]   [9,Gray], [10,White]
+		// HasBeard 	bool
+		// HasGlasses 	bool
+		// HasSmile 	bool
+		// Age			int
+		// UpdateDate 	date		// text format: date("Y-m-d:H:i:s")
+
 //include 'Facebook_user.php';
 include 'Facebook_photo.php';
-include("../APi/Attributes.php");
 
 class DbWrapper {
 	
@@ -49,7 +46,7 @@ class DbWrapper {
 		$allowed_tables_array						= array('Users', 'Photos', 'PhotoAttributes');
 		$allowed_columns_array['Users']				= array('FacebookId', 'FirstName', 'LastName');
 		$allowed_columns_array['Photos'] 			= array('Id', 'FacebookPhotoId', 'FacebookId','UpdateDate', 'PhotoLink', 'NumOfLikes', 'IsValidPhoto');
-		$allowed_columns_array['PhotoAttributes'] 	= array('Id', 'PhotoId', 'Gender', 'EyeColor', 'HasBeard', 'HasGlasses', 'HasSmile', 'Age', 'UpdateDate', 'UpdatedByUser');
+		$allowed_columns_array['PhotoAttributes'] 	= array('Id', 'PhotoId', 'Gender', 'EyeColor', 'HasBeard', 'HasGlasses', 'HasSmile', 'Age', 'UpdateDate');
 	
 		$this->connection = new mysqli($this->servername, $this->username, $this->password, $this->dbname);
 		// Check connection
@@ -168,46 +165,9 @@ class DbWrapper {
 				$this->update_cell($tableName, $primaryKey, $primaryVal, "NumOfLikes",   $object->getNumOfLikes());
 				$this->update_cell($tableName, $primaryKey, $primaryVal, "IsValidPhoto", $object->getIsValidPhoto());
 				break;
-				
-			case "Attributes":
-				$photoId = $object->getPhotoId();
-				
-				$coloumnName = "Gender";
-				$value = $object->getGender();
-				execute("UPDATE PhotoAttributes SET " . $coloumnName . " = \"" . $value . "\" WHERE PhotoId = " . $photoId . " AND UpdatedByUser = false");
-				
-				$coloumnName = "EyeColor";
-				$value = $object->getEyeColor();
-				execute("UPDATE PhotoAttributes SET " . $coloumnName . " = \"" . $value . "\" WHERE PhotoId = " . $photoId . " AND UpdatedByUser = false");
-
-				$coloumnName = "HairColor";
-				$value = $object->getHairColor();
-				execute("UPDATE PhotoAttributes SET " . $coloumnName . " = \"" . $value . "\" WHERE PhotoId = " . $photoId . " AND UpdatedByUser = false");				
-				
-				$coloumnName = "HasBeard";
-				$value = $object->getHasBeard();
-				execute("UPDATE PhotoAttributes SET " . $coloumnName . " = \"" . $value . "\" WHERE PhotoId = " . $photoId . " AND UpdatedByUser = false");
-				
-				$coloumnName = "HasGlasses";
-				$value = $object->getHasGlasses();
-				execute("UPDATE PhotoAttributes SET " . $coloumnName . " = \"" . $value . "\" WHERE PhotoId = " . $photoId . " AND UpdatedByUser = false");				
-
-				$coloumnName = "HasSmile";
-				$value = $object->getHasSmile();
-				execute("UPDATE PhotoAttributes SET " . $coloumnName . " = \"" . $value . "\" WHERE PhotoId = " . $photoId . " AND UpdatedByUser = false");
-				
-				$coloumnName = "Age";
-				$value = $object->getAge();
-				execute("UPDATE PhotoAttributes SET " . $coloumnName . " = \"" . $value . "\" WHERE PhotoId = " . $photoId . " AND UpdatedByUser = false");
-
-				$coloumnName = "UpdateDate";
-				$value = $object->getUpdateDate();
-				execute("UPDATE PhotoAttributes SET " . $coloumnName . " = \"" . $value . "\" WHERE PhotoId = " . $photoId . " AND UpdatedByUser = false");
-				
-				break;
 		}
 	}
-	
+
 	public function getAllPhotos($Facebook_user) {
 		$id = $Facebook_user->FacebookId;
 		$photos = execute("SELECT * FROM Photos WHERE Photos.FacebookId = " . $id);
@@ -374,15 +334,12 @@ class DbWrapper {
 			case "Photos":
 				$string = $string . " (FacebookPhotoId, FacebookId, UpdateDate, PhotoLink, NumOfLikes, IsValidPhoto) VALUES ";
 				$string = $string . " (" . $object->getPhotoId() . ", " . $object->getUserID() . ", " . $object->getUpdateDate() . ", " .
-										$object->getPhotoLink() . ", " . $object->getNumOfLikes()  . ", " . getisValidPhoto() . ")";
+										$object->getPhotoLink . ", " . $object->getNumOfLikes  . ", " . getisValidPhoto() . ")";
 				break;
 			
-			case "Attributes":
-				$string = $string . " (PhotoId, Gender, EyeColor, HairColor, HasBeard, HasGlasses, HasSmile, Age, UpdateDate, UpdatedByUser) VALUES ";
-				$string = $string . " (" . $object->getPhotoId() . ", " . $object->getGender() . ", " . $object->getEyeColor() . ", " .
-										$object->getHairColor() . ", " . $object->getHasBeard()  . ", " . getHasGlasses() . ", " .
-										$object->getHasSmile() . ", " . $object->getAge() . ", " $object->getUpdateDate() . ", " $object->getUpdatedByUsed() . ")";
-				break;
+			//case "PhotoAttributes":
+				//$string = $string . " (Id, PhotoId, Gender, EyeColor, HairColor, HasBeard, HasGlasses, HasSmile, Age, UpdateDate) VALUES ";
+				//break;
 		}
 		
 		$this->execute($string);
@@ -398,9 +355,9 @@ class DbWrapper {
 		//		    SELECT `FacebookPhotoId` FROM `photos` GROUP BY `FacebookPhotoId` HAVING count(*) > 1
 		//			))AS `tbltmp`)
 
-		$sqlFindDup = ' SELECT `Id` FROM `photos` WHERE `FacebookPhotoId` IN (
-						SELECT `FacebookPhotoId` FROM `photos` GROUP BY `FacebookPhotoId` HAVING count(*) > 1
-						)';
+		$sqlFindDup = 'SELECT `Id` FROM `photos` WHERE `FacebookPhotoId` IN (
+    SELECT `FacebookPhotoId` FROM `photos` GROUP BY `FacebookPhotoId` HAVING count(*) > 1
+	)';
 
 		$sqlSetDupZero ="UPDATE `photos`
 				SET `IsValidPhoto` = 0
@@ -421,6 +378,7 @@ class DbWrapper {
 			$this->execute($sqladdDupNoPic);
 		}
 	}
+
 	#endregion Methods (public)
 	
 }

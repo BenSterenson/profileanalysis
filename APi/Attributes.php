@@ -2,6 +2,7 @@
 
 class Attributes implements JsonSerializable {
 
+	#region Fields
     private $PhotoId; //photoId;
     private $Gender; //female/male;
     private $EyeColor; // RGB hex color value
@@ -12,6 +13,7 @@ class Attributes implements JsonSerializable {
     private $Age;
     private $UpdateDate; //date of api check
 	private $UpdatedByUser;
+	#endregion Fields
 	
 	#region Setters
 	function setPhotoId($PhotoId) {
@@ -78,8 +80,11 @@ class Attributes implements JsonSerializable {
 		return $this->UpdatedByUser;
 	}
 	#endregion Getters
+	
+	#region Methods
 	public function jsonSerialize() {
         return Array(
+		   'PhotoId'		=> $this->PhotoId + 0,
            'Gender'			=> $this->Gender,
            'EyeColor'  		=> $this->EyeColor,
            'HairColor' 		=> $this->HairColor,
@@ -104,7 +109,6 @@ class Attributes implements JsonSerializable {
         Update Date : " . $this->UpdateDate . " <br>
         Updated By User : " . $this->UpdatedByUser . " <br>";
     } 
+	#endregion Methods
 }
-
-
 ?>

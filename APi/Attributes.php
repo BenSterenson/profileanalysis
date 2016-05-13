@@ -1,7 +1,8 @@
 <?php
 
 class Attributes implements JsonSerializable {
-    
+
+    private $PhotoId; //photoId;
     private $Gender; //female/male;
     private $EyeColor; // RGB hex color value
     private $HairColor; // RGB hex color value
@@ -13,6 +14,9 @@ class Attributes implements JsonSerializable {
 	private $UpdatedByUser;
 	
 	#region Setters
+	function setPhotoId($PhotoId) {
+		$this->PhotoId = $PhotoId;
+	}
 	function setGender($Gender) {
 		$this->Gender = $Gender;
 	}
@@ -43,6 +47,9 @@ class Attributes implements JsonSerializable {
 	#endregion Setters
 
 	#region Getters
+	function getPhotoId() {
+		return $this->PhotoId;
+	}
 	function getGender() {
 		return $this->FacebookId;
 	}
@@ -86,7 +93,8 @@ class Attributes implements JsonSerializable {
     }
 	
 	function __toString() { 
-        return "Gender : " . $this->Gender . " <br>
+        return "PhotoId : " . $this->PhotoId . " <br>
+        Gender : " . $this->Gender . " <br>
         Eye Color : " . $this->EyeColor . " <br>
         Hair Color : " . $this->HairColor . " <br>
         Has Beard : " . $this->HasBeard . " <br>

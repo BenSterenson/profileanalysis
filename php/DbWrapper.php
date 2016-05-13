@@ -365,7 +365,7 @@ class DbWrapper {
 
 		$this->execute($sqlSetDupZero);
 	}
-	
+
 	public function addDupToNoProfilePic() {
 		// add duplicatetd FacebookPhotoId to noprofilepic
 		$sqlFindDup = 'SELECT `FacebookPhotoId`, COUNT(*) `c` FROM `photos` GROUP BY `FacebookPhotoId` HAVING c > 1';

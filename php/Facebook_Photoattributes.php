@@ -4,8 +4,8 @@ include 'DbWrapper.php';
 include("../APi/api.php");
 
 
-$startAttId = 1;
-$endAttId = 4;
+$startAttId = 14;
+$endAttId = 17;
 
 
 function get_tiny_url($url)  {  
@@ -23,15 +23,25 @@ function get_tiny_url($url)  {
 function update_attributes($id) {
 	// connect to DB 
 	$dbWrapper = new DbWrapper();
-	$getUrlQuery = 'SELECT `PhotoLink` FROM `photos` WHERE `Id` = '. $id;
-	echo $getUrlQuery."<br>";
+	//$getUrlQuery = 'SELECT `FacebookPhotoId`, `PhotoLink` FROM `photos` WHERE `Id` = '. $id;
+	$getUrlQuery = "SELECT `PhotoLink` FROM `photos` AS a
+					WHERE NOT EXISTS(SELECT *
+					FROM noprofilepic AS b WHERE a.FacebookPhotoId = b.FakePhotoId)
+					AND `Id` = $id";
+	
 	// run Query
+	echo "$getUrlQuery <br>";
 	$result = $dbWrapper->execute($getUrlQuery);
+
+	if ($result->num_rows == 0) {
+		//no profile pic
+		return;
+	}
+
 	$row = ($result->fetch_assoc());
 	$picUrl = $row['PhotoLink']; // extracted link
 
 	$picUrl = get_tiny_url($picUrl);
-	//$picUrl = 'http://www.math.tau.ac.il/~milo/design/images/tova11.jpg';
 	echo "pic url: ".$picUrl. "<br>";
 	chdir('../APi/');
 
@@ -39,22 +49,17 @@ function update_attributes($id) {
 	$api = new betaFaceApi();
 	$face = $api->get_Image_attributes($picUrl);
 	echo $api->image_Attributes ."<br>";
+	$setIsValidPhoto = 0;
 
-	if($face == -1) {
-		// no face found set to 0 IsValidPhoto
-		echo "no face";
-		$updateQuery = 'UPDATE `photos` SET `IsValidPhoto` = 0 WHERE `Id` = '. $id;
-		echo $updateQuery."<br>";
-		$result = $dbWrapper->execute($updateQuery);
-		return;
+	if($face != -1) {
+		// face found
+		$setIsValidPhoto = 1;
+		//$dbWrapper->insert($api->image_Attributes);
 	}
 
-	$dbWrapper->update($api->image_Attributes);
-
-	$updateQuery = 'UPDATE `photos` SET `IsValidPhoto` = 1 WHERE `Id` = '. $id;
-	echo $updateQuery."<br>";
-	$result = $dbWrapper->execute($updateQuery);
-	
+	$updateQuery = "UPDATE `photos` SET `IsValidPhoto` = $setIsValidPhoto WHERE `Id` = $id";
+	echo "$updateQuery<br>";
+	//$result = $dbWrapper->execute($updateQuery);
 	return;
 } 
 
@@ -64,6 +69,7 @@ function update_all_pictures() {
 	GLOBAL $endAttId;
 
 	for ($i = $startAttId; $i <= $endAttId; $i++) {
+		echo "id : $i <br>";
 	    update_attributes($i);
 	}
 

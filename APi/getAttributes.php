@@ -1,7 +1,7 @@
 <?php
 include("api.php");
 
-$api = new betaFaceApi();
+$api = new betaFaceApi(1);
 
 
 /*Add here the image url*/

@@ -46,7 +46,7 @@ function update_attributes($id) {
 	chdir('../APi/');
 
 	// run in betaface
-	$api = new betaFaceApi();
+	$api = new betaFaceApi($id);
 	$face = $api->get_Image_attributes($picUrl);
 	echo $api->image_Attributes ."<br>";
 	$setIsValidPhoto = 0;

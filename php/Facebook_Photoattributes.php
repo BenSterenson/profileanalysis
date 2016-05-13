@@ -54,12 +54,12 @@ function insert_attributes($id) {
 	if($face != -1) {
 		// face found
 		$setIsValidPhoto = 1;
-		//$dbWrapper->insert($api->image_Attributes);
+		$dbWrapper->insert($api->image_Attributes);
 	}
 
 	$updateQuery = "UPDATE `photos` SET `IsValidPhoto` = $setIsValidPhoto WHERE `Id` = $id";
 	echo "$updateQuery<br>";
-	//$result = $dbWrapper->execute($updateQuery);
+	$result = $dbWrapper->execute($updateQuery);
 	return;
 } 
 

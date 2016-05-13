@@ -59,13 +59,13 @@ class Attributes implements JsonSerializable {
 		return $this->PhotoId;
 	}
 	function getGender() {
-		return $this->FacebookId;
+		return $this->Gender;
 	}
 	function getEyeColor() {
-		return $this->FirstName;
+		return $this->EyeColor;
 	}
 	function getHairColor() {
-		return $this->LastName;
+		return $this->HairColor;
 	}
 	function getHasBeard() {
 		return $this->HasBeard;

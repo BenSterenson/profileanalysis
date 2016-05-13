@@ -22,23 +22,23 @@ class betaFaceApi
     var $image_Attributes;
     var $log_level = -1;
     
-    function _betaFaceApi($api_key,$api_secret,$api_url,$poll_interval)
+    function _betaFaceApi($api_key,$api_secret,$api_url,$poll_interval,$PhotoId)
     {
         $this->api_key = $api_key;
         $this->api_secret= $api_secret;
         $this->api_url = $api_url;
         $this->poll_interval = $poll_interval;
-        $this->image_Attributes = new Attributes();
+        $this->image_Attributes = new Attributes($PhotoId);
        
     }
     
-    function betaFaceApi()
+    function betaFaceApi($PhotoId)
     {
         $this->api_key = DEFAULT_API_KEY;
         $this->api_secret= DEFAULT_API_SECRET;
         $this->api_url = DEFAULT_API_URL;
         $this->poll_interval = DEFAULT_POLL_INTERVAL; 
-        $this->image_Attributes = new Attributes();
+        $this->image_Attributes = new Attributes($PhotoId);
         return true;
     }    
 

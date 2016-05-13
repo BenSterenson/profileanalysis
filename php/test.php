@@ -15,7 +15,8 @@ echo $foo;
 
 //## test 2 ###
 $dbWrapper = new DbWrapper();
-$dbWrapper->addDupToNoProfilePic();
+//$dbWrapper->addDupToNoProfilePic();
+$dbWrapper->desableDupPhotos();
 //## end test 2 ###
 
 ?> 

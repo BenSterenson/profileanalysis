@@ -345,19 +345,29 @@ class DbWrapper {
 	}
 
 	public function desableDupPhotos() {
-		// finds all users with same FacebookPhotoId
+		// finds all users with same FacebookPhotoId and set IsValidPhoto to 0
+		//		UPDATE `photos`
+		//		SET `IsValidPhoto` = 0
+		//		WHERE `Id` IN (
+		//			SELECT `Id` FROM (
+		//		    SELECT `Id` FROM `photos` WHERE `FacebookPhotoId` IN (
+		//		    SELECT `FacebookPhotoId` FROM `photos` GROUP BY `FacebookPhotoId` HAVING count(*) > 1
+		//			))AS `tbltmp`)
 
-		$sqlFindDup = 'SELECT * FROM `photos` WHERE `FacebookPhotoId` IN (
+		$sqlFindDup = 'SELECT `Id` FROM `photos` WHERE `FacebookPhotoId` IN (
     SELECT `FacebookPhotoId` FROM `photos` GROUP BY `FacebookPhotoId` HAVING count(*) > 1
 	)';
 
-		$result = $this->execute(sqlFindDup);
-		$row = ($result->fetch_assoc());
-		$FacebookPhotoId = $row['FacebookPhotoId'];
+		$sqlSetDupZero ="UPDATE `photos`
+				SET `IsValidPhoto` = 0
+				WHERE `Id` IN (
+					SELECT `Id` FROM ($sqlFindDup)AS `tbltmp`)";
 
+		$this->execute($sqlSetDupZero);
 	}
+	
 	public function addDupToNoProfilePic() {
-
+		// add duplicatetd FacebookPhotoId to noprofilepic
 		$sqlFindDup = 'SELECT `FacebookPhotoId`, COUNT(*) `c` FROM `photos` GROUP BY `FacebookPhotoId` HAVING c > 1';
 		$result = $this->execute($sqlFindDup);
 		while ($row = ($result->fetch_assoc())) {

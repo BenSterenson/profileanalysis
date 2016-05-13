@@ -13,6 +13,11 @@ class Attributes implements JsonSerializable {
     private $UpdateDate; //date of api check
 	private $UpdatedByUser;
 	
+
+	public function __construct($PhotoId) {
+	    $this->PhotoId = $PhotoId;
+	}
+	
 	#region Setters
 	function setPhotoId($PhotoId) {
 		$this->PhotoId = $PhotoId;

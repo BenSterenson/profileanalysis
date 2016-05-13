@@ -1,6 +1,6 @@
 <?php
 
-class Attributes {
+class Attributes implements JsonSerializable {
     
     private $Gender; //female/male;
     private $EyeColor; // RGB hex color value
@@ -71,6 +71,19 @@ class Attributes {
 		return $this->UpdatedByUser;
 	}
 	#endregion Getters
+	public function jsonSerialize() {
+        return Array(
+           'Gender'			=> $this->Gender,
+           'EyeColor'  		=> $this->EyeColor,
+           'HairColor' 		=> $this->HairColor,
+		   'HasBeard' 		=> $this->HasBeard,
+		   'HasGlasses' 	=> $this->HasGlasses,
+		   'HasSmile' 		=> $this->HasSmile,
+		   'Age' 			=> $this->Age + 0,
+		   'UpdateDate' 	=> $this->UpdateDate + 0,
+		   'UpdatedByUser' 	=> $this->UpdatedByUser
+        );
+    }
 	
 	function __toString() { 
         return "Gender : " . $this->Gender . " <br>

@@ -10,6 +10,7 @@ CREATE TABLE PhotoAttributes (
     HasSmile bool NOT NULL,
     Age int NOT NULL,
     UpdateDate date NOT NULL,
+    UpdatedByUser bool NOT NULL, 
     CONSTRAINT PhotoAttributes_pk PRIMARY KEY (Id)
 );
 

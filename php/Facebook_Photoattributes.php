@@ -20,7 +20,7 @@ function get_tiny_url($url)  {
 }
 
 
-function update_attributes($id) {
+function insert_attributes($id) {
 	// connect to DB 
 	$dbWrapper = new DbWrapper();
 	//$getUrlQuery = 'SELECT `FacebookPhotoId`, `PhotoLink` FROM `photos` WHERE `Id` = '. $id;
@@ -63,17 +63,17 @@ function update_attributes($id) {
 	return;
 } 
 
-function update_all_pictures() {
+function insert_att_all_photo() {
 
 	GLOBAL $startAttId;
 	GLOBAL $endAttId;
 
 	for ($i = $startAttId; $i <= $endAttId; $i++) {
 		echo "id : $i <br>";
-	    update_attributes($i);
+	    insert_attributes($i);
 	}
 
 } 
 
-update_all_pictures();
+insert_att_all_photo();
 ?> 

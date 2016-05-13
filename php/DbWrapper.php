@@ -361,36 +361,36 @@ class DbWrapper {
 		return json_encode($rows, JSON_NUMERIC_CHECK );
 		#endregion else
 	}
-
+	
 	public function insert($object) {
 	
 		switch (get_class($object)) {
 			case "Users":
 				$string = "INSERT INTO Users ";
 				$string = $string . " (FacebookId, FirstName, LastName) VALUES ";
-				$string = $string . " (" . $object->getUserID() . ", " . $object->getFirstName() . ", " . $object->getLastName() . ")";
+				$string = $string . " (" . $object->getUserID() . ", '" . $object->getFirstName() . "', '" . $object->getLastName() . "')";
 				break;
 				
 			case "Photos":
 				$string = "INSERT INTO Photos ";
 				$string = $string . " (FacebookPhotoId, FacebookId, UpdateDate, PhotoLink, NumOfLikes, IsValidPhoto) VALUES ";
-				$string = $string . " (" . $object->getPhotoId() . ", " . $object->getUserID() . ", " . $object->getUpdateDate() . ", " .
-										$object->getPhotoLink() . ", " . $object->getNumOfLikes()  . ", " . getisValidPhoto() . ")";
+				$string = $string . " (" . $object->getPhotoId() . ", " . $object->getUserID() . ", '" . $object->getUpdateDate() . "', '" .
+										$object->getPhotoLink() . "', " . $object->getNumOfLikes()  . ", " . getisValidPhoto() . ")";
 				break;
 			
 			case "Attributes":
 				$string = "INSERT INTO PhotoAttributes ";
 				$string = $string . " (PhotoId, Gender, EyeColor, HairColor, HasBeard, HasGlasses, HasSmile, Age, UpdateDate, UpdatedByUser) VALUES ";
-				$string = $string . " (" . $object->getPhotoId() . ", " . $object->getGender() . ", " . $object->getEyeColor() . ", " .
-										$object->getHairColor() . ", " . $object->getHasBeard()  . ", " . $object->getHasGlasses() . ", " .
-										$object->getHasSmile() . ", " . $object->getAge() . ", " . $object->getUpdateDate() . ", " . $object->getUpdatedByUser() . ")";
+				$string = $string . " (" . $object->getPhotoId() . ", " . $object->getGender() . ", '" . $object->getEyeColor() . "', '" .
+										$object->getHairColor() . "', " . $object->getHasBeard()  . ", " . $object->getHasGlasses() . ", " .
+										$object->getHasSmile() . ", " . $object->getAge() . ", '" . $object->getUpdateDate() . "', " . $object->getUpdatedByUser() . ")";
 
 				break;
 		}
-		
+		echo $string;
 		$this->execute($string);
 	}
-
+	
 	public function desableDupPhotos() {
 		// finds all users with same FacebookPhotoId and set IsValidPhoto to 0
 		//		UPDATE `photos`

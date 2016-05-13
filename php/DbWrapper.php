@@ -29,7 +29,7 @@
 #endregion Comments
 //include 'Facebook_user.php';
 include 'Facebook_photo.php';
-include("../APi/Attributes.php");
+//include("../APi/Attributes.php");
 
 class DbWrapper {
 	
@@ -380,8 +380,9 @@ class DbWrapper {
 			case "Attributes":
 				$string = $string . " (PhotoId, Gender, EyeColor, HairColor, HasBeard, HasGlasses, HasSmile, Age, UpdateDate, UpdatedByUser) VALUES ";
 				$string = $string . " (" . $object->getPhotoId() . ", " . $object->getGender() . ", " . $object->getEyeColor() . ", " .
-										$object->getHairColor() . ", " . $object->getHasBeard()  . ", " . getHasGlasses() . ", " .
-										$object->getHasSmile() . ", " . $object->getAge() . ", " $object->getUpdateDate() . ", " $object->getUpdatedByUsed() . ")";
+										$object->getHairColor() . ", " . $object->getHasBeard()  . ", " . $object->getHasGlasses() . ", " .
+										$object->getHasSmile() . ", " . $object->getAge() . ", " . $object->getUpdateDate() . ", " . $object->getUpdatedByUsed() . ")";
+
 				break;
 		}
 		

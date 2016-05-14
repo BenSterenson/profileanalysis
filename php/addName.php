@@ -7,22 +7,9 @@ function extract_html($FacebookPhotoId) {
 	return $html;
 }
 function extract_name($html) {
-	$data = "";
-	if(preg_match('#<title id="pageTitle">(.+?)</title>#i',$html, $matches)) {
-		$data = $matches[1];
-	
-		if(strcmp($data,'Page not found | Facebook') == 0){
-			return "";
-		}
-		$data = explode(" - ", $data, 2);
-		$data = $data[1];
-		$data = preg_replace('/ added.*/', '', $data);
-		$data = preg_replace('/ updated.*/', '', $data);
-		$data = preg_replace('/ \|.*/', '', $data);
-	}
-
-	echo "<br> ## name found: $data <br>";
-	return $data;
+	$name = '"ownername":';
+	$name = extract_tag($name ,$html);
+	return $name;
 }
 
 function extract_likes_num($html){

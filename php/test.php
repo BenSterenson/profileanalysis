@@ -2,7 +2,7 @@
 include "dbWrapper.php";
 
 
-//## test 1 ###
+/*//## test 1 ###
 //retrieve user from sql and update first name last name by sending num:
 // 0 - dont update retrieve from database
 // 1 - update scrape facebook
@@ -24,4 +24,14 @@ echo "test color identification";
 $res=$dbWrapper->ColorNUMtoTXT(0xf7e92a);
 echo $res;
 //## end test 2 ###
+
+*/
+$uid = 502424842;
+$first_name = 'Omri';
+$last_name = 'Zimbler';
+$user = new Facebook_user($uid, $first_name, $last_name);
+echo $user;
+$dbWrapper = new DbWrapper();
+$dbWrapper->update($user);
+
 ?> 

@@ -25,6 +25,9 @@ function extract_tag($tag, $html){
 		if(strcmp($tag,'"name":') == 0){
 			$data = substr($matches[1],1,-1);
 		}
+		if(strcmp($tag,'"ownername":') == 0){
+			$data = substr($matches[1],1,-1);
+		}
 	}
 	return $data;
 }
@@ -107,13 +110,13 @@ class Facebook_user implements JsonSerializable {
 	#endregion Setters
 
 	#region Getters
-	function getUserID() {
+	public function getUserID() {
 		return $this->FacebookId;
 	}
-	function getFirstName() {
+	public function getFirstName() {
 		return $this->FirstName;
 	}
-	function getLastName() {
+	public function getLastName() {
 		return $this->LastName;
 	}
 	#endregion Getters
@@ -149,7 +152,7 @@ class Facebook_user implements JsonSerializable {
 	
 	//############### print ###############//
     function __toString() { 
-        return "FacebookId : " . $this->FacebookId . " <br>First Name : " . $this->FirstName . " <br>Last Name : " . $this->LastName; 
+        return "FacebookId : " . $this->FacebookId . " <br>First Name : " . $this->FirstName . " <br>Last Name : " . $this->LastName . "<br>"; 
     } 
 	#endregion Methods
 } 

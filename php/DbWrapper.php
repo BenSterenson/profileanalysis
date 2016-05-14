@@ -46,11 +46,11 @@ class DbWrapper {
 	
 	#region Constructors
 	public function __construct() {
-		$allowed_tables_array						= array('Users', 'Photos', 'PhotoAttributes');
-		$allowed_columns_array['Users']				= array('FacebookId', 'FirstName', 'LastName');
-		$allowed_columns_array['Photos'] 			= array('Id', 'FacebookPhotoId', 'FacebookId','UpdateDate', 'PhotoLink', 'NumOfLikes', 'IsValidPhoto');
-		$allowed_columns_array['PhotoAttributes'] 	= array('Id', 'PhotoId', 'Gender', 'EyeColor', 'HasBeard', 'HasGlasses', 'HasSmile', 'Age', 'UpdateDate', 'UpdatedByUser');
-	
+		$this->allowed_tables_array						= array('Users', 'Photos', 'PhotoAttributes');
+		$this->allowed_columns_array['Users']				= array('FacebookId', 'FirstName', 'LastName');
+		$this->allowed_columns_array['Photos'] 			= array('Id', 'FacebookPhotoId', 'FacebookId','UpdateDate', 'PhotoLink', 'NumOfLikes', 'IsValidPhoto');
+		$this->allowed_columns_array['PhotoAttributes'] 	= array('Id', 'PhotoId', 'Gender', 'EyeColor', 'HasBeard', 'HasGlasses', 'HasSmile', 'Age', 'UpdateDate', 'UpdatedByUser');
+		
 		$this->connection = new mysqli($this->servername, $this->username, $this->password, $this->dbname);
 		// Check connection
 		if ($this->connection->connect_error) {
@@ -70,21 +70,22 @@ class DbWrapper {
 		{
 			$string = "UPDATE " . $tableName . " SET " . $coloumnName . " = \"" . $value . "\"";
 			echo "<br>trying to execute: " . $string . "<br>";
-			execute($string);
+			$this->execute($string);
 			return;
 		}
 	}
 	
 	private function update_cell($tableName, $keyCol, $keyValue, $coloumnName, $value) {
 		if(in_array($tableName, $this->allowed_tables_array) &&
-			in_array($keyCol, $allowed_columns_array[$tableName]) &&
-			in_array($coloumnName, $allowed_columns_array[$tableName]))
+			in_array($keyCol, $this->allowed_columns_array[$tableName]) &&
+			in_array($coloumnName, $this->allowed_columns_array[$tableName]))
 		{
 			$string = "UPDATE " . $tableName . " SET " . $coloumnName . " = \"" . $value . "\" WHERE " . $keyCol . " = \"" . $keyValue . "\"" ;
 			echo "<br>trying to execute: " . $string . "<br>";	
-			execute($string);
+			$this->execute($string);
 			return;
 		}
+		echo "<br> failed to UPDATE <br>";
 	}
 	#endregion Methods (private)
 	
@@ -152,7 +153,6 @@ class DbWrapper {
 				$tableName  = "Users";
 				$primaryKey = "FacebookId";
 				$primaryVal = $object->getUserID();
-				
 				$this->update_cell($tableName, $primaryKey, $primaryVal, "FirstName", $object->getFirstName());
 				$this->update_cell($tableName, $primaryKey, $primaryVal, "LastName",  $object->getLastName());
 				break;

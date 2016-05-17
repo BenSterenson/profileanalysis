@@ -365,20 +365,20 @@ class DbWrapper {
 	public function insert($object) {
 	
 		switch (get_class($object)) {
-			case "users":
+			case "Users":
 				$string = "INSERT INTO users ";
 				$string = $string . " (FacebookId, FirstName, LastName) VALUES ";
 				$string = $string . " (" . $object->getUserID() . ", '" . $object->getFirstName() . "', '" . $object->getLastName() . "')";
 				break;
 				
-			case "photos":
+			case "Photos":
 				$string = "INSERT INTO photos ";
 				$string = $string . " (FacebookPhotoId, FacebookId, UpdateDate, PhotoLink, NumOfLikes, IsValidPhoto) VALUES ";
 				$string = $string . " (" . $object->getPhotoId() . ", " . $object->getUserID() . ", '" . $object->getUpdateDate() . "', '" .
 										$object->getPhotoLink() . "', " . $object->getNumOfLikes()  . ", " . getisValidPhoto() . ")";
 				break;
 			
-			case "attributes":
+			case "Attributes":
 				$string = "INSERT INTO photoattributes ";
 				$string = $string . " (PhotoId, Gender, EyeColor, HairColor, HasBeard, HasGlasses, HasSmile, Age, UpdateDate, UpdatedByUser) VALUES ";
 				$string = $string . " (" . $object->getPhotoId() . ", " . $object->getGender() . ", '" . $object->getEyeColor() . "', '" .

@@ -5,7 +5,7 @@ include("../APi/api.php");
 
 
 $startAttId = 2;
-$endAttId = 10;
+$endAttId = 2;
 
 
 function get_tiny_url($url)  {  

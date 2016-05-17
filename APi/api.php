@@ -319,7 +319,12 @@ class betaFaceApi
                     $this->image_Attributes->setAge($value);
                     break;
                 case "gender":
-                    $this->image_Attributes->setGender($value);
+					if (strcmp(strtolower($value), "male") == 0) {
+						$this->image_Attributes->setGender(true);
+					}
+					else {
+						$this->image_Attributes->setGender(false);
+					}
                     break;
                 case "color hair":
                     $this->image_Attributes->setHairColor($value);
@@ -334,7 +339,12 @@ class betaFaceApi
                         $this->image_Attributes->setHasGlasses(convertTextToBool($value));
                     break;
                 case "expression":
-                    $this->image_Attributes->setHasSmile($value);
+					if (strcmp(strtolower($value), "smile") == 0) {
+						$this->image_Attributes->setHasSmile(true);
+					}
+					else {
+						$this->image_Attributes->setHasSmile(false);
+					}
                     break;
             }
          

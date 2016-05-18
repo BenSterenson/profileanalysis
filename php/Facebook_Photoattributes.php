@@ -5,7 +5,7 @@ include("../APi/api.php");
 
 
 $startAttId = 2;
-$endAttId = 2;
+$endAttId = 11;
 
 
 function get_tiny_url($url)  {  
@@ -23,14 +23,13 @@ function get_tiny_url($url)  {
 function insert_attributes($id) {
 	// connect to DB 
 	$dbWrapper = new DbWrapper();
-	//$getUrlQuery = 'SELECT `FacebookPhotoId`, `PhotoLink` FROM `photos` WHERE `Id` = '. $id;
-	$getUrlQuery = "SELECT `PhotoLink` FROM `photos` AS a
+	//$getUrlQuery = 'SELECT `FacebookPhotoId`, `PhotoLink` FROM `Photos` WHERE `Id` = '. $id;
+	$getUrlQuery = "SELECT `PhotoLink` FROM `Photos` AS a
 					WHERE NOT EXISTS(SELECT *
-					FROM noprofilepic AS b WHERE a.FacebookPhotoId = b.FakePhotoId)
+					FROM NoProfilePic AS b WHERE a.FacebookPhotoId = b.FakePhotoId)
 					AND `Id` = $id";
-	
 	// run Query
-	echo "$getUrlQuery <br>";
+	echo "<br> $getUrlQuery <br>";
 	$result = $dbWrapper->execute($getUrlQuery);
 
 	if ($result->num_rows == 0) {
@@ -48,17 +47,18 @@ function insert_attributes($id) {
 	// run in betaface
 	$api = new betaFaceApi($id);
 	$face = $api->get_Image_attributes($picUrl);
-	echo $api->image_Attributes ."<br>";
+	echo $api->image_Attributes;
 	$setIsValidPhoto = 0;
-
+	echo $face." <br>";
 	if($face != -1) {
+		echo "face found!!!! <br>";
 		// face found
 		$setIsValidPhoto = 1;
 		$dbWrapper->insert($api->image_Attributes);
 	}
 
-	$updateQuery = "UPDATE `photos` SET `IsValidPhoto` = $setIsValidPhoto WHERE `Id` = $id";
-	echo "$updateQuery<br>";
+	$updateQuery = "UPDATE `Photos` SET `IsValidPhoto` = $setIsValidPhoto WHERE `Id` = $id";
+	echo "$updateQuery <br>";
 	$result = $dbWrapper->execute($updateQuery);
 	return;
 } 

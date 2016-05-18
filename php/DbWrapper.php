@@ -46,10 +46,10 @@ class DbWrapper {
 	
 	#region Constructors
 	public function __construct() {
-		$this->allowed_tables_array						= array('users', 'photos', 'photoattributes');
-		$this->allowed_columns_array['users']				= array('FacebookId', 'FirstName', 'LastName');
-		$this->allowed_columns_array['photos'] 			= array('Id', 'FacebookPhotoId', 'FacebookId','UpdateDate', 'PhotoLink', 'NumOfLikes', 'IsValidPhoto');
-		$this->allowed_columns_array['photoattributes'] 	= array('Id', 'PhotoId', 'Gender', 'EyeColor', 'HasBeard', 'HasGlasses', 'HasSmile', 'Age', 'UpdateDate', 'UpdatedByUser');
+		$this->allowed_tables_array						= array('Users', 'Photos', 'PhotoAttributes');
+		$this->allowed_columns_array['Users']				= array('FacebookId', 'FirstName', 'LastName');
+		$this->allowed_columns_array['Photos'] 			= array('Id', 'FacebookPhotoId', 'FacebookId','UpdateDate', 'PhotoLink', 'NumOfLikes', 'IsValidPhoto');
+		$this->allowed_columns_array['PhotoAttributes'] 	= array('Id', 'PhotoId', 'Gender', 'EyeColor', 'HasBeard', 'HasGlasses', 'HasSmile', 'Age', 'UpdateDate', 'UpdatedByUser');
 		
 		$this->connection = new mysqli($this->servername, $this->username, $this->password, $this->dbname);
 		// Check connection
@@ -150,7 +150,7 @@ class DbWrapper {
 		switch (get_class($object))
 		{
 			case "Facebook_user":
-				$tableName  = "users";
+				$tableName  = "Users";
 				$primaryKey = "FacebookId";
 				$primaryVal = $object->getUserID();
 				$this->update_cell($tableName, $primaryKey, $primaryVal, "FirstName", $object->getFirstName());
@@ -158,7 +158,7 @@ class DbWrapper {
 				break;
 				
 			case "Facebook_photo":
-				$tableName  = "photos";
+				$tableName  = "Photos";
 				$primaryKey = "FacebookPhotoId";
 				$primaryVal = $object->getPhotoId();
 				
@@ -174,35 +174,35 @@ class DbWrapper {
 				
 				$coloumnName = "Gender";
 				$value = $object->getGender();
-				execute("UPDATE photoattributes SET " . $coloumnName . " = \"" . $value . "\" WHERE PhotoId = " . $photoId . " AND UpdatedByUser = false");
+				execute("UPDATE PhotoAttributes SET " . $coloumnName . " = \"" . $value . "\" WHERE PhotoId = " . $photoId . " AND UpdatedByUser = false");
 				
 				$coloumnName = "EyeColor";
 				$value = $object->getEyeColor();
-				execute("UPDATE photoattributes SET " . $coloumnName . " = \"" . $value . "\" WHERE PhotoId = " . $photoId . " AND UpdatedByUser = false");
+				execute("UPDATE PhotoAttributes SET " . $coloumnName . " = \"" . $value . "\" WHERE PhotoId = " . $photoId . " AND UpdatedByUser = false");
 
 				$coloumnName = "HairColor";
 				$value = $object->getHairColor();
-				execute("UPDATE photoattributes SET " . $coloumnName . " = \"" . $value . "\" WHERE PhotoId = " . $photoId . " AND UpdatedByUser = false");				
+				execute("UPDATE PhotoAttributes SET " . $coloumnName . " = \"" . $value . "\" WHERE PhotoId = " . $photoId . " AND UpdatedByUser = false");				
 				
 				$coloumnName = "HasBeard";
 				$value = $object->getHasBeard();
-				execute("UPDATE photoattributes SET " . $coloumnName . " = \"" . $value . "\" WHERE PhotoId = " . $photoId . " AND UpdatedByUser = false");
+				execute("UPDATE PhotoAttributes SET " . $coloumnName . " = \"" . $value . "\" WHERE PhotoId = " . $photoId . " AND UpdatedByUser = false");
 				
 				$coloumnName = "HasGlasses";
 				$value = $object->getHasGlasses();
-				execute("UPDATE photoattributes SET " . $coloumnName . " = \"" . $value . "\" WHERE PhotoId = " . $photoId . " AND UpdatedByUser = false");				
+				execute("UPDATE PhotoAttributes SET " . $coloumnName . " = \"" . $value . "\" WHERE PhotoId = " . $photoId . " AND UpdatedByUser = false");				
 
 				$coloumnName = "HasSmile";
 				$value = $object->getHasSmile();
-				execute("UPDATE photoattributes SET " . $coloumnName . " = \"" . $value . "\" WHERE PhotoId = " . $photoId . " AND UpdatedByUser = false");
+				execute("UPDATE PhotoAttributes SET " . $coloumnName . " = \"" . $value . "\" WHERE PhotoId = " . $photoId . " AND UpdatedByUser = false");
 				
 				$coloumnName = "Age";
 				$value = $object->getAge();
-				execute("UPDATE photoattributes SET " . $coloumnName . " = \"" . $value . "\" WHERE PhotoId = " . $photoId . " AND UpdatedByUser = false");
+				execute("UPDATE PhotoAttributes SET " . $coloumnName . " = \"" . $value . "\" WHERE PhotoId = " . $photoId . " AND UpdatedByUser = false");
 
 				$coloumnName = "UpdateDate";
 				$value = $object->getUpdateDate();
-				execute("UPDATE photoattributes SET " . $coloumnName . " = \"" . $value . "\" WHERE PhotoId = " . $photoId . " AND UpdatedByUser = false");
+				execute("UPDATE PhotoAttributes SET " . $coloumnName . " = \"" . $value . "\" WHERE PhotoId = " . $photoId . " AND UpdatedByUser = false");
 				
 				break;
 		}
@@ -210,7 +210,7 @@ class DbWrapper {
 	
 	public function getAllPhotos($Facebook_user) {
 		$id = $Facebook_user->FacebookId;
-		$photos = execute("SELECT * FROM photos WHERE Photos.FacebookId = " . $id);
+		$photos = execute("SELECT * FROM Photos WHERE Photos.FacebookId = " . $id);
 		
 		$photoArray = array();
 		while ($row = $photos->fetch_assoc()) {
@@ -222,8 +222,8 @@ class DbWrapper {
 	public function getLastPhoto($Facebook_user) {
 		$id = $Facebook_user->FacebookId;
 		$result = execute(	"SELECT * FROM " .
-								" (SELECT * FROM photos ORDER by photos.Id DESC) " .
-							" WHERE photos.FacebookId = " . $id .
+								" (SELECT * FROM Photos ORDER by Photos.Id DESC) " .
+							" WHERE Photos.FacebookId = " . $id .
 							" LIMIT 1 ");
 		
 		if ($result->num_rows > 0) {
@@ -243,7 +243,7 @@ class DbWrapper {
 			$myUser = new Facebook_user($FacebookId);
 			$myPhoto = new Facebook_photo($FacebookId);
 	
-			$personExist = $this->execute("SELECT * FROM users WHERE Users.FacebookId = " . $FacebookId);
+			$personExist = $this->execute("SELECT * FROM Users WHERE Users.FacebookId = " . $FacebookId);
 			
 			// user exists, only update and return
 			if ($personExist->num_rows > 0) {
@@ -281,30 +281,30 @@ class DbWrapper {
 		
 		#region else: filter by parameters
 		$string = " SELECT *
-					FROM users, photos, photoattributes
-					WHERE users.FacebookId = photos.FacebookId AND photos.FacebookPhotoId = photoattributes.PhotoId ";
+					FROM Users, Photos, PhotoAttributes
+					WHERE Users.FacebookId = photos.FacebookId AND photos.FacebookPhotoId = PhotoAttributes.PhotoId ";
 					
 		if ($FirstName != NULL) {
-			$string = $string . " AND users.FirstName = " . "\"" . $FirstName . "\"";
+			$string = $string . " AND Users.FirstName = " . "\"" . $FirstName . "\"";
 		}
 		if ($LastName != NULL) {
-			$string = $string . " AND users.LastName = " . "\"". $LastName . "\"";
+			$string = $string . " AND Users.LastName = " . "\"". $LastName . "\"";
 		}
 		
 		if ($PhotoUpdatedDateFROM != NULL) {
-			$string = $string . " AND photos.UpdateDate >= " . $PhotoUpdatedDateFROM;
+			$string = $string . " AND Photos.UpdateDate >= " . $PhotoUpdatedDateFROM;
 		}
 		
 		if ($PhotoUpdatedDateTO != NULL) {
-			$string = $string . " AND photos.UpdateDate <= " . $PhotoUpdatedDateTO;
+			$string = $string . " AND Photos.UpdateDate <= " . $PhotoUpdatedDateTO;
 		}
 		
 		if ($NumOfLikesFROM != NULL) {
-			$string = $string . " AND photos.NumOfLikes >= " . $NumOfLikesFROM;
+			$string = $string . " AND Photos.NumOfLikes >= " . $NumOfLikesFROM;
 		}
 		
 		if ($NumOfLikesTO != NULL) {
-			$string = $string . " AND photos.NumOfLikes <= " . $NumOfLikesTO;
+			$string = $string . " AND Photos.NumOfLikes <= " . $NumOfLikesTO;
 		}
 
 		if ($Gender != NULL) {
@@ -317,39 +317,39 @@ class DbWrapper {
 				$gender = true;
 				break;
 			}
-			$string = $string . " AND photoattributes.Gender = " . $gender;
+			$string = $string . " AND PhotoAttributes.Gender = " . $gender;
 		}
 		
 		if ($EyeColor != NULL) {
-			$string = $string . " AND photoattributes.EyeColor = " . "\"". $LastName . "\"";
+			$string = $string . " AND PhotoAttributes.EyeColor = " . "\"". $LastName . "\"";
 		}
 		
 		if ($HasBeard != NULL) {
-			$string = $string . " AND photoattributes.HasBeard = " . $HasBeard;	
+			$string = $string . " AND PhotoAttributes.HasBeard = " . $HasBeard;	
 		}
 		
 		if ($HasGlasses != NULL) {
-			$string = $string . " AND photoattributes.HasGlasses = " . $HasGlasses;
+			$string = $string . " AND PhotoAttributes.HasGlasses = " . $HasGlasses;
 		}
 		
 		if ($HasSmile != NULL) {
-			$string = $string . " AND photoattributes.HasSmile = " . $HasSmile;
+			$string = $string . " AND PhotoAttributes.HasSmile = " . $HasSmile;
 		}
 		
 		if ($AgeFROM != NULL) {
-			$string = $string . " AND photos.Age >= " . $AgeFROM;
+			$string = $string . " AND Photos.Age >= " . $AgeFROM;
 		}
 		
 		if ($AgeTO != NULL) {
-			$string = $string . " AND photos.Age <= " . $AgeTO;
+			$string = $string . " AND Photos.Age <= " . $AgeTO;
 		}
 		
 		if ($AttUpdateDateFROM != NULL) {
-			$string = $string . " AND photos.AttUpdateDate >= " . $AttUpdateDateFROM;
+			$string = $string . " AND Photos.AttUpdateDate >= " . $AttUpdateDateFROM;
 		}
 		
 		if ($AttUpdateDateTO != NULL) {
-			$string = $string . " AND photos.AttUpdateDate >= " . $AttUpdateDateTO;
+			$string = $string . " AND Photos.AttUpdateDate >= " . $AttUpdateDateTO;
 		}
 
 		$result = $this->execute($string);
@@ -366,20 +366,20 @@ class DbWrapper {
 	
 		switch (get_class($object)) {
 			case "Users":
-				$string = "INSERT INTO users ";
+				$string = "INSERT INTO Users ";
 				$string = $string . " (FacebookId, FirstName, LastName) VALUES ";
 				$string = $string . " (" . $object->getUserID() . ", '" . $object->getFirstName() . "', '" . $object->getLastName() . "')";
 				break;
 				
 			case "Photos":
-				$string = "INSERT INTO photos ";
+				$string = "INSERT INTO Photos ";
 				$string = $string . " (FacebookPhotoId, FacebookId, UpdateDate, PhotoLink, NumOfLikes, IsValidPhoto) VALUES ";
 				$string = $string . " (" . $object->getPhotoId() . ", " . $object->getUserID() . ", '" . $object->getUpdateDate() . "', '" .
 										$object->getPhotoLink() . "', " . $object->getNumOfLikes()  . ", " . getisValidPhoto() . ")";
 				break;
 			
 			case "Attributes":
-				$string = "INSERT INTO photoattributes ";
+				$string = "INSERT INTO PhotoAttributes ";
 				$string = $string . " (PhotoId, Gender, EyeColor, HairColor, HasBeard, HasGlasses, HasSmile, Age, UpdateDate, UpdatedByUser) VALUES ";
 				$string = $string . " (" . $object->getPhotoId() . ", " . $object->getGender() . ", '" . $object->getEyeColor() . "', '" .
 										$object->getHairColor() . "', " . $object->getHasBeard()  . ", " . $object->getHasGlasses() . ", " .
@@ -401,11 +401,11 @@ class DbWrapper {
 		//		    SELECT `FacebookPhotoId` FROM `photos` GROUP BY `FacebookPhotoId` HAVING count(*) > 1
 		//			))AS `tbltmp`)
 
-		$sqlFindDup = ' SELECT `Id` FROM `photos` WHERE `FacebookPhotoId` IN (
-						SELECT `FacebookPhotoId` FROM `photos` GROUP BY `FacebookPhotoId` HAVING count(*) > 1
+		$sqlFindDup = ' SELECT `Id` FROM `Photos` WHERE `FacebookPhotoId` IN (
+						SELECT `FacebookPhotoId` FROM `Photos` GROUP BY `FacebookPhotoId` HAVING count(*) > 1
 						)';
 
-		$sqlSetDupZero ="UPDATE `photos`
+		$sqlSetDupZero ="UPDATE `Photos`
 				SET `IsValidPhoto` = 0
 				WHERE `Id` IN (
 					SELECT `Id` FROM ($sqlFindDup)AS `tbltmp`)";
@@ -414,13 +414,13 @@ class DbWrapper {
 	}
 
 	public function addDupToNoProfilePic() {
-		// add duplicatetd FacebookPhotoId to noprofilepic
-		$sqlFindDup = 'SELECT `FacebookPhotoId`, COUNT(*) `c` FROM `photos` GROUP BY `FacebookPhotoId` HAVING c > 1';
+		// add duplicatetd FacebookPhotoId to NoProfilePic
+		$sqlFindDup = 'SELECT `FacebookPhotoId`, COUNT(*) `c` FROM `Photos` GROUP BY `FacebookPhotoId` HAVING c > 1';
 		$result = $this->execute($sqlFindDup);
 		while ($row = ($result->fetch_assoc())) {
 			$FacebookPhotoId = $row['FacebookPhotoId'];
-			echo "adding $FacebookPhotoId to noprofilepic <br>";
-			$sqladdDupNoPic = 'INSERT INTO `noprofilepic` (`FakePhotoId`) SELECT '. $FacebookPhotoId .' FROM dual WHERE NOT EXISTS (SELECT * FROM `noprofilepic` WHERE `FakePhotoId`= ' . $FacebookPhotoId .')';
+			echo "adding $FacebookPhotoId to NoProfilePic <br>";
+			$sqladdDupNoPic = 'INSERT INTO `NoProfilePic` (`FakePhotoId`) SELECT '. $FacebookPhotoId .' FROM dual WHERE NOT EXISTS (SELECT * FROM `NoProfilePic` WHERE `FakePhotoId`= ' . $FacebookPhotoId .')';
 			$this->execute($sqladdDupNoPic);
 		}
 	}

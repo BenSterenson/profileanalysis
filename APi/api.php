@@ -320,10 +320,10 @@ class betaFaceApi
                     break;
                 case "gender":
 					if (strcmp(strtolower($value), "male") == 0) {
-						$this->image_Attributes->setGender(true);
+						$this->image_Attributes->setGender(1);
 					}
 					else {
-						$this->image_Attributes->setGender(false);
+						$this->image_Attributes->setGender(0);
 					}
                     break;
                 case "color hair":
@@ -340,10 +340,10 @@ class betaFaceApi
                     break;
                 case "expression":
 					if (strcmp(strtolower($value), "smile") == 0) {
-						$this->image_Attributes->setHasSmile(true);
+						$this->image_Attributes->setHasSmile(1);
 					}
 					else {
-						$this->image_Attributes->setHasSmile(false);
+						$this->image_Attributes->setHasSmile(0);
 					}
                     break;
             }

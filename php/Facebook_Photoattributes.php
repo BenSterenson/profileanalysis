@@ -29,7 +29,7 @@ function insert_attributes($id) {
 					FROM NoProfilePic AS b WHERE a.FacebookPhotoId = b.FakePhotoId)
 					AND `Id` = $id";
 	// run Query
-	echo "<br> $getUrlQuery <br>";
+	echo "$getUrlQuery <br>";
 	$result = $dbWrapper->execute($getUrlQuery);
 
 	if ($result->num_rows == 0) {
@@ -58,7 +58,7 @@ function insert_attributes($id) {
 	}
 
 	$updateQuery = "UPDATE `Photos` SET `IsValidPhoto` = $setIsValidPhoto WHERE `Id` = $id";
-	echo "$updateQuery <br>";
+	echo "$updateQuery <br><br>";
 	$result = $dbWrapper->execute($updateQuery);
 	return;
 } 

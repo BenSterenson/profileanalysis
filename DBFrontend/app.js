@@ -29,13 +29,20 @@
       }
 
 	  $scope.successRun = "none";
+	  $scope.run = function(i,stop){
+		  $http.get('../php/api/addattributes/'+i).then(function successCallback(response) {
+			$scope.successRun = i;
+			if(i<=stop){
+				$scope.run(i+1,stop);
+			}
+		  },
+		  function errorCallback(response) {
+			$scope.successRun = i + " Error: " + response.statusText;
+		  });
+	  }
+	  
       $scope.runApi = function () {
-          var i;
-          for (i = $scope.from; i < $scope.to; i++) {
-              $http.get('../php/api/addattributes/'+i).then(function successCallback(response) {
-				$scope.successRun = i;
-			  });
-          }
+          $scope.run($scope.from,$scope.to);
           
       }
       // Load the data

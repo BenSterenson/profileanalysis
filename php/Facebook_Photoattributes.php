@@ -4,8 +4,8 @@ include 'DbWrapper.php';
 include("../APi/api.php");
 
 
-$startAttId = 2;
-$endAttId = 11;
+$startAttId = 101;
+$endAttId = 201;
 
 
 function get_tiny_url($url)  {  

@@ -4,8 +4,8 @@ include 'DbWrapper.php';
 include("../APi/api.php");
 
 
-$startAttId = 2;
-$endAttId = 11;
+$startAttId = 31;
+$endAttId = 100;
 
 
 function get_tiny_url($url)  {  
@@ -50,11 +50,14 @@ function insert_attributes($id) {
 	echo $api->image_Attributes;
 	$setIsValidPhoto = 0;
 	echo $face." <br>";
-	if($face != -1) {
+	if($face != -1 || $face != false) {
 		echo "face found!!!! <br>";
 		// face found
 		$setIsValidPhoto = 1;
 		$dbWrapper->insert($api->image_Attributes);
+	}
+	if($face == false){
+		echo "API call to upload image failed! : $id";
 	}
 
 	$updateQuery = "UPDATE `Photos` SET `IsValidPhoto` = $setIsValidPhoto WHERE `Id` = $id";
@@ -71,6 +74,10 @@ function insert_att_all_photo() {
 	for ($i = $startAttId; $i <= $endAttId; $i++) {
 		echo "id : $i <br>";
 	    insert_attributes($i);
+	    if ($id % 10 == 0){
+	    	echo "sleeping for 5 sec";
+	    	sleep(5);
+	    }
 	}
 
 } 

@@ -387,7 +387,7 @@ class DbWrapper {
 
 				break;
 		}
-		echo $string;
+		//echo $string;
 		$this->execute($string);
 	}
 	

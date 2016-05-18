@@ -10,14 +10,36 @@
       responsive: true
     });
   });
-
-  app.controller('MainCtrl', function ($scope) {
-
-      $scope.selectedUser = {};
-
-      $scope.editUser = function (user) {
-          $scope.selectedUser = user;
+  app.service('ChartService', function ($http) {
+      this.getEyeColors = function () {
+          return $http.get('api/geteyecolors');
       }
+  });
+    app.controller('MainCtrl', function ($scope,$http, ChartService) {
+
+      // Handle Facebook
+      $scope.loggedOnUser = {};
+      $scope.login = function (accessToken) {
+          FB.api('/me', function (response) {
+              $scope.loggedOnUser = response;
+              console.log(JSON.stringify(response));
+              $scope.$apply();
+          });
+          
+      }
+
+	  $scope.successRun = "none";
+      $scope.runApi = function () {
+          var i;
+          for (i = $scope.from; i < $scope.to; i++) {
+              $http.get('../php/api/addattributes/'+i).then(function successCallback(response) {
+				$scope.successRun = i;
+			  });
+          }
+          
+      }
+      // Load the data
+
 
     // Eye Color Data
     $scope.eyeColorData = [300, 500, 100, 200];
@@ -53,7 +75,11 @@
     $scope.glassesLabels = ['Yes', 'No'];
     $scope.glassesChartColors = ['#000099', '#33ccff'];
 
-   
+      // Has Beard
+    $scope.beardData = [100, 605];
+    $scope.beardLabels = ['Yes', 'No'];
+    $scope.beardChartColors = ['#330099', '#33cc11'];
+
   });
 
 

@@ -7,13 +7,87 @@
   <script src="https://use.fontawesome.com/1b5f59f5ad.js"></script>
   <link href="css/bootstrap.css" rel="stylesheet">
   <link href="app.css" rel="stylesheet">
+    <script src="js/angular.min.js"></script>
+    <script src="js/Chart.js"></script>
+    <script src="js/ui-bootstrap-tpls.min.js"></script>
+    <script src="js/angular-chart.min.js"></script>
+    <script src="js/smoothscroll.min.js"></script>
+    <script src="http://chir.ag/projects/ntc/ntc.js"></script>
+
+    <script src="app.js"></script>
 </head>
 <body ng-app="profileanalysis" id="top" ng-controller="MainCtrl">
+    <script>
+
+        function statusChangeCallback(response) {
+            var el = document.querySelector('#top'),
+                $el = angular.element(el),
+                $scopeAlter = $el.scope();
+
+            if (response.status === 'connected') {
+                // Logged into your app and Facebook.
+                $scopeAlter.login(response.authResponse.accessToken)
+            } else if (response.status === 'not_authorized') {
+                // The person is logged into Facebook, but not your app.
+                $scopeAlter.loggedOnUser = {};
+
+            } else {
+                // The person is not logged into Facebook, so we're not sure if
+                // they are logged into this app or not.
+                $scopeAlter.loggedOnUser = {};
+            }
+        }
+
+        function checkLoginState() {
+            FB.getLoginStatus(function (response) {
+                statusChangeCallback(response);
+            });
+        }
+        window.fbAsyncInit = function () {
+            FB.init({
+                appId: '129747197429804',
+              xfbml      : true,
+              version    : 'v2.6'
+            });
+          };
+
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "//connect.facebook.net/en_US/sdk.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+    </script>
+
+
     <div class="container">
         <div class="page-header">
-            <h1>Facebook Analysis</h1>
+            <h1>Profilyze</h1>
         </div>
-        <div class="row">
+        <div class="row" >
+            <div class="panel panel-primary col-md-4">
+                <div class="panel-heading">
+                    <span ng-if="!loggedOnUser.name">We dare you to login!</span>
+                    <span ng-if="loggedOnUser.name">Welcome {{loggedOnUser.name}}</span>
+                </div>
+                <div class="panel-body">
+                    <div ng-if="!loggedOnUser.name">
+                        <fb:login-button scope="public_profile,email" size="xlarge" onlogin="checkLoginState();">
+                        </fb:login-button>
+                    </div>
+                    <div ng-if="loggedOnUser.name">
+
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <input type="number" ng-model="from" />
+                    <input type="number" ng-model="to" />
+                    <button class="btn btn-primary" ng-click="runApi()">Run BetaFace API</button>
+					
+					Run Successfully: {{successRun}}
+                </div>
+            </div>
             <section id="charts" class="col-md-8">
                 <div class="row">
                     <div class="col-md-4">
@@ -43,7 +117,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="panel panel-default">
                             <div class="panel-heading">Gender</div>
                             <div class="panel-body">
@@ -51,7 +125,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="panel panel-default">
                             <div class="panel-heading">Has Glasses</div>
                             <div class="panel-body">
@@ -59,7 +133,15 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">Has Beard</div>
+                            <div class="panel-body">
+                                <canvas id="pie" class="chart chart-doughnut chart-xs" chart-data="beardData" chart-labels="beardLabels" chart-colours="beardChartColors"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
                         <div class="panel panel-default">
                             <div class="panel-heading">Smiles</div>
                             <div class="panel-body">
@@ -69,7 +151,10 @@
                     </div>
                 </div>
             </section>
-            <section id="users" class="col-md-4">
+        </div>
+        <div class="row">
+
+            <section id="users">
                 <div class="page-header">
                     <h2>Users</h2>
                 </div>
@@ -82,55 +167,63 @@
                             <img class="media-object img-rounded img-responsive" src="http://placehold.it/50x50" />
                         </figure>
                     </div>
-                    <div ng-click="editUser(user)" style="cursor:pointer">
+                    <div class="col-md-2" ng-click="user.selected=!user.selected" style="cursor:pointer">
                         <h4 class="list-group-item-heading"> {{user.name}} </h4>
                         <p class="list-group-item-text">{{user.desc}} </p>
                     </div>
-                </div>
-            </section>
-        </div>
-        <div class="row" ng-show="selectedUser.name">
-            <section id="edituserSection">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <button class="fa fa-times pull-right" ng-click="selectedUser={}"></button>
-                        <h2>{{selectedUser.name}}</h2>
 
-                    </div>
-                    <div class="panel-body">
-                        <div class="form-group">
-                            <label for="eyeColorSelect">Eye Color</label>
-                            <select id="eyeColorSelect" class="form-control">
-                                <option ng-repeat="color in eyeColorLabels">{{color}}</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="hairColorSelect">Hair Color</label>
-                            <select id="hairColorSelect" class="form-control">
-                                <option ng-repeat="color in hairColorLabels">{{color}}</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="ageInput">Age</label>
-                            <input type="number" id="ageInput">
-                        </div>
-                        <div class="form-group">
-                            <label for="hasGlasses">Has Glasses</label>
-                            <br />
-                            Yes: <input type="radio" id="hasGlasses" value="Yes">
-                            No: <input type="radio" id="hasGlasses" value="No">
-                        </div>
-                        <div class="form-group">
-                            <label for="smilesInput">Smiles</label>
-                            <br />
-                            Yes: <input type="radio" id="smilesInput" value="Yes">
-                            No: <input type="radio" id="smilesInput" value="No">
-                        </div>
-                        <button type="submit" class="btn btn-default">Update</button>
+                    <div class="col-md-8" ng-show="user.selected">
+                        <section id="edituserSection">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <button class="fa fa-times pull-right" ng-click="user.selected=false"></button>
+                                    <h2>{{selectedUser.name}}</h2>
+
+                                </div>
+                                <div class="panel-body">
+                                    <div class="form-group">
+                                        <label for="eyeColorSelect">Eye Color</label>
+                                        <select id="eyeColorSelect" class="form-control">
+                                            <option ng-repeat="color in eyeColorLabels">{{color}}</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="hairColorSelect">Hair Color</label>
+                                        <select id="hairColorSelect" class="form-control">
+                                            <option ng-repeat="color in hairColorLabels">{{color}}</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="ageInput">Age</label>
+                                        <input type="number" id="ageInput">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="hasGlasses">Has Glasses</label>
+                                        <br />
+                                        Yes: <input type="radio" id="hasGlasses" value="Yes">
+                                        No: <input type="radio" id="hasGlasses" value="No">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="hasGlasses">Has Beard</label>
+                                        <br />
+                                        Yes: <input type="radio" id="hasBeard" value="Yes">
+                                        No: <input type="radio" id="hasBeard" value="No">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="smilesInput">Smiles</label>
+                                        <br />
+                                        Yes: <input type="radio" id="smilesInput" value="Yes">
+                                        No: <input type="radio" id="smilesInput" value="No">
+                                    </div>
+                                    <button type="submit" class="btn btn-default">Update</button>
+                                </div>
+                            </div>
+                        </section>
                     </div>
                 </div>
             </section>
         </div>
+        
         
     </div>
     
@@ -139,13 +232,6 @@
             <p>Built by Lior Shkiller, Royee Guy, Ben Sterenson and Michael Palarya  </p>
         </div>
     </footer>
-    <script src="js/angular.min.js"></script>
-    <script src="js/Chart.js"></script>
-    <script src="js/ui-bootstrap-tpls.min.js"></script>
-    <script src="js/angular-chart.min.js"></script>
-    <script src="js/smoothscroll.min.js"></script>
-    <script src="http://chir.ag/projects/ntc/ntc.js"></script>
-
-    <script src="app.js"></script>
+    
 </body>
 </html>

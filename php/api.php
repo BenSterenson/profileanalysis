@@ -33,7 +33,7 @@ class API extends abstract_api
 	}
 
 
-	protected function insert_attributes($id) {
+	protected function insert_attributes($id, $debugPrint = 1) {
 		// connect to DB 
 		$dbWrapper = new DbWrapper();
 		//$getUrlQuery = 'SELECT `FacebookPhotoId`, `PhotoLink` FROM `Photos` WHERE `Id` = '. $id;
@@ -42,7 +42,10 @@ class API extends abstract_api
 						FROM NoProfilePic AS b WHERE a.FacebookPhotoId = b.FakePhotoId)
 						AND `Id` = $id";
 		// run Query
-		//echo "$getUrlQuery <br>";
+		if($debugPrint == 1){
+			echo "$getUrlQuery <br>";
+		}
+
 		$result = $dbWrapper->execute($getUrlQuery);
 
 		if ($result->num_rows == 0) {
@@ -53,32 +56,34 @@ class API extends abstract_api
 		$row = ($result->fetch_assoc());
 		$picUrl = $row['PhotoLink']; // extracted link
 
-		$picUrl = $this->get_tiny_url($picUrl);
-		//echo "pic url: ".$picUrl. "<br>";
+		$picUrl = get_tiny_url($picUrl);
+		if($debugPrint == 1){
+			echo "pic url: ".$picUrl. "<br>";
+		}
 		chdir('../APi/');
 
 		// run in betaface
 		$api = new betaFaceApi($id);
 		$face = $api->get_Image_attributes($picUrl);
-		//echo $api->image_Attributes;
+
+		if($debugPrint == 1){
+			echo $api->image_Attributes;
+		}
+
 		$setIsValidPhoto = 0;
-		//echo $face." <br>";
-		if($face != -1 || $face != false) {
-			//echo "face found!!!! <br>";
+
+		if($face != -1) {
 			// face found
+			if($debugPrint == 1){
+				echo "face found!!!! <br>";
+			}
 			$setIsValidPhoto = 1;
 			$dbWrapper->insert($api->image_Attributes);
-			$updateQuery = "UPDATE `Photos` SET `IsValidPhoto` = $setIsValidPhoto WHERE `Id` = $id";
-			$result = $dbWrapper->execute($updateQuery);
-
-			return 1;
 		}
-		if($face == false){
-			//echo "API call to upload image failed! : $id";
-		}
-
 		$updateQuery = "UPDATE `Photos` SET `IsValidPhoto` = $setIsValidPhoto WHERE `Id` = $id";
-		//echo "$updateQuery <br><br>";
+		if($debugPrint == 1){
+			echo "$updateQuery <br><br>";
+		}
 		$result = $dbWrapper->execute($updateQuery);
 		return;
 	} 

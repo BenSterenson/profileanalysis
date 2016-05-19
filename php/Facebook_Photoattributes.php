@@ -3,8 +3,8 @@ set_time_limit(0);
 include 'DbWrapper.php';
 include("../APi/api.php");
 
-$startAttId = 115;
-$endAttId = 130;
+$startAttId = 350;
+$endAttId = 399;
 
 
 function get_tiny_url($url)  {  
@@ -67,8 +67,19 @@ function insert_att_all_photo() {
 	GLOBAL $endAttId;
 
 	for ($i = $startAttId; $i <= $endAttId; $i++) {
+		ob_start();
+
 		echo "id : $i <br>";
 	    insert_attributes($i);
+		// flush all output
+		ob_end_flush();
+		ob_flush();
+		flush();
+		 
+		// close current session
+		if (session_id()) session_write_close();
+
+	    sleep(5);
 	}
 
 } 

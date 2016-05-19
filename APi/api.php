@@ -20,7 +20,8 @@ class betaFaceApi
     var $api_url;
     var $poll_interval;
     var $image_Attributes;
-    var $log_level = -1;
+    var $log_level = 1;
+    var $countConnect = 0;
     
     function _betaFaceApi($api_key,$api_secret,$api_url,$poll_interval,$PhotoId)
     {
@@ -88,8 +89,11 @@ class betaFaceApi
         }
         while(!$result['ready'])
         {
+            if($this->countConnect == 30)
+                return -1;
             sleep($this->poll_interval);
             $result = $this->api_call('GetImageInfo', array('image_uid' => $img_uid));
+            $this->countConnect++;
         }
        
         if($result['face_uid'])
@@ -177,6 +181,7 @@ class betaFaceApi
         
         //open curl connection 
         $ch = curl_init();
+        //$timeout = 30;  
 
         //set the url, POST vars, POST data and headers
         curl_setopt($ch,CURLOPT_URL, $url);
@@ -184,7 +189,8 @@ class betaFaceApi
         curl_setopt($ch, CURLOPT_POSTFIELDS,$request_data);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        
+        //curl_setopt($ch,CURLOPT_CONNECTTIMEOUT,$timeout);  
+
         $result = curl_exec($ch);
         
         if(!$result)

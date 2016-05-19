@@ -91,6 +91,7 @@ class DbWrapper {
 	
 	#region Methods (public)
 	public function execute($sql_string) {
+		echo "execute: ". $sql_string. "<br>";
 		return $this->connection->query($sql_string);
 	}
 	

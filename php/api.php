@@ -68,6 +68,9 @@ class API extends abstract_api
 			// face found
 			$setIsValidPhoto = 1;
 			$dbWrapper->insert($api->image_Attributes);
+			$updateQuery = "UPDATE `Photos` SET `IsValidPhoto` = $setIsValidPhoto WHERE `Id` = $id";
+			$result = $dbWrapper->execute($updateQuery);
+
 			return 1;
 		}
 		if($face == false){

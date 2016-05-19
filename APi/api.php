@@ -181,7 +181,7 @@ class betaFaceApi
         
         //open curl connection 
         $ch = curl_init();
-        //$timeout = 30;  
+        //$timeout = 5;  
 
         //set the url, POST vars, POST data and headers
         curl_setopt($ch,CURLOPT_URL, $url);

@@ -3,7 +3,7 @@ set_time_limit(0);
 include 'DbWrapper.php';
 include("../APi/api.php");
 
-$startAttId = 350;
+$startAttId = 374;
 $endAttId = 399;
 
 
@@ -79,7 +79,7 @@ function insert_att_all_photo() {
 		// close current session
 		if (session_id()) session_write_close();
 
-	    sleep(5);
+	    sleep(10);
 	}
 
 } 

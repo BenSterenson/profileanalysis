@@ -20,6 +20,37 @@ class API extends abstract_api
             return "Only accepts GET requests";
         }
      }
+
+     protected function getHairColors() {
+        if ($this->method == 'GET') {
+            return "Success";
+        } else {
+            return "Only accepts GET requests";
+        }
+     }
+    protected function getGender() {
+        if ($this->method == 'GET') {
+            return "Success";
+        } else {
+            return "Only accepts GET requests";
+        }
+     }
+
+    protected function getGlasses() {
+        if ($this->method == 'GET') {
+            return "Success";
+        } else {
+            return "Only accepts GET requests";
+        }
+     }
+    
+    protected function getGlasses() {
+        if ($this->method == 'GET') {
+            return "Success";
+        } else {
+            return "Only accepts GET requests";
+        }
+     }
 	 
 	 protected function get_tiny_url($url)  {  
 		$ch = curl_init();  

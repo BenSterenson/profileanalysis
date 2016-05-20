@@ -1,20 +1,22 @@
 <?php
 include 'DbWrapper.php';
-include("../APi/api.php");
+//include("../APi/api.php");
 
 require_once 'abstract_api.php';
 class API extends abstract_api
 {
+	public static $myDbWrapper;
+	
     public function __construct($request, $origin) {
-        parent::__construct($request);
-
+        $myDbWrapper = 
+		parent::__construct($request);
     }
 
-	// building statistical distribution:
+	#region attributes count functions:
 	
-    protected function getColors($attributeName)
+    protected static function getColors($attributeName)
 	{
-		$colorCountsArray = getNumberByAtt($attributeName);
+		$colorCountsArray = API::$myDbWrapper->getNumberByAtt($attributeName);
 		
 		$myArray = array(
 			"red" 		=> $colorCountsArray[0],
@@ -37,7 +39,7 @@ class API extends abstract_api
 	{
 		if ($this->method == 'GET')
 		{
-			return getColors("EyeColor");
+			return API::getColors("EyeColor");
         }
 		else
 		{
@@ -49,7 +51,7 @@ class API extends abstract_api
 	{
 		if ($this->method == 'GET')
 		{
-			return getColors("HairColor");
+			return API::getColors("HairColor");
         }
 		else
 		{
@@ -63,7 +65,7 @@ class API extends abstract_api
 		{
             $genderCountArray = getNumberByAtt("Gender");
 			
-			$myArray = (
+			$myArray = array(
 				"female"	=> $genderCountArray[0],
 				"male"		=> $genderCountArray[1]);
 			
@@ -81,7 +83,7 @@ class API extends abstract_api
 		{
             $glassesCountArray = getNumberByAtt("HasGlasses");
 			
-			$myArray = (
+			$myArray = array(
 				"no"	=> $glassesCountArray[0],
 				"yes"	=> $glassesCountArray[1]);
 			
@@ -99,7 +101,7 @@ class API extends abstract_api
 		{
             $beardCountArray = getNumberByAtt("HasBeard");
 			
-			$myArray = (
+			$myArray = array(
 				"no"	=> $beardCountArray[0],
 				"yes"	=> $beardCountArray[1]);
 			
@@ -117,7 +119,7 @@ class API extends abstract_api
 		{
             $smileCountArray = getNumberByAtt("HasSmile");
 			
-			$myArray = (
+			$myArray = array(
 				"no"	=> $smileCountArray[0],
 				"yes"	=> $smileCountArray[1]);
 			
@@ -128,8 +130,28 @@ class API extends abstract_api
             return "Only accepts GET requests";
         }
      }
-    	 
-	 protected function get_tiny_url($url)  {  
+    
+	protected function getAge()
+	{
+        if ($this->method == 'GET')
+		{
+            $ageCountArray = getNumberByAtt("Age");
+			
+			$myArray = array(
+				"no"	=> $ageCountArray[0],
+				"yes"	=> $ageCountArray[1]);
+			
+			return json_encode($myArray);
+        }
+		else 
+		{
+            return "Only accepts GET requests";
+        }
+     }
+	
+	#endregion
+	
+	protected function get_tiny_url($url)  {  
 		$ch = curl_init();  
 		$timeout = 5;  
 		curl_setopt($ch,CURLOPT_URL,'http://tinyurl.com/api-create.php?url='.$url);  
@@ -202,6 +224,7 @@ class API extends abstract_api
 		} 
 	}
  }
+ API::$myDbWrapper = new DbWrapper();
  
  // Requests from the same server don't have a HTTP_ORIGIN header
 if (!array_key_exists('HTTP_ORIGIN', $_SERVER)) {

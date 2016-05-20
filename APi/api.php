@@ -9,7 +9,9 @@ define("DEFAULT_POLL_INTERVAL",1);
 
 function convertTextToBool($value){
     if(!(strcmp($value,"no")))
+	{
         return 0;
+	}
     return 1;
 }
 

@@ -29,7 +29,7 @@
 #endregion Comments
 //include 'Facebook_user.php';
 include 'Facebook_photo.php';
-include("../APi/api.php");
+include("../APi/Attributes.php");
 
 class DbWrapper {
 	

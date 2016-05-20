@@ -425,9 +425,8 @@ class DbWrapper {
 			$this->execute($sqladdDupNoPic);
 		}
 	}
-	#endregion Methods (public)
 
-	public function getNumberAge() {
+	public function getNumberAge($att) {
 		//SELECT count(*) FROM PhotoAttributes where Age > 0 AND Age < 5 AND UpdatedByUser = 0
 		$sql_format_s = 'SELECT count(*) FROM PhotoAttributes where  %1$s < %2$d AND UpdatedByUser = 0';
 		$sql_format = 'SELECT count(*) FROM PhotoAttributes where  %1$s > %2$d AND %1$s < %3$d AND UpdatedByUser = 0';
@@ -506,18 +505,18 @@ class DbWrapper {
 
 		// Age
 		if (strcmp($att,'Age') == 0) {
-			$res_arr = getNumberAge();
+			$res_arr = $this->getNumberAge($att);
 		}
 
 		//Gender', 'HasBeard', 'HasGlasses', 'HasSmile'
 		else if (in_array($att, $binAttArr)) {
-			$res_arr = getNumberAge($att);
+			$res_arr = $this->getNumberBinaryAtt($att);
 		}
 
 		// Eyecolor, HairColor
 		else {
 			$color = strcmp($att,'EyeColor') == 0 ? 'EyeColor' : 'HairColor';
-			return getNumberByColor($color);
+			return $this->getNumberByColor($color);
 		}
 
 		// create list
@@ -532,4 +531,6 @@ class DbWrapper {
 
 		return $res_arr;
 	}
+	#endregion Methods (public)
+
 }

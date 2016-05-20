@@ -427,23 +427,48 @@ class DbWrapper {
 	}
 	#endregion Methods (public)
 
-
-
 	public function getNumberByAtt($att) {
 		$binAttArr = array('Gender', 'HasBeard', 'HasGlasses', 'HasSmile');
-		if (in_array($att, $binAttArr)){
 
-			$res_0 = $this->execute("SELECT count(*) FROM PhotoAttributes where " . $att ." = 0 AND UpdatedByUser = 0");
-			$res_1 = $this->execute("SELECT count(*) FROM PhotoAttributes where " . $att ." = 1 AND UpdatedByUser = 0");
+		// Age
+		if (strcmp($att,'Age') == 0) {
+			//SELECT count(*) FROM PhotoAttributes where Age > 0 AND Age < 5 AND UpdatedByUser = 0
+			$sql_format_s = 'SELECT count(*) FROM PhotoAttributes where  %1$s < %2$d AND UpdatedByUser = 0';
+			$sql_format = 'SELECT count(*) FROM PhotoAttributes where  %1$s > %2$d AND %1$s < %3$d AND UpdatedByUser = 0';
+			$sql_format_b = 'SELECT count(*) FROM PhotoAttributes where  %1$s > %2$d AND UpdatedByUser = 0';
 
-			if ($res_0->num_rows == 0 || $res_1->num_rows == 0)
-				return -1;
+			$age_from = 24;
+			$age_to = $age_from + 10; 
 
-			$res_0 = $res_0->fetch_assoc();
-			$res_1 = $res_1->fetch_assoc();
 
-			$res_arr = array($res_0,$res_1);
-			return $res_arr;
+			$res_arr[] = $this->execute(sprintf($sql_format_s, $att, 17));
+			$res_arr[] = $this->execute(sprintf($sql_format, $att, 18, $age_from++));
+
+			for ($i = 0; $i < 3; $i++) {
+				$res_arr[] = $this->execute(sprintf($sql_format, $att, $age_from, $age_to));
+				$age_from = $age_to + 1;
+				$age_to += 10;
+			}
+			$res_arr[] = $this->execute(sprintf($sql_format_b, $att, $age_from));
 		}
+
+		//Gender', 'HasBeard', 'HasGlasses', 'HasSmile'
+		else if (in_array($att, $binAttArr)) {
+
+			$res_arr[] = $this->execute("SELECT count(*) FROM PhotoAttributes where " . $att ." = 0 AND UpdatedByUser = 0");
+			$res_arr[] = $this->execute("SELECT count(*) FROM PhotoAttributes where " . $att ." = 1 AND UpdatedByUser = 0");
+		}
+
+		// create list
+		$arr_length = count($res_arr);
+
+		for ($i = 0; $i < $arr_length; $i++) {
+				if($res_arr[$i]->num_rows == 0)
+					return -1;
+
+				$res_arr[$i] = $res_arr[$i]->fetch_assoc();
+		}
+
+		return $res_arr;
 	}
 }

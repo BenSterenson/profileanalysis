@@ -40,6 +40,8 @@ echo "<br>";
 print_r($dbWrapper->getNumberByAtt('HasGlasses'));
 echo "<br>";
 print_r($dbWrapper->getNumberByAtt('HasSmile'));
+echo "<br>";
+print_r($dbWrapper->getNumberByAtt('Age'));
 
 
 ?> 

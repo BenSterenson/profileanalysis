@@ -17,7 +17,7 @@ class API extends abstract_api
 		$colorCountsArray = getNumberByAtt($attributeName);
 		
 		$myArray = array(
-			"red" 		=> colorCountsArray[0],
+			"red" 		=> $colorCountsArray[0],
 			"green"		=> $colorCountsArray[1],
 			"yellow"	=> $colorCountsArray[2],
 			"blue"		=> $colorCountsArray[3],
@@ -30,7 +30,7 @@ class API extends abstract_api
 			"white" 	=> $colorCountsArray[10]);
 		
 		// returning json in format: {"red": 10,"black":8, ... }
-		return json_encode(myArray);
+		return json_encode($myArray);
 	}
 
 	protected function getEyeColors()
@@ -57,10 +57,20 @@ class API extends abstract_api
         }
     } 
 	 
-    protected function getGender() {
-        if ($this->method == 'GET') {
-            return "Success";
-        } else {
+    protected function getGender()
+	{
+        if ($this->method == 'GET')
+		{
+            $genderCountArray = getNumberByAtt("Gender");
+			
+			$myArray = (
+				"female"	=> $genderCountArray[0],
+				"male"		=> $genderCountArray[1]);
+			
+			return json_encode($myArray);
+        }
+		else 
+		{
             return "Only accepts GET requests";
         }
      }

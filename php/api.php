@@ -1,6 +1,5 @@
 <?php
 include 'DbWrapper.php';
-//include("../APi/api.php");
 
 require_once 'abstract_api.php';
 class API extends abstract_api
@@ -63,7 +62,7 @@ class API extends abstract_api
 	{
         if ($this->method == 'GET')
 		{
-            $genderCountArray = getNumberByAtt("Gender");
+            $genderCountArray = API::$myDbWrapper->getNumberByAtt("Gender");
 			
 			$myArray = array(
 				"female"	=> $genderCountArray[0],
@@ -81,7 +80,7 @@ class API extends abstract_api
 	{
         if ($this->method == 'GET')
 		{
-            $glassesCountArray = getNumberByAtt("HasGlasses");
+            $glassesCountArray = API::$myDbWrapper->getNumberByAtt("HasGlasses");
 			
 			$myArray = array(
 				"no"	=> $glassesCountArray[0],
@@ -99,7 +98,7 @@ class API extends abstract_api
 	{
         if ($this->method == 'GET')
 		{
-            $beardCountArray = getNumberByAtt("HasBeard");
+            $beardCountArray = API::$myDbWrapper->getNumberByAtt("HasBeard");
 			
 			$myArray = array(
 				"no"	=> $beardCountArray[0],
@@ -117,7 +116,7 @@ class API extends abstract_api
 	{
         if ($this->method == 'GET')
 		{
-            $smileCountArray = getNumberByAtt("HasSmile");
+            $smileCountArray = API::$myDbWrapper->getNumberByAtt("HasSmile");
 			
 			$myArray = array(
 				"no"	=> $smileCountArray[0],

@@ -42,6 +42,9 @@ echo "<br>";
 print_r($dbWrapper->getNumberByAtt('HasSmile'));
 echo "<br>";
 print_r($dbWrapper->getNumberByAtt('Age'));
-
+echo "<br>";
+print_r($dbWrapper->getNumberByAtt('EyeColor'));
+echo "<br>";
+print_r($dbWrapper->getNumberByAtt('HairColor'));
 
 ?> 

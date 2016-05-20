@@ -458,6 +458,52 @@ class DbWrapper {
 			$res_arr[] = $this->execute("SELECT count(*) FROM PhotoAttributes where " . $att ." = 0 AND UpdatedByUser = 0");
 			$res_arr[] = $this->execute("SELECT count(*) FROM PhotoAttributes where " . $att ." = 1 AND UpdatedByUser = 0");
 		}
+		else {
+			$color = strcmp($att,'EyeColor') == 0 ? 'EyeColor' : 'HairColor';
+			$res_all = $this->execute("SELECT * FROM PhotoAttributes where UpdatedByUser = 0");
+			$res_arr = array(0,0,0,0,0,0,0,0,0,0);
+
+			while ($row = $res_all->fetch_assoc()) {
+				$colorHex = $row[$color];
+				$colorName = $this->ColorNUMtoTXT($colorHex);
+				switch(strtolower($colorName)) {
+					case "red":
+						$res_arr[0]++;
+						break;
+					case "green":
+						$res_arr[1]++;
+						break;
+					case "yellow":
+						$res_arr[2]++;
+						break;
+					case "blue":
+						$res_arr[3]++;
+						break;
+					case "orange":
+						$res_arr[4]++;
+						break;
+					case "purple":
+						$res_arr[5]++;
+						break;
+					case "pink":
+						$res_arr[6]++;
+						break;
+					case "brown":
+						$res_arr[7]++;
+						break;
+					case "black":
+						$res_arr[8]++;
+						break;
+					case "gray":
+						$res_arr[9]++;
+						break;
+					case "white":
+						$res_arr[10]++;
+						break;
+				}
+			}
+			return $res_arr;
+		}
 
 		// create list
 		$arr_length = count($res_arr);

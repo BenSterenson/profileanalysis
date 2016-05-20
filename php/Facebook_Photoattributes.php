@@ -3,8 +3,8 @@ set_time_limit(0);
 include 'DbWrapper.php';
 include("../APi/api.php");
 
-$startAttId = 374;
-$endAttId = 399;
+$startAttId = 649;
+$endAttId = 1000;
 
 
 function get_tiny_url($url)  {  
@@ -55,9 +55,11 @@ function insert_attributes($id) {
 		$setIsValidPhoto = 1;
 		$dbWrapper->insert($api->image_Attributes);
 	}
-	$updateQuery = "UPDATE `Photos` SET `IsValidPhoto` = $setIsValidPhoto WHERE `Id` = $id";
-	echo "$updateQuery <br><br>";
-	$result = $dbWrapper->execute($updateQuery);
+	if($face != 0){
+		$updateQuery = "UPDATE `Photos` SET `IsValidPhoto` = $setIsValidPhoto WHERE `Id` = $id";
+		echo "$updateQuery <br><br>";
+		$result = $dbWrapper->execute($updateQuery);
+	}
 	return;
 } 
 
@@ -65,24 +67,24 @@ function insert_att_all_photo() {
 
 	GLOBAL $startAttId;
 	GLOBAL $endAttId;
-
 	for ($i = $startAttId; $i <= $endAttId; $i++) {
 		ob_start();
 
 		echo "id : $i <br>";
-	    insert_attributes($i);
+		insert_attributes($i);
 		// flush all output
 		ob_end_flush();
 		ob_flush();
 		flush();
-		 
-		// close current session
+			 
+			// close current session
 		if (session_id()) session_write_close();
-
-	    sleep(10);
 	}
 
 } 
-
+//$num = $argv[1];
+//$num = 638;
+//echo $num."\n";
 insert_att_all_photo();
+//insert_att_all_photo($num);
 ?> 

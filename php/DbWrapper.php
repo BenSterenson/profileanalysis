@@ -433,8 +433,8 @@ class DbWrapper {
 		$binAttArr = array('Gender', 'HasBeard', 'HasGlasses', 'HasSmile');
 		if (in_array($att, $binAttArr)){
 
-			$res_0 = $this->execute("SELECT count(*) FROM PhotoAttributes where " . $att ." = 0");
-			$res_1 = $this->execute("SELECT count(*) FROM PhotoAttributes where " . $att ." = 1");
+			$res_0 = $this->execute("SELECT count(*) FROM PhotoAttributes where " . $att ." = 0 AND UpdatedByUser = 0");
+			$res_1 = $this->execute("SELECT count(*) FROM PhotoAttributes where " . $att ." = 1 AND UpdatedByUser = 0");
 
 			if ($res_0->num_rows == 0 || $res_1->num_rows == 0)
 				return -1;

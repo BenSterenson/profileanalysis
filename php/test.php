@@ -34,5 +34,12 @@ echo $res;
 
 $dbWrapper = new DbWrapper();
 print_r($dbWrapper->getNumberByAtt('Gender'));
+echo "<br>";
+print_r($dbWrapper->getNumberByAtt('HasBeard'));
+echo "<br>";
+print_r($dbWrapper->getNumberByAtt('HasGlasses'));
+echo "<br>";
+print_r($dbWrapper->getNumberByAtt('HasSmile'));
+
 
 ?> 

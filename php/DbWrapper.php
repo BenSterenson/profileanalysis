@@ -536,6 +536,22 @@ class DbWrapper {
 
 		return $res_arr;
 	}
+
+	public function getMostLiked($limit) {
+		//function returns list of top $limit liked profile pictures arr[0]-> userid, profilepic, num of likes
+		//SELECT FacebookId, PhotoLink, NumOfLikes FROM profilyze.Photos ORDER BY NumOfLikes DESC LIMIT 10
+		$res_arr = $this->execute("SELECT FacebookId, PhotoLink, NumOfLikes FROM Photos ORDER BY NumOfLikes DESC LIMIT " . $limit );
+
+		while ($row = $res_arr->fetch_assoc()) {
+			$FacebookId = $row['FacebookId'];
+			$PhotoLink = $row['PhotoLink'];
+			$NumOfLikes = $row['NumOfLikes'];
+			$TopLikedArr[] = array($FacebookId, $PhotoLink, $NumOfLikes);
+		}
+
+		return $TopLikedArr;
+	}
+
 	#endregion Methods (public)
 
 }

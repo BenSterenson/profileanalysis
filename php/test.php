@@ -47,4 +47,7 @@ print_r($dbWrapper->getNumberByAtt('EyeColor'));
 echo "<br>";
 print_r($dbWrapper->getNumberByAtt('HairColor'));
 
+echo "<br>";
+print_r($dbWrapper->getMostLiked(10));
+
 ?> 

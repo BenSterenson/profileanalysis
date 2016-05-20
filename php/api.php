@@ -10,13 +10,32 @@ class API extends abstract_api
 
     }
 
-    /**
-     * Get Eye Color
-     */
-     protected function getEyeColors() {
-        if ($this->method == 'GET') {
-            return "Success";
-        } else {
+	// building statistical distribution:
+	
+     protected function getEyeColors()
+	 {
+        if ($this->method == 'GET')
+		{
+			$colorCountsArray = getNumberByAtt("EyeColor");
+			
+			$myArray = array(
+				"red" 		=> colorCountsArray[0],
+				"green"		=> $colorCountsArray[1],
+				"yellow"	=> $colorCountsArray[2],
+				"blue"		=> $colorCountsArray[3],
+				"orange"	=> $colorCountsArray[4],
+				"purple"	=> $colorCountsArray[5],
+				"pink" 		=> $colorCountsArray[6],
+				"brown"		=> $colorCountsArray[7],
+				"black"	 	=> $colorCountsArray[8],
+				"gray" 		=> $colorCountsArray[9],
+				"white" 	=> $colorCountsArray[10]);
+			
+			// returning json in format: {"red": 10,"black":8, ... }
+			return json_encode(myArray);
+        }
+		else
+		{
             return "Only accepts GET requests";
         }
      }

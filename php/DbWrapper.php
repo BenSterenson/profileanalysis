@@ -123,6 +123,8 @@ class DbWrapper {
 	}
 	
 	public function ColorNUMtoTXT($num) {
+		if($num =="")
+			return "undetermined";
 		$colors = array ("red", "green", "yellow", "blue", "orange", "purple", "pink", "brown", "black", "gray", "white");
 		$minDist = 0xFFFFFFF;
 		$bestFit = "white"; // assuming given black as input
@@ -456,7 +458,7 @@ class DbWrapper {
 
 	public function getNumberByColor($color) {
 		$res_all = $this->execute("SELECT * FROM PhotoAttributes where UpdatedByUser = 0");
-		$res_arr = array(0,0,0,0,0,0,0,0,0,0);
+		$res_arr = array(0,0,0,0,0,0,0,0,0,0,0,0);
 
 		while ($row = $res_all->fetch_assoc()) {
 			$colorHex = $row[$color];
@@ -494,6 +496,9 @@ class DbWrapper {
 					break;
 				case "white":
 					$res_arr[10]++;
+					break;
+				case "undetermined":
+					$res_arr[11]++;
 					break;
 			}
 		}

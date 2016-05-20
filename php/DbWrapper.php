@@ -427,82 +427,97 @@ class DbWrapper {
 	}
 	#endregion Methods (public)
 
+	public function getNumberAge() {
+		//SELECT count(*) FROM PhotoAttributes where Age > 0 AND Age < 5 AND UpdatedByUser = 0
+		$sql_format_s = 'SELECT count(*) FROM PhotoAttributes where  %1$s < %2$d AND UpdatedByUser = 0';
+		$sql_format = 'SELECT count(*) FROM PhotoAttributes where  %1$s > %2$d AND %1$s < %3$d AND UpdatedByUser = 0';
+		$sql_format_b = 'SELECT count(*) FROM PhotoAttributes where  %1$s > %2$d AND UpdatedByUser = 0';
+
+		$age_from = 24;
+		$age_to = $age_from + 10; 
+
+
+		$res_arr[] = $this->execute(sprintf($sql_format_s, $att, 17));
+		$res_arr[] = $this->execute(sprintf($sql_format, $att, 18, $age_from++));
+
+		for ($i = 0; $i < 3; $i++) {
+			$res_arr[] = $this->execute(sprintf($sql_format, $att, $age_from, $age_to));
+			$age_from = $age_to + 1;
+			$age_to += 10;
+		}
+		$res_arr[] = $this->execute(sprintf($sql_format_b, $att, $age_from));
+		return $res_arr;
+	}
+
+	public function getNumberBinaryAtt($att) {
+		$res_arr[] = $this->execute("SELECT count(*) FROM PhotoAttributes where " . $att ." = 0 AND UpdatedByUser = 0");
+		$res_arr[] = $this->execute("SELECT count(*) FROM PhotoAttributes where " . $att ." = 1 AND UpdatedByUser = 0");
+		return $res_arr;
+	}
+
+	public function getNumberByColor($color) {
+		$res_all = $this->execute("SELECT * FROM PhotoAttributes where UpdatedByUser = 0");
+		$res_arr = array(0,0,0,0,0,0,0,0,0,0);
+
+		while ($row = $res_all->fetch_assoc()) {
+			$colorHex = $row[$color];
+			$colorName = $this->ColorNUMtoTXT($colorHex);
+			switch(strtolower($colorName)) {
+				case "red":
+					$res_arr[0]++;
+					break;
+				case "green":
+					$res_arr[1]++;
+					break;
+				case "yellow":
+					$res_arr[2]++;
+					break;
+				case "blue":
+					$res_arr[3]++;
+					break;
+				case "orange":
+					$res_arr[4]++;
+					break;
+				case "purple":
+					$res_arr[5]++;
+					break;
+				case "pink":
+					$res_arr[6]++;
+					break;
+				case "brown":
+					$res_arr[7]++;
+					break;
+				case "black":
+					$res_arr[8]++;
+					break;
+				case "gray":
+					$res_arr[9]++;
+					break;
+				case "white":
+					$res_arr[10]++;
+					break;
+			}
+		}
+		return $res_arr;
+	}
+
 	public function getNumberByAtt($att) {
 		$binAttArr = array('Gender', 'HasBeard', 'HasGlasses', 'HasSmile');
 
 		// Age
 		if (strcmp($att,'Age') == 0) {
-			//SELECT count(*) FROM PhotoAttributes where Age > 0 AND Age < 5 AND UpdatedByUser = 0
-			$sql_format_s = 'SELECT count(*) FROM PhotoAttributes where  %1$s < %2$d AND UpdatedByUser = 0';
-			$sql_format = 'SELECT count(*) FROM PhotoAttributes where  %1$s > %2$d AND %1$s < %3$d AND UpdatedByUser = 0';
-			$sql_format_b = 'SELECT count(*) FROM PhotoAttributes where  %1$s > %2$d AND UpdatedByUser = 0';
-
-			$age_from = 24;
-			$age_to = $age_from + 10; 
-
-
-			$res_arr[] = $this->execute(sprintf($sql_format_s, $att, 17));
-			$res_arr[] = $this->execute(sprintf($sql_format, $att, 18, $age_from++));
-
-			for ($i = 0; $i < 3; $i++) {
-				$res_arr[] = $this->execute(sprintf($sql_format, $att, $age_from, $age_to));
-				$age_from = $age_to + 1;
-				$age_to += 10;
-			}
-			$res_arr[] = $this->execute(sprintf($sql_format_b, $att, $age_from));
+			$res_arr = getNumberAge();
 		}
 
 		//Gender', 'HasBeard', 'HasGlasses', 'HasSmile'
 		else if (in_array($att, $binAttArr)) {
-
-			$res_arr[] = $this->execute("SELECT count(*) FROM PhotoAttributes where " . $att ." = 0 AND UpdatedByUser = 0");
-			$res_arr[] = $this->execute("SELECT count(*) FROM PhotoAttributes where " . $att ." = 1 AND UpdatedByUser = 0");
+			$res_arr = getNumberAge($att);
 		}
+
+		// Eyecolor, HairColor
 		else {
 			$color = strcmp($att,'EyeColor') == 0 ? 'EyeColor' : 'HairColor';
-			$res_all = $this->execute("SELECT * FROM PhotoAttributes where UpdatedByUser = 0");
-			$res_arr = array(0,0,0,0,0,0,0,0,0,0);
-
-			while ($row = $res_all->fetch_assoc()) {
-				$colorHex = $row[$color];
-				$colorName = $this->ColorNUMtoTXT($colorHex);
-				switch(strtolower($colorName)) {
-					case "red":
-						$res_arr[0]++;
-						break;
-					case "green":
-						$res_arr[1]++;
-						break;
-					case "yellow":
-						$res_arr[2]++;
-						break;
-					case "blue":
-						$res_arr[3]++;
-						break;
-					case "orange":
-						$res_arr[4]++;
-						break;
-					case "purple":
-						$res_arr[5]++;
-						break;
-					case "pink":
-						$res_arr[6]++;
-						break;
-					case "brown":
-						$res_arr[7]++;
-						break;
-					case "black":
-						$res_arr[8]++;
-						break;
-					case "gray":
-						$res_arr[9]++;
-						break;
-					case "white":
-						$res_arr[10]++;
-						break;
-				}
-			}
-			return $res_arr;
+			return getNumberByColor($color);
 		}
 
 		// create list

@@ -29,7 +29,7 @@
 #endregion Comments
 //include 'Facebook_user.php';
 include 'Facebook_photo.php';
-//include("../APi/Attributes.php");
+include("../APi/api.php");
 
 class DbWrapper {
 	
@@ -551,7 +551,46 @@ class DbWrapper {
 
 		return $TopLikedArr;
 	}
+	public function setAttByRow($att,$row) {
+		$att->setGender($row['Gender']);
+		$att->setEyeColor($this->ColorNUMtoTXT($row['EyeColor']));
+		$att->setHairColor($this->ColorNUMtoTXT($row['HairColor']));
+		$att->setHasBeard($row['HasBeard']);
+		$att->setHasGlasses($row['HasGlasses']);
+		$att->setHasSmile($row['HasSmile']);
+		$att->setAge($row['Age']);
+	}
+	
+	public function getMostLikedWithAtt($limit, $gender = -1) {
+		//function returns list of top $limit liked profile pictures arr[0]-> userid, profilepic, num of likes
+		//SELECT FacebookId, PhotoLink, NumOfLikes FROM profilyze.Photos, profilyze.PhotoAttributes where Photos.Id = PhotoAttributes.PhotoId ORDER BY NumOfLikes DESC LIMIT 10 
 
+		$string = " SELECT FacebookId, PhotoLink, NumOfLikes, PhotoId, Gender, EyeColor, HairColor, HasBeard, HasGlasses, HasBeard, HasSmile, Age
+					FROM Photos, PhotoAttributes
+					where Photos.Id = PhotoAttributes.PhotoId";
+		
+		// filter by gender			
+		if ($gender != -1) 
+			$string = $string . " AND PhotoAttributes.Gender = ". $gender;
+		
+		$string = $string . " ORDER BY NumOfLikes DESC LIMIT " . $limit ;
+
+		$res_arr = $this->execute($string);
+		//$res_arr = $this->execute("SELECT FacebookId, PhotoLink, NumOfLikes, PhotoId, Gender, EyeColor, HairColor, HasBeard, HasGlasses, HasBeard, HasSmile, Age FROM Photos, PhotoAttributes where Photos.Id = PhotoAttributes.PhotoId ORDER BY NumOfLikes DESC LIMIT " . $limit );
+
+		while ($row = $res_arr->fetch_assoc()) {
+			$FacebookId = $row['FacebookId'];
+			$PhotoLink = $row['PhotoLink'];
+			$NumOfLikes = $row['NumOfLikes'];
+
+			$att = new attributes($row['PhotoId']);
+			echo $this->setAttByRow($att,$row);
+			echo $att;
+			$TopLikedArr[] = array($FacebookId, $PhotoLink, $NumOfLikes, $att);
+		}
+
+		return $TopLikedArr;
+	}
 	#endregion Methods (public)
 
 }

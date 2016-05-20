@@ -48,6 +48,6 @@ echo "<br>";
 print_r($dbWrapper->getNumberByAtt('HairColor'));
 
 echo "<br>";
-print_r($dbWrapper->getMostLiked(10));
+print_r($dbWrapper->getMostLikedWithAtt(10,0));
 
 ?> 

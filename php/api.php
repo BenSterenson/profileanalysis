@@ -137,8 +137,12 @@ class API extends abstract_api
             $ageCountArray = getNumberByAtt("Age");
 			
 			$myArray = array(
-				"no"	=> $ageCountArray[0],
-				"yes"	=> $ageCountArray[1]);
+				"17-"	=> $ageCountArray[0],
+				"18-24"	=> $ageCountArray[1],
+				"25-35"	=> $ageCountArray[2],
+				"36-45"	=> $ageCountArray[3],
+				"46-55"	=> $ageCountArray[4],
+				"56+"	=> $ageCountArray[5]);
 			
 			return json_encode($myArray);
         }

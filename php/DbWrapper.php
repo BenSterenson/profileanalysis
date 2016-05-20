@@ -430,8 +430,8 @@ class DbWrapper {
 
 	public function getNumberAge($att) {
 		//SELECT count(*) FROM PhotoAttributes where Age > 0 AND Age < 5 AND UpdatedByUser = 0
-		$sql_format_s = 'SELECT count(*) FROM PhotoAttributes where  %1$s < %2$d AND UpdatedByUser = 0';
-		$sql_format = 'SELECT count(*) FROM PhotoAttributes where  %1$s > %2$d AND %1$s < %3$d AND UpdatedByUser = 0';
+		$sql_format_s = 'SELECT count(*) FROM PhotoAttributes where  %1$s =< %2$d AND UpdatedByUser = 0';
+		$sql_format = 'SELECT count(*) FROM PhotoAttributes where  %1$s >= %2$d AND %1$s =< %3$d AND UpdatedByUser = 0';
 		$sql_format_b = 'SELECT count(*) FROM PhotoAttributes where  %1$s > %2$d AND UpdatedByUser = 0';
 
 		$age_from = 24;

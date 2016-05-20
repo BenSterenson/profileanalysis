@@ -1,17 +1,10 @@
 <?php
-include("Attributes.php");
+include_once("Attributes.php");
 
 define("DEFAULT_API_KEY", 'd45fd466-51e2-4701-8da8-04351c872236');
 define("DEFAULT_API_SECRET", '171e8465-f548-401d-b63b-caf0dc28df5f');
 define("DEFAULT_API_URL",'http://www.betafaceapi.com/service.svc');
 define("DEFAULT_POLL_INTERVAL",1);
-
-
-function convertTextToBool($value){
-    if(!(strcmp($value,"no")))
-        return 0;
-    return 1;
-}
 
 class betaFaceApi
 {
@@ -42,6 +35,13 @@ class betaFaceApi
         $this->image_Attributes = new Attributes($PhotoId);
         return true;
     }    
+	
+	function convertTextToBool($value){
+		if(!(strcmp($value,"no"))){
+			return 0;
+		}
+		return 1;
+	}
 
     /**
      * Get face info from BetaFace API by face_uid
@@ -179,17 +179,9 @@ class betaFaceApi
         $this->logger("Making HTTP request to $url");
         $headers[] = "Content-Type: application/xml";
         
-        $proxy_ip = '31.168.236.236';
-        $proxy_port = '8080';
-        $headers[] = "Cache-Control: no-cache"; 
-
-        ob_start();
         //open curl connection 
         $ch = curl_init();
-        //$timeout = 5;  
-
-
-curl_setopt($curl1, CURLOPT_HTTPHEADER, $headers);
+        //$timeout = 30;  
 
         //set the url, POST vars, POST data and headers
         curl_setopt($ch,CURLOPT_URL, $url);
@@ -197,16 +189,10 @@ curl_setopt($curl1, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($ch, CURLOPT_POSTFIELDS,$request_data);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-
-        curl_setopt($curl, CURLOPT_FRESH_CONNECT , 1);
-        curl_setopt($ch, CURLOPT_PROXYPORT, $proxy_port);
-        curl_setopt($ch, CURLOPT_PROXYTYPE, 'HTTP');
-        curl_setopt($ch, CURLOPT_PROXY, $proxy_ip);
         //curl_setopt($ch,CURLOPT_CONNECTTIMEOUT,$timeout);  
 
         $result = curl_exec($ch);
-        ob_end_clean();
-
+        
         if(!$result)
             $this->logger("Response empty from API");
         
@@ -353,10 +339,10 @@ curl_setopt($curl1, CURLOPT_HTTPHEADER, $headers);
                     $this->image_Attributes->setEyeColor($value);
                     break;
                 case "beard":
-                    $this->image_Attributes->setHasBeard(convertTextToBool($value));
+                    $this->image_Attributes->setHasBeard($this->convertTextToBool($value));
                     break;
                 case "glasses":
-                        $this->image_Attributes->setHasGlasses(convertTextToBool($value));
+                        $this->image_Attributes->setHasGlasses($this->convertTextToBool($value));
                     break;
                 case "expression":
 					if (strcmp(strtolower($value), "smile") == 0) {

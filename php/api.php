@@ -1,20 +1,21 @@
 <?php
 include 'DbWrapper.php';
-include("../APi/api.php");
 
 require_once 'abstract_api.php';
 class API extends abstract_api
 {
+	var $dbWrapper;
     public function __construct($request, $origin) {
         parent::__construct($request);
 
+		$this->dbWrapper = new DbWrapper();
     }
 
 	// building statistical distribution:
 	
     protected function getColors($attributeName)
 	{
-		$colorCountsArray = getNumberByAtt($attributeName);
+		$colorCountsArray = $this->dbWrapper->getNumberByAtt($attributeName);
 		
 		$myArray = array(
 			"red" 		=> $colorCountsArray[0],
@@ -61,9 +62,9 @@ class API extends abstract_api
 	{
         if ($this->method == 'GET')
 		{
-            $genderCountArray = getNumberByAtt("Gender");
+            $genderCountArray = $dbWrapper->getNumberByAtt("Gender");
 			
-			$myArray = (
+			$myArray = array(
 				"female"	=> $genderCountArray[0],
 				"male"		=> $genderCountArray[1]);
 			
@@ -79,9 +80,9 @@ class API extends abstract_api
 	{
         if ($this->method == 'GET')
 		{
-            $glassesCountArray = getNumberByAtt("HasGlasses");
+            $glassesCountArray = $dbWrapper->getNumberByAtt("HasGlasses");
 			
-			$myArray = (
+			$myArray = array(
 				"no"	=> $glassesCountArray[0],
 				"yes"	=> $glassesCountArray[1]);
 			
@@ -97,9 +98,9 @@ class API extends abstract_api
 	{
         if ($this->method == 'GET')
 		{
-            $beardCountArray = getNumberByAtt("HasBeard");
+            $beardCountArray = $dbWrapper->getNumberByAtt("HasBeard");
 			
-			$myArray = (
+			$myArray = array(
 				"no"	=> $beardCountArray[0],
 				"yes"	=> $beardCountArray[1]);
 			
@@ -115,9 +116,9 @@ class API extends abstract_api
 	{
         if ($this->method == 'GET')
 		{
-            $smileCountArray = getNumberByAtt("HasSmile");
+            $smileCountArray = $dbWrapper->getNumberByAtt("HasSmile");
 			
-			$myArray = (
+			$myArray = array(
 				"no"	=> $smileCountArray[0],
 				"yes"	=> $smileCountArray[1]);
 			

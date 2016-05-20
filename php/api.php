@@ -92,16 +92,34 @@ class API extends abstract_api
             return "Only accepts GET requests";
         }
      }
-	 
+	
 	protected function getBeard()
 	{
         if ($this->method == 'GET')
 		{
-            $glassesCountArray = getNumberByAtt("HasBeard");
+            $beardCountArray = getNumberByAtt("HasBeard");
 			
 			$myArray = (
-				"no"	=> $glassesCountArray[0],
-				"yes"	=> $glassesCountArray[1]);
+				"no"	=> $beardCountArray[0],
+				"yes"	=> $beardCountArray[1]);
+			
+			return json_encode($myArray);
+        }
+		else 
+		{
+            return "Only accepts GET requests";
+        }
+     }
+    			
+	protected function getSmile()
+	{
+        if ($this->method == 'GET')
+		{
+            $smileCountArray = getNumberByAtt("HasSmile");
+			
+			$myArray = (
+				"no"	=> $smileCountArray[0],
+				"yes"	=> $smileCountArray[1]);
 			
 			return json_encode($myArray);
         }

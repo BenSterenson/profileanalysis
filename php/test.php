@@ -26,12 +26,13 @@ echo $res;
 //## end test 2 ###
 
 */
-$uid = 502424842;
-$first_name = 'Omri';
-$last_name = 'Zimbler';
-$user = new Facebook_user($uid, $first_name, $last_name);
-echo $user;
+//$uid = 502424842;
+//$first_name = 'Omri';
+//$last_name = 'Zimbler';
+//$user = new Facebook_user($uid, $first_name, $last_name);
+//echo $user;
+
 $dbWrapper = new DbWrapper();
-$dbWrapper->update($user);
+print_r($dbWrapper->getNumberByAtt('Gender'));
 
 ?> 

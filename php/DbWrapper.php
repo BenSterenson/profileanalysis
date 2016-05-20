@@ -426,5 +426,24 @@ class DbWrapper {
 		}
 	}
 	#endregion Methods (public)
-	
+
+
+
+	public function getNumberByAtt($att) {
+		$binAttArr = array('Gender', 'HasBeard', 'HasGlasses', 'HasSmile');
+		if (in_array($att, $binAttArr)){
+
+			$res_0 = $this->execute("SELECT count(*) FROM PhotoAttributes where " . $att ." = 0");
+			$res_1 = $this->execute("SELECT count(*) FROM PhotoAttributes where " . $att ." = 1");
+
+			if ($res_0->num_rows == 0 || $res_1->num_rows == 0)
+				return -1;
+
+			$res_0 = $res_0->fetch_assoc();
+			$res_1 = $res_1->fetch_assoc();
+
+			$res_arr = array($res_0,$res_1);
+			return $res_arr;
+		}
+	}
 }

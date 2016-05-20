@@ -179,9 +179,17 @@ class betaFaceApi
         $this->logger("Making HTTP request to $url");
         $headers[] = "Content-Type: application/xml";
         
+        $proxy_ip = '31.168.236.236';
+        $proxy_port = '8080';
+        $headers[] = "Cache-Control: no-cache"; 
+
+        ob_start();
         //open curl connection 
         $ch = curl_init();
         //$timeout = 5;  
+
+
+curl_setopt($curl1, CURLOPT_HTTPHEADER, $headers);
 
         //set the url, POST vars, POST data and headers
         curl_setopt($ch,CURLOPT_URL, $url);
@@ -189,10 +197,16 @@ class betaFaceApi
         curl_setopt($ch, CURLOPT_POSTFIELDS,$request_data);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+        curl_setopt($curl, CURLOPT_FRESH_CONNECT , 1);
+        curl_setopt($ch, CURLOPT_PROXYPORT, $proxy_port);
+        curl_setopt($ch, CURLOPT_PROXYTYPE, 'HTTP');
+        curl_setopt($ch, CURLOPT_PROXY, $proxy_ip);
         //curl_setopt($ch,CURLOPT_CONNECTTIMEOUT,$timeout);  
 
         $result = curl_exec($ch);
-        
+        ob_end_clean();
+
         if(!$result)
             $this->logger("Response empty from API");
         

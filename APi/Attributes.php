@@ -16,9 +16,41 @@ class Attributes implements JsonSerializable {
 	#endregion Fields
 	
 	#region Constructors
-	public function __construct($PhotoId) {
+	public function __construct() {
+        $argv = func_get_args();
+        switch( func_num_args() ) {
+            case 1:
+                self::__construct1($argv[0]);
+                break;
+
+            case 2:
+            	self::__construct2($argv[0], $argv[1]);
+            	break;
+
+         }
+    }
+
+	public function __construct1($PhotoId) {
 	    $this->PhotoId = $PhotoId;
 	}
+
+	public function __construct2($row, $update) {
+		//if ($row->num_rows == 1) {
+		//	$row = ($row->fetch_assoc());
+			$this->PhotoId = $row['PhotoId'];
+			$this->Gender = $row['Gender'];
+			$this->EyeColor = $row['EyeColor'];
+			$this->HairColor = $row['HairColor'];
+			$this->HasBeard = $row['HasBeard'];
+			$this->HasGlasses = $row['HasGlasses'];
+			$this->HasSmile = $row['HasSmile'];
+			$this->Age = $row['Age'];
+		//}
+		return;
+    }
+
+
+
 	#endregion Constructors
 	
 	#region Setters

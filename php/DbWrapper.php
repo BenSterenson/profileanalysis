@@ -572,16 +572,7 @@ class DbWrapper {
 
 		return $TopLikedArr;
 	}
-	public function setAttByRow($att,$row) {
-		$att->setGender($row['Gender']);
-		$att->setEyeColor($this->ColorNumToStr($row['EyeColor']));
-		$att->setHairColor($this->ColorNumToStr($row['HairColor']));
-		$att->setHasBeard($row['HasBeard']);
-		$att->setHasGlasses($row['HasGlasses']);
-		$att->setHasSmile($row['HasSmile']);
-		$att->setAge($row['Age']);
-	}
-	
+
 	public function getMostLikedWithAtt($limit, $gender = -1) {
 		//function returns list of top $limit liked profile pictures arr[0]-> userid, profilepic, num of likes
 		//SELECT FacebookId, PhotoLink, NumOfLikes FROM profilyze.Photos, profilyze.PhotoAttributes where Photos.Id = PhotoAttributes.PhotoId ORDER BY NumOfLikes DESC LIMIT 10 
@@ -604,8 +595,8 @@ class DbWrapper {
 			$PhotoLink = $row['PhotoLink'];
 			$NumOfLikes = $row['NumOfLikes'];
 
-			$att = new attributes($row['PhotoId']);
-			echo $this->setAttByRow($att,$row);
+			$att = new attributes($row,0);
+
 			echo $att;
 			$TopLikedArr[] = array($FacebookId, $PhotoLink, $NumOfLikes, $att);
 		}

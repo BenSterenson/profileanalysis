@@ -31,6 +31,8 @@
 include 'Facebook_photo.php';
 include("../APi/Attributes.php");
 
+define("NUMOfCOLORS",11);
+
 class DbWrapper {
 	
 	#region Fields
@@ -94,6 +96,64 @@ class DbWrapper {
 		echo "execute: ". $sql_string. "<br>";
 		return $this->connection->query($sql_string);
 	}
+
+	public function ColorStrToNUM($str) {
+		switch(strtolower($str)) {
+			case "red":
+				return 0;
+			case "green":
+				return 1;
+			case "yellow":
+				return 2;
+			case "blue":
+				return 3;
+			case "orange":
+				return 4;
+			case "purple":
+				return 5;
+			case "pink":
+				return 6;
+			case "brown":
+				return 7;
+			case "black":
+				return 8;
+			case "gray":
+				return 9;
+			case "white":
+				return 10;
+			case "":
+				return 11;
+		}
+	}
+	public function ColorNumToStr($num) {
+		switch($num) {
+			case 0:
+				return "red";
+			case 1:
+				return "green";
+			case 2:
+				return "yellow";
+			case 3:
+				return "blue";
+			case 4:
+				return "orange";
+			case 5:
+				return "purple";
+			case 6:
+				return "pink";
+			case 7:
+				return "brown";
+			case 8:
+				return "black";
+			case 9:
+				return "gray";
+			case 10:
+				return "white";
+			case 11:
+				return "undetermined";
+		}
+	}
+	
 	
 	public function ColorTXTtoNUM($txt) {
 		switch(strtolower($txt)) {
@@ -145,7 +205,7 @@ class DbWrapper {
 				$bestFit = $color;
 			}
 		}
-		return $bestFit;
+		return $this->ColorStrToNUM($bestFit);
 	}
 					
 	// function overrides database information with object's fields.
@@ -384,8 +444,8 @@ class DbWrapper {
 			case "Attributes":
 				$string = "INSERT INTO PhotoAttributes ";
 				$string = $string . " (PhotoId, Gender, EyeColor, HairColor, HasBeard, HasGlasses, HasSmile, Age, UpdateDate, UpdatedByUser) VALUES ";
-				$string = $string . " (" . $object->getPhotoId() . ", " . $object->getGender() . ", '" . $object->getEyeColor() . "', '" .
-										$object->getHairColor() . "', " . $object->getHasBeard()  . ", " . $object->getHasGlasses() . ", " .
+				$string = $string . " (" . $object->getPhotoId() . ", " . $object->getGender() . ", '" . $this->ColorNUMtoTXT($object->getEyeColor()) . "', '" .
+										$this->ColorNUMtoTXT($object->getHairColor()) . "', " . $object->getHasBeard()  . ", " . $object->getHasGlasses() . ", " .
 										$object->getHasSmile() . ", " . $object->getAge() . ", '" . $object->getUpdateDate() . "', " . $object->getUpdatedByUser() . ")";
 
 				break;
@@ -456,51 +516,12 @@ class DbWrapper {
 		return $res_arr;
 	}
 
-	public function getNumberByColor($color) {
-		$res_all = $this->execute("SELECT * FROM PhotoAttributes where UpdatedByUser = 0");
-		$res_arr = array(0,0,0,0,0,0,0,0,0,0,0,0);
+	public function getNumberByColor($colorType) {
+		$BaseString = "SELECT count(*) FROM PhotoAttributes where UpdatedByUser = 0";
 
-		while ($row = $res_all->fetch_assoc()) {
-			$colorHex = $row[$color];
-			$colorName = $this->ColorNUMtoTXT($colorHex);
-			switch(strtolower($colorName)) {
-				case "red":
-					$res_arr[0]++;
-					break;
-				case "green":
-					$res_arr[1]++;
-					break;
-				case "yellow":
-					$res_arr[2]++;
-					break;
-				case "blue":
-					$res_arr[3]++;
-					break;
-				case "orange":
-					$res_arr[4]++;
-					break;
-				case "purple":
-					$res_arr[5]++;
-					break;
-				case "pink":
-					$res_arr[6]++;
-					break;
-				case "brown":
-					$res_arr[7]++;
-					break;
-				case "black":
-					$res_arr[8]++;
-					break;
-				case "gray":
-					$res_arr[9]++;
-					break;
-				case "white":
-					$res_arr[10]++;
-					break;
-				case "undetermined":
-					$res_arr[11]++;
-					break;
-			}
+		for ($i = 0; $i <= NUMOfCOLORS; $i++) {
+			$colorStr = $BaseString . " AND " . $colorType . " = " . $i;
+			$res_arr[] = $this->execute($colorStr);
 		}
 		return $res_arr;
 	}
@@ -521,7 +542,7 @@ class DbWrapper {
 		// Eyecolor, HairColor
 		else {
 			$color = strcmp($att,'EyeColor') == 0 ? 'EyeColor' : 'HairColor';
-			return $this->getNumberByColor($color);
+			$res_arr = $this->getNumberByColor($color);
 		}
 
 		// create list
@@ -553,8 +574,8 @@ class DbWrapper {
 	}
 	public function setAttByRow($att,$row) {
 		$att->setGender($row['Gender']);
-		$att->setEyeColor($this->ColorNUMtoTXT($row['EyeColor']));
-		$att->setHairColor($this->ColorNUMtoTXT($row['HairColor']));
+		$att->setEyeColor($this->ColorNumToStr($row['EyeColor']));
+		$att->setHairColor($this->ColorNumToStr($row['HairColor']));
 		$att->setHasBeard($row['HasBeard']);
 		$att->setHasGlasses($row['HasGlasses']);
 		$att->setHasSmile($row['HasSmile']);

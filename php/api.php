@@ -134,7 +134,7 @@ class API extends abstract_api
 	{
         if ($this->method == 'GET')
 		{
-            $ageCountArray = getNumberByAtt("Age");
+            $ageCountArray = API::$myDbWrapper->getNumberByAtt("Age");
 			
 			$myArray = array(
 				"17-"	=> $ageCountArray[0],

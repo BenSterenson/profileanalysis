@@ -95,7 +95,7 @@ class DbWrapper {
 		if(in_array($tableName, $allowed_tables_array) && in_array($coloumnName, $allowed_columns_array[$tableName]))
 		{
 			$string = "UPDATE " . $tableName . " SET " . $coloumnName . " = \"" . $value . "\"";
-			echo "<br>trying to execute: " . $string . "<br>";
+			//echo "<br>trying to execute: " . $string . "<br>";
 			$this->execute($string);
 			return;
 		}
@@ -107,17 +107,17 @@ class DbWrapper {
 			in_array($coloumnName, $this->allowed_columns_array[$tableName]))
 		{
 			$string = "UPDATE " . $tableName . " SET " . $coloumnName . " = \"" . $value . "\" WHERE " . $keyCol . " = \"" . $keyValue . "\"" ;
-			echo "<br>trying to execute: " . $string . "<br>";	
+			//echo "<br>trying to execute: " . $string . "<br>";	
 			$this->execute($string);
 			return;
 		}
-		echo "<br> failed to UPDATE <br>";
+		//echo "<br> failed to UPDATE <br>";
 	}
 	#endregion Methods (private)
 	
 	#region Methods (public)
 	public function execute($sql_string) {
-		echo "execute: ". $sql_string. "<br>";
+		//echo "execute: ". $sql_string. "<br>";
 		return $this->connection->query($sql_string);
 	}
 
@@ -491,7 +491,7 @@ class DbWrapper {
 										$object->getFacebookId() . ")";
 				break;
 		}
-		//echo $string;
+		////echo $string;
 		$this->execute($string);
 	}
 	
@@ -523,7 +523,7 @@ class DbWrapper {
 		$result = $this->execute($sqlFindDup);
 		while ($row = ($result->fetch_assoc())) {
 			$FacebookPhotoId = $row['FacebookPhotoId'];
-			echo "adding $FacebookPhotoId to NoProfilePic <br>";
+			//echo "adding $FacebookPhotoId to NoProfilePic <br>";
 			$sqladdDupNoPic = 'INSERT INTO `NoProfilePic` (`FakePhotoId`) SELECT '. $FacebookPhotoId .' FROM dual WHERE NOT EXISTS (SELECT * FROM `NoProfilePic` WHERE `FakePhotoId`= ' . $FacebookPhotoId .')';
 			$this->execute($sqladdDupNoPic);
 		}
@@ -531,9 +531,9 @@ class DbWrapper {
 
 	public function getNumberAge($att) {
 		//SELECT count(*) FROM PhotoAttributes where Age > 0 AND Age < 5 AND UpdatedByUser = 0
-		$sql_format_s = 'SELECT count(*) FROM PhotoAttributes where  %1$s <= %2$d AND UpdatedByUser = 0';
-		$sql_format = 'SELECT count(*) FROM PhotoAttributes where  %1$s >= %2$d AND %1$s <= %3$d AND UpdatedByUser = 0';
-		$sql_format_b = 'SELECT count(*) FROM PhotoAttributes where  %1$s > %2$d AND UpdatedByUser = 0';
+		$sql_format_s = 'SELECT count(*) as cnt FROM PhotoAttributes where  %1$s <= %2$d AND UpdatedByUser = 0';
+		$sql_format = 'SELECT count(*) as cnt FROM PhotoAttributes where  %1$s >= %2$d AND %1$s <= %3$d AND UpdatedByUser = 0';
+		$sql_format_b = 'SELECT count(*) as cnt FROM PhotoAttributes where  %1$s > %2$d AND UpdatedByUser = 0';
 
 		$age_from = 24;
 		$age_to = $age_from + 10; 
@@ -552,13 +552,13 @@ class DbWrapper {
 	}
 
 	public function getNumberBinaryAtt($att) {
-		$res_arr[] = $this->execute("SELECT count(*) FROM PhotoAttributes where " . $att ." = 0 AND UpdatedByUser = 0");
-		$res_arr[] = $this->execute("SELECT count(*) FROM PhotoAttributes where " . $att ." = 1 AND UpdatedByUser = 0");
+		$res_arr[] = $this->execute("SELECT count(*) as cnt FROM PhotoAttributes where " . $att ." = 0 AND UpdatedByUser = 0");
+		$res_arr[] = $this->execute("SELECT count(*) as cnt FROM PhotoAttributes where " . $att ." = 1 AND UpdatedByUser = 0");
 		return $res_arr;
 	}
 
 	public function getNumberByColor($colorType) {
-		$BaseString = "SELECT count(*) FROM PhotoAttributes where UpdatedByUser = 0";
+		$BaseString = "SELECT count(*) as cnt FROM PhotoAttributes where UpdatedByUser = 0";
 
 		for ($i = 0; $i <= NUMOfCOLORS; $i++) {
 			$colorStr = $BaseString . " AND " . $colorType . " = " . $i;
@@ -592,8 +592,8 @@ class DbWrapper {
 		for ($i = 0; $i < $arr_length; $i++) {
 				if($res_arr[$i]->num_rows == 0)
 					return -1;
-
-				$res_arr[$i] = $res_arr[$i]->fetch_assoc();
+				
+				$res_arr[$i] = $res_arr[$i]->fetch_assoc()["cnt"];
 		}
 
 		return $res_arr;
@@ -638,7 +638,7 @@ class DbWrapper {
 
 			$att = new attributes($row,0);
 
-			echo $att;
+			//echo $att;
 			$TopLikedArr[] = array($FacebookId, $PhotoLink, $NumOfLikes, $att);
 		}
 

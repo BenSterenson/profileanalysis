@@ -10,9 +10,76 @@
       responsive: true
     });
   });
+  app.service('UsersService', function ($http) {
+	  
+  })
   app.service('ChartService', function ($http) {
+	  	  
+		// Gets json object and returns object of keys and values
+		function getKeysAndValuesOfObject(obj){
+			var keys = []
+			var values = []
+			for (var key in obj){
+				keys.push(key);
+				values.push(obj[key]);
+			}
+			return  {keys:keys,values:values};
+		}
+	  
       this.getEyeColors = function () {
-          return $http.get('api/geteyecolors');
+          return $http.get('../php/api/geteyecolors').then(function successCallback(response) {
+				return getKeysAndValuesOfObject(JSON.parse(response.data));
+			}, function errorCallback(response) {
+				alert("Error on GetEyeColors!");
+			});
+      }
+	  
+	  this.getHairColors = function () {
+          return $http.get('../php/api/getHairColors').then(function successCallback(response) {
+				return getKeysAndValuesOfObject(JSON.parse(response.data));
+				}, function errorCallback(response) {
+				alert("Error on getHairColors!");
+			});
+      }
+	  
+	  this.getGender = function () {
+          return $http.get('../php/api/getGender').then(function successCallback(response) {
+				return getKeysAndValuesOfObject(JSON.parse(response.data));
+			}, function errorCallback(response) {
+				alert("Error on getGender!");
+			});
+      }
+	  
+	  this.getGlasses = function () {
+          return $http.get('../php/api/getGlasses').then(function successCallback(response) {
+				return getKeysAndValuesOfObject(JSON.parse(response.data));
+			}, function errorCallback(response) {
+				alert("Error on getGlasses!");
+			});
+      }
+	  
+	  this.getBeard = function () {
+          return $http.get('../php/api/getBeard').then(function successCallback(response) {
+				return getKeysAndValuesOfObject(JSON.parse(response.data));
+			}, function errorCallback(response) {
+				alert("Error on getBeard!");
+			});
+      }
+	  
+	  this.getSmile = function () {
+          return $http.get('../php/api/getSmile').then(function successCallback(response) {
+				return getKeysAndValuesOfObject(JSON.parse(response.data));
+			}, function errorCallback(response) {
+				alert("Error on getSmile!");
+			});
+      }
+	  
+	  this.getAge = function () {
+          return $http.get('../php/api/getAge').then(function successCallback(response) {
+				return getKeysAndValuesOfObject(JSON.parse(response.data));
+			}, function errorCallback(response) {
+				alert("Error on getAge!");
+			});
       }
   });
     app.controller('MainCtrl', function ($scope,$http, ChartService) {
@@ -46,46 +113,93 @@
           
       }
       // Load the data
+	
 
-
+	
+	function convertColorsToViewable(colors){
+		var newArray = []
+		var colorDict = {
+			"red":"#d92626",
+			"green":"#80ff00",
+			"yellow":"#ffbf00",
+			"blue":"#00bfff",
+			"orange":"#ff8000",
+			"purple":"#8000ff",
+			"pink":"#ff0040",
+			"brown":"#a64a2b",			
+			"black":"#000",
+			"gray":"#808080",
+			"white":"#fff"
+		}
+		for (var i in colors){
+			newArray[i] = colorDict[colors[i]];
+		}
+		return newArray;
+	}
+	
     // Eye Color Data
-    $scope.eyeColorData = [300, 500, 100, 200];
-    $scope.eyeColorChartColors = ['#0000FF', '#964B00', '#808080', '#00FF00'];
-    $scope.eyeColorLabels = [];
-    $scope.eyeColorChartColors.forEach(function (color) {
-        $scope.eyeColorLabels.push(ntc.name(color)[1]);
-    });
+	$scope.eyeColorData =[];
+	$scope.eyeColorLabels =[];		
+	ChartService.getEyeColors().then(function successCallback(data) {
+		$scope.eyeColorData = data.values;
+		$scope.eyeColorLabels = data.keys;
+		$scope.eyeColorChartColors = convertColorsToViewable(data.keys);
+	});
+	
 
     // Hair Color
-    $scope.hairColorData = [100, 500, 100, 200, 300];
-    $scope.hairColorChartColors = ['#FFFF00', '#000000', '#FF681F', '#00FF00', '#964B00'];
-    $scope.hairColorLabels = [];
-    $scope.hairColorChartColors.forEach(function (color) {
-        $scope.hairColorLabels.push(ntc.name(color)[1]);
-    });
+	$scope.hairColorData =[];
+	$scope.hairColorLabels =[];
+	ChartService.getHairColors().then(function successCallback(data) {
+		$scope.hairColorData = data.values;
+		$scope.hairColorLabels = data.keys;
+		$scope.hairColorChartColors = convertColorsToViewable(data.keys);
+	});
 
     // Age
-    $scope.ageData = [[40, 90, 60, 30, 10]];
-    $scope.ageLabels = ['18-24', '25-34', '35-44', '45-54', '55+'];
+	$scope.ageData =[];
+	$scope.ageLabels =[];
+	ChartService.getAge().then(function successCallback(data) {
+		$scope.ageData = [data.values];
+		$scope.ageLabels = data.keys;
+	});
 
     // Gender
-    $scope.genderData = [100,105];
-    $scope.genderLabels = ['Male', 'Female'];
+	$scope.genderData =[];
+	$scope.genderLabels =[];
+	ChartService.getGender().then(function successCallback(data) {		
+		$scope.genderData = data.values;
+		$scope.genderLabels = data.keys;
+		$scope.genderChartColors = ['#ffc0cb', '#000066'];
+	});
+    
 
     // Smiles
-    $scope.smilesData = [100, 1];
-    $scope.smilesLabels = ['Yes', 'No'];
-    $scope.smilesChartColors = ['#0099ff', '#ff0000'];
+	$scope.smilesData =[];
+	$scope.smilesLabels =[];
+	ChartService.getSmile().then(function successCallback(data) {		
+		$scope.smilesData = data.values;
+		$scope.smilesLabels = data.keys;
+		$scope.smilesChartColors = ['#004d4d', '#99ffff'];
+	});
 
-    // Has Glasses
-    $scope.glassesData = [100, 605];
-    $scope.glassesLabels = ['Yes', 'No'];
-    $scope.glassesChartColors = ['#000099', '#33ccff'];
+    // Has Glasses	
+	$scope.glassesData =[];
+	$scope.glassesLabels =[];
+	ChartService.getGlasses().then(function successCallback(data) {		
+		$scope.glassesData = data.values;
+		$scope.glassesLabels = data.keys;
+		$scope.glassesChartColors = ['#39ac39', '#d9f2d9'];
+	});
 
       // Has Beard
-    $scope.beardData = [100, 605];
-    $scope.beardLabels = ['Yes', 'No'];
-    $scope.beardChartColors = ['#330099', '#33cc11'];
+	$scope.beardData =[];
+	$scope.beardLabels =[];
+	ChartService.getBeard().then(function successCallback(data) {		
+		$scope.beardData = data.values;
+		$scope.beardLabels = data.keys;
+		$scope.beardChartColors = ['#003399', '#99bbff'];
+	});
 
   });
 

@@ -471,21 +471,20 @@ class DbWrapper {
 				$string = $string . " (" . $object->getPhotoId() . ", " . $object->getGender() . ", '" . $this->ColorNUMtoTXT($object->getEyeColor()) . "', '" .
 										$this->ColorNUMtoTXT($object->getHairColor()) . "', " . $object->getHasBeard()  . ", " . $object->getHasGlasses() . ", " .
 										$object->getHasSmile() . ", " . $object->getAge() . ", '" . $object->getUpdateDate() . "', " . $object->getUpdatedByUser() . ")";
-
 				break;
-			case "History"
+			case "History":
 				$string = "INSERT INTO History ";
 				$string = $string . " (Id,FacebookId,AttributeName,FilterValue,SessionId) VALUES ";
 				$string = $string . " (" . $object->getId() . ", " . $object->getFBID() . ", '" . $object->getAttributeName() . "', '" .
 										$object->getFilterValue() . "', " . $object->getSessionId() . ")";
 				break;
-			case "PhotoComments"
+			case "PhotoComments":
 				$string = "INSERT INTO PhotoComments ";
 				$string = $string . " (Id,FacebookId,Comment,PhotoId,Time) VALUES ";
 				$string = $string . " (" . $object->getId() . ", " . $object->getFacebookId() . ", '" . $object->getComment() . "', '" .
 										$object->getPhotoId() . "', " . $object->getTime() . ")";
 				break;
-			case "PhotoRatings"
+			case "PhotoRatings":
 				$string = "INSERT INTO PhotoComments ";
 				$string = $string . " (Id,isHot,PhotoId,FacebookId) VALUES ";
 				$string = $string . " (" . $object->getId() . ", " . $object->getIsHot() . ", '" . $object->getPhotoId() . "', '" .

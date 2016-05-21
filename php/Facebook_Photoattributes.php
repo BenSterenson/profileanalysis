@@ -4,7 +4,7 @@ include 'DbWrapper.php';
 include_once("../APi/api.php");
 
 
-$startAttId = 655;
+$startAttId = 707;
 $endAttId = 1000;
 
 

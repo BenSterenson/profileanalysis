@@ -147,6 +147,8 @@ class DbWrapper {
 				return 10;
 			case "":
 				return 11;
+			case "undetermined":
+				return 11;
 		}
 	}
 	public function ColorNumToStr($num) {
@@ -208,7 +210,7 @@ class DbWrapper {
 	
 	public function ColorNUMtoTXT($num) {
 		if($num =="")
-			return "undetermined";
+			return ColorStrToNUM("undetermined");
 		$colors = array ("red", "green", "yellow", "blue", "orange", "purple", "pink", "brown", "black", "gray", "white");
 		$minDist = 0xFFFFFFF;
 		$bestFit = "white"; // assuming given black as input

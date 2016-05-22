@@ -3,7 +3,7 @@ set_time_limit(0);
 include 'DbWrapper.php';
 include_once("../APi/api.php");
 
-$startAttId = 1201;
+$startAttId = 1305;
 $endAttId = 1400;
 $PROX_USE = 0;
 
@@ -75,7 +75,7 @@ function insert_att_all_photo() {
 	$count = 1;
 	$read = 0;
 
-	for ($iter = 0; $iter <= 10; $iter++) {
+	for ($iter = 0; $iter <= 50; $iter++) {
 
 		echo "\n<br>#################################################<br>\n";
 		echo "\n<br>#################### sending ####################<br>\n";
@@ -84,9 +84,18 @@ function insert_att_all_photo() {
 		for ($i = $startAttId; $i <= $endAttId; $i++) {
 			ob_start();
 
-			if($count == 50) {
+			if($count == 20) {
 				$count = 1;
-				break;
+				echo "\n<br>#################################################<br>\n";
+				echo "\n<br>#################### reading ####################<br>\n";
+				echo "\n<br>#################################################<br>\n";
+
+				echo "\n<br>sleeping 90 sec<br>\n";
+				ob_end_flush();
+				flush();
+				$read = 1;
+				sleep (90);
+				break 1;
 			}
 
 			echo "id : $i <br>\n";
@@ -99,26 +108,24 @@ function insert_att_all_photo() {
 			if (session_id()) session_write_close();
 			$count ++;
 		}
-		echo "\n<br>#################################################<br>\n";
-		echo "\n<br>#################### reading ####################<br>\n";
-		echo "\n<br>#################################################<br>\n";
 
-		echo "\n<br>sleeping 180 sec<br>\n";
-		sleep (180);
-		$read = 1;
 
-		for ($i = $startAttId; $i <= $endAttId; $i++) {
+
+
+		for ($j = $startAttId; $j <= $endAttId; $j++) {
 			ob_start();
 			
-			if($count == 50) {
+			if($count == 20) {
 				$count = 1;
-				$startAttId = $i;
+				$startAttId = $j;
 				$read = 0;
-				break;
+				ob_end_flush();
+				flush();
+				break 1;
 			}
 
-			echo "id : $i <br>\n";
-			insert_attributes($i,$read);
+			echo "id : $j <br>\n";
+			insert_attributes($j,$read);
 			// flush all output
 			ob_end_flush();
 			flush();

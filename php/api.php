@@ -152,6 +152,52 @@ class API extends abstract_api
         }
      }
 	
+	protected function getHistory($FBID)
+	{
+		if ($this->method == 'GET')
+		{
+			$HistoryArr = API::$myDbWrapper->getHistory($FBID);
+			$myArray = array(
+				"AttributeName" => $HistoryArr[0],
+				"FilterValue" => $HistoryArr[1]);
+			return json_encode($myArray);
+		}		
+		else 
+		{
+            return "Only accepts GET requests";
+        }
+	}
+	
+	protected function getPhotoComments($PhotoID)
+	{
+		if ($this->method == 'GET')
+		{
+			TODO
+		}		
+		else 
+		{
+            return "Only accepts GET requests";
+        }
+	}
+	
+	protected function getPhotoRatings()
+	{
+		if ($this->method == 'GET')
+		{
+			$RatingsArr = API::$myDbWrapper->getPhotoRatings($PhotoId);
+			$myArray = array(
+				"Hot" => $RatingsArr[0],
+				"Not" => $RatingsArr[1]);
+			return json_encode($myArray);
+		
+		}		
+		else 
+		{
+            return "Only accepts GET requests";
+        }
+	}
+	
+	
 	#endregion
 	
 	protected function get_tiny_url($url)  {  

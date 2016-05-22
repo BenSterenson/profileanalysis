@@ -646,6 +646,28 @@ class DbWrapper {
 
 		return $TopLikedArr;
 	}
+	
+	public function getHistory($FBID)
+	{
+		$res_arr[] = $this->execute("SELECT AttributeName,FilterValue FROM History where FacebookId = " . $FBID );
+		
+			while ($row = $res_arr->fetch_assoc()) {
+			$AttributeName = $row['AttributeName'];
+			$FilterValue = $row['FilterValue'];
+			$HistoryArr[] = array($AttributeName, $FilterValue);
+		}
+		return $HistoryArr;
+	
+	}
+	
+	public function getPhotoRatings($PhotoId)
+	{
+		$res_arr[] = $this->execute("SELECT count(IsHot) as cnt FROM PhotoRatings where IsHot = 1 AND PhotoId = " . $PhotoId );
+		$res_arr[] = $this->execute("SELECT count(IsHot) as cnt FROM PhotoRatings where IsHot = 0 AND PhotoId = " . $PhotoId );
+		return $res_arr;
+	}
+	
+	
 	#endregion Methods (public)
 
 }

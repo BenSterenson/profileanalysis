@@ -22,7 +22,7 @@ class betaFaceApi
     var $proxy_use = 0;
     var $proxy_port;
     var $proxy_ip;
-
+    var $limit = 60;
 
     function _betaFaceApi($api_key,$api_secret,$api_url,$poll_interval,$PhotoId)
     {
@@ -77,9 +77,10 @@ class betaFaceApi
      * @param type $person_id
      * @return boolean
      */
-    function get_Image_attributes($url,$proxyUSE)
+    function get_Image_attributes($url,$proxyUSE,$send=3)
     {
         $this->proxy_use = $proxyUSE;
+        $this->limit = $send;
         // Step 1: upload image to service and get image ID
         $image__url = $url;
         $params = array("img_url" => $image__url,"original_filename" => $image__url);
@@ -101,7 +102,7 @@ class betaFaceApi
         }
         while(!$result['ready'])
         {
-            if($this->countConnect == 60)
+            if($this->countConnect == $this->limit)
                 return -1;
             sleep($this->poll_interval);
             $result = $this->api_call('GetImageInfo', array('image_uid' => $img_uid));

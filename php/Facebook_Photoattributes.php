@@ -3,7 +3,7 @@ set_time_limit(0);
 include 'DbWrapper.php';
 include_once("../APi/api.php");
 
-$startAttId = 1037;
+$startAttId = 1201;
 $endAttId = 1400;
 $PROX_USE = 0;
 
@@ -20,7 +20,7 @@ function get_tiny_url($url)  {
 }
 
 
-function insert_attributes($id) {
+function insert_attributes($id,$send) {
 	// connect to DB 
 	$dbWrapper = new DbWrapper();
 	//$getUrlQuery = 'SELECT `FacebookPhotoId`, `PhotoLink` FROM `Photos` WHERE `Id` = '. $id;
@@ -46,7 +46,11 @@ function insert_attributes($id) {
 
 	// run in betaface
 	$api = new betaFaceApi($id);
-	$face = $api->get_Image_attributes($picUrl,$PROX_USE);
+	$send = $send == 1 ? 10 : 1; 
+
+	$face = $api->get_Image_attributes($picUrl,$PROX_USE,$send);
+
+	//$face = $api->get_Image_attributes($picUrl,$PROX_USE);
 	echo $api->image_Attributes;
 	$setIsValidPhoto = 0;
 
@@ -68,17 +72,61 @@ function insert_att_all_photo() {
 
 	GLOBAL $startAttId;
 	GLOBAL $endAttId;
-	for ($i = $startAttId; $i <= $endAttId; $i++) {
-		ob_start();
+	$count = 1;
+	$read = 0;
 
-		echo "id : $i <br>";
-		insert_attributes($i);
-		// flush all output
-		ob_end_flush();
-		flush();
-			 
-			// close current session
-		if (session_id()) session_write_close();
+	for ($iter = 0; $iter <= 10; $iter++) {
+
+		echo "\n<br>#################################################<br>\n";
+		echo "\n<br>#################### sending ####################<br>\n";
+		echo "\n<br>#################################################<br>\n";
+
+		for ($i = $startAttId; $i <= $endAttId; $i++) {
+			ob_start();
+
+			if($count == 50) {
+				$count = 1;
+				break;
+			}
+
+			echo "id : $i <br>\n";
+			insert_attributes($i,$read);
+			// flush all output
+			ob_end_flush();
+			flush();
+				 
+				// close current session
+			if (session_id()) session_write_close();
+			$count ++;
+		}
+		echo "\n<br>#################################################<br>\n";
+		echo "\n<br>#################### reading ####################<br>\n";
+		echo "\n<br>#################################################<br>\n";
+
+		echo "\n<br>sleeping 180 sec<br>\n";
+		sleep (180);
+		$read = 1;
+
+		for ($i = $startAttId; $i <= $endAttId; $i++) {
+			ob_start();
+			
+			if($count == 50) {
+				$count = 1;
+				$startAttId = $i;
+				$read = 0;
+				break;
+			}
+
+			echo "id : $i <br>\n";
+			insert_attributes($i,$read);
+			// flush all output
+			ob_end_flush();
+			flush();
+				 
+				// close current session
+			if (session_id()) session_write_close();
+			$count ++;
+		}
 	}
 
 } 

@@ -3,10 +3,10 @@ set_time_limit(0);
 include 'DbWrapper.php';
 include_once("../APi/api.php");
 
-$startAttId = 1006;
+$startAttId = 1024;
 $endAttId = 1400;
+$PROX_USE = 0;
 
-define("PROX_USE",0);
 
 function get_tiny_url($url)  {  
 	$ch = curl_init();  
@@ -36,7 +36,7 @@ function insert_attributes($id) {
 		//no profile pic
 		return;
 	}
-
+	GLOBAL $PROX_USE;
 	$row = ($result->fetch_assoc());
 	$picUrl = $row['PhotoLink']; // extracted link
 

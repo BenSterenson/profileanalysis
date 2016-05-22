@@ -6,8 +6,8 @@ define("DEFAULT_API_SECRET", '171e8465-f548-401d-b63b-caf0dc28df5f');
 define("DEFAULT_API_URL",'http://www.betafaceapi.com/service.svc');
 define("DEFAULT_POLL_INTERVAL",1);
 
-define("PROXY_IP",'31.168.236.236');
-define("PROXY_PORT",'8080');
+define("D_PROXY_IP",'31.168.236.236');
+define("D_PROXY_PORT",'8080');
 
 
 class betaFaceApi
@@ -20,6 +20,9 @@ class betaFaceApi
     var $log_level = 1;
     var $countConnect = 0;
     var $proxy_use = 0;
+    var $proxy_port;
+    var $proxy_ip;
+
 
     function _betaFaceApi($api_key,$api_secret,$api_url,$poll_interval,$PhotoId)
     {
@@ -38,8 +41,10 @@ class betaFaceApi
         $this->api_url = DEFAULT_API_URL;
         $this->poll_interval = DEFAULT_POLL_INTERVAL; 
         $this->image_Attributes = new Attributes($PhotoId);
+        $this->proxy_port = D_PROXY_PORT;
+        $this->proxy_ip = D_PROXY_IP;
         return true;
-    }    
+    }
 	
 	function convertTextToBool($value){
 		if(!(strcmp($value,"no"))){
@@ -204,9 +209,9 @@ class betaFaceApi
 
         if($this->proxy_use == 1){
             echo "using proxy";
-            curl_setopt($ch, CURLOPT_PROXYPORT, $PROXY_PORT);
+            curl_setopt($ch, CURLOPT_PROXYPORT, $this->proxy_port);
             curl_setopt($ch, CURLOPT_PROXYTYPE, 'HTTP');
-            curl_setopt($ch, CURLOPT_PROXY, $PROXY_IP);
+            curl_setopt($ch, CURLOPT_PROXY, $this->proxy_ip);
         }
 
         $result = curl_exec($ch);

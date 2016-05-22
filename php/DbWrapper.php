@@ -210,7 +210,7 @@ class DbWrapper {
 	
 	public function ColorNUMtoTXT($num) {
 		if($num =="")
-			return ColorStrToNUM("undetermined");
+			return $this->ColorStrToNUM("undetermined");
 		$colors = array ("red", "green", "yellow", "blue", "orange", "purple", "pink", "brown", "black", "gray", "white");
 		$minDist = 0xFFFFFFF;
 		$bestFit = "white"; // assuming given black as input

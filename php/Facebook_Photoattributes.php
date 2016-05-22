@@ -3,7 +3,7 @@ set_time_limit(0);
 include 'DbWrapper.php';
 include_once("../APi/api.php");
 
-$startAttId = 1024;
+$startAttId = 1037;
 $endAttId = 1400;
 $PROX_USE = 0;
 

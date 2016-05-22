@@ -3,7 +3,7 @@ set_time_limit(0);
 include 'DbWrapper.php';
 include_once("../APi/api.php");
 
-$startAttId = 1305;
+$startAttId = 1314;
 $endAttId = 1400;
 $PROX_USE = 0;
 
@@ -84,17 +84,17 @@ function insert_att_all_photo() {
 		for ($i = $startAttId; $i <= $endAttId; $i++) {
 			ob_start();
 
-			if($count == 20) {
+			if($count == 10) {
 				$count = 1;
 				echo "\n<br>#################################################<br>\n";
 				echo "\n<br>#################### reading ####################<br>\n";
 				echo "\n<br>#################################################<br>\n";
 
-				echo "\n<br>sleeping 90 sec<br>\n";
+				echo "\n<br>sleeping 60 sec<br>\n";
 				ob_end_flush();
 				flush();
 				$read = 1;
-				sleep (90);
+				sleep (60);
 				break 1;
 			}
 
@@ -115,7 +115,7 @@ function insert_att_all_photo() {
 		for ($j = $startAttId; $j <= $endAttId; $j++) {
 			ob_start();
 			
-			if($count == 20) {
+			if($count == 10) {
 				$count = 1;
 				$startAttId = $j;
 				$read = 0;

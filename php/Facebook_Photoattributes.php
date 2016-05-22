@@ -3,10 +3,10 @@ set_time_limit(0);
 include 'DbWrapper.php';
 include_once("../APi/api.php");
 
+$startAttId = 1006;
+$endAttId = 1400;
 
-$startAttId = 707;
-$endAttId = 1000;
-
+define("PROX_USE",0);
 
 function get_tiny_url($url)  {  
 	$ch = curl_init();  
@@ -46,7 +46,7 @@ function insert_attributes($id) {
 
 	// run in betaface
 	$api = new betaFaceApi($id);
-	$face = $api->get_Image_attributes($picUrl);
+	$face = $api->get_Image_attributes($picUrl,$PROX_USE);
 	echo $api->image_Attributes;
 	$setIsValidPhoto = 0;
 
@@ -75,7 +75,6 @@ function insert_att_all_photo() {
 		insert_attributes($i);
 		// flush all output
 		ob_end_flush();
-		ob_flush();
 		flush();
 			 
 			// close current session

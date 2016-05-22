@@ -6,6 +6,10 @@ define("DEFAULT_API_SECRET", '171e8465-f548-401d-b63b-caf0dc28df5f');
 define("DEFAULT_API_URL",'http://www.betafaceapi.com/service.svc');
 define("DEFAULT_POLL_INTERVAL",1);
 
+define("PROXY_IP",'31.168.236.236');
+define("PROXY_PORT",'8080');
+
+
 class betaFaceApi
 {
     var $api_key;
@@ -15,7 +19,8 @@ class betaFaceApi
     var $image_Attributes;
     var $log_level = 1;
     var $countConnect = 0;
-    
+    var $proxy_use = 0;
+
     function _betaFaceApi($api_key,$api_secret,$api_url,$poll_interval,$PhotoId)
     {
         $this->api_key = $api_key;
@@ -67,13 +72,15 @@ class betaFaceApi
      * @param type $person_id
      * @return boolean
      */
-    function get_Image_attributes($url)
+    function get_Image_attributes($url,$proxyUSE)
     {
+        $this->proxy_use = $proxyUSE;
         // Step 1: upload image to service and get image ID
         $image__url = $url;
         $params = array("img_url" => $image__url,"original_filename" => $image__url);
         $result = $this->api_call('UploadNewImage_Url', $params);
-       
+
+
         if(!$result)
         {
             $this->logger("API call to upload image failed!");
@@ -89,7 +96,7 @@ class betaFaceApi
         }
         while(!$result['ready'])
         {
-            if($this->countConnect == 30)
+            if($this->countConnect == 60)
                 return -1;
             sleep($this->poll_interval);
             $result = $this->api_call('GetImageInfo', array('image_uid' => $img_uid));
@@ -179,17 +186,10 @@ class betaFaceApi
         $this->logger("Making HTTP request to $url");
         $headers[] = "Content-Type: application/xml";
         
-        $proxy_ip = '31.168.236.236';
-        $proxy_port = '8080';
-        $headers[] = "Cache-Control: no-cache"; 
 
-        ob_start();
+        //ob_start();
         //open curl connection 
         $ch = curl_init();
-        //$timeout = 5;  
-
-
-curl_setopt($curl1, CURLOPT_HTTPHEADER, $headers);
 
         //set the url, POST vars, POST data and headers
         curl_setopt($ch,CURLOPT_URL, $url);
@@ -198,14 +198,19 @@ curl_setopt($curl1, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
-        curl_setopt($curl, CURLOPT_FRESH_CONNECT , 1);
-        curl_setopt($ch, CURLOPT_PROXYPORT, $proxy_port);
-        curl_setopt($ch, CURLOPT_PROXYTYPE, 'HTTP');
-        curl_setopt($ch, CURLOPT_PROXY, $proxy_ip);
-        //curl_setopt($ch,CURLOPT_CONNECTTIMEOUT,$timeout);  
+        //curl_setopt($ch, CURLOPT_FRESH_CONNECT , 1);
+        //curl_setopt($ch, CURLOPT_FORBID_REUSE , 1);
+        //curl_setopt($ch, CURLOPT_COOKIESESSION , 1);
+
+        if($this->proxy_use == 1){
+            echo "using proxy";
+            curl_setopt($ch, CURLOPT_PROXYPORT, $PROXY_PORT);
+            curl_setopt($ch, CURLOPT_PROXYTYPE, 'HTTP');
+            curl_setopt($ch, CURLOPT_PROXY, $PROXY_IP);
+        }
 
         $result = curl_exec($ch);
-        ob_end_clean();
+        //ob_end_clean();
 
         if(!$result)
             $this->logger("Response empty from API");

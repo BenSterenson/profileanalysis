@@ -23,7 +23,7 @@ function extract_likes_num($html){
 }
 
 
-$file = fopen("../fb_users/imported_data_cvs/users.txt", "r") or exit("Unable to open file!");
+$file = fopen("../DB_backup/imported_data_cvs/users.txt", "r") or exit("Unable to open file!");
 while(!feof($file)) {
 	$line = fgets($file);
 	$uid = rtrim($line, " \t\r\n");

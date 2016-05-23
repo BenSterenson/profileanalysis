@@ -3,6 +3,7 @@
 class Attributes implements JsonSerializable {
 
 	#region Fields
+	
     private $PhotoId; //photoId;
     private $Gender; //female/male;
     private $EyeColor; // RGB hex color value
@@ -13,9 +14,11 @@ class Attributes implements JsonSerializable {
     private $Age;
     private $UpdateDate; //date of api check
 	private $UpdatedByUser;
+	
 	#endregion Fields
 	
 	#region Constructors
+	
 	public function __construct() {
         $argv = func_get_args();
         switch( func_num_args() ) {
@@ -35,25 +38,20 @@ class Attributes implements JsonSerializable {
 	}
 
 	public function __construct2($row, $update) {
-		//if ($row->num_rows == 1) {
-		//	$row = ($row->fetch_assoc());
-			$this->PhotoId = $row['PhotoId'];
-			$this->Gender = $row['Gender'];
-			$this->EyeColor = $row['EyeColor'];
-			$this->HairColor = $row['HairColor'];
-			$this->HasBeard = $row['HasBeard'];
-			$this->HasGlasses = $row['HasGlasses'];
-			$this->HasSmile = $row['HasSmile'];
-			$this->Age = $row['Age'];
-		//}
-		return;
+		$this->PhotoId = $row['PhotoId'];
+		$this->Gender = $row['Gender'];
+		$this->EyeColor = $row['EyeColor'];
+		$this->HairColor = $row['HairColor'];
+		$this->HasBeard = $row['HasBeard'];
+		$this->HasGlasses = $row['HasGlasses'];
+		$this->HasSmile = $row['HasSmile'];
+		$this->Age = $row['Age'];
     }
-
-
 
 	#endregion Constructors
 	
 	#region Setters
+	
 	function setPhotoId($PhotoId) {
 		$this->PhotoId = $PhotoId;
 	}
@@ -84,9 +82,11 @@ class Attributes implements JsonSerializable {
 	function setUpdatedByUser($UpdatedByUser) {
 		$this->UpdatedByUser = $UpdatedByUser;
 	}
+	
 	#endregion Setters
 
 	#region Getters
+	
 	function getPhotoId() {
 		return $this->PhotoId;
 	}
@@ -117,9 +117,11 @@ class Attributes implements JsonSerializable {
 	function getUpdatedByUser() {
 		return $this->UpdatedByUser;
 	}
+	
 	#endregion Getters
 	
 	#region Methods
+	
 	public function jsonSerialize() {
         return Array(
 		   'PhotoId'		=> $this->PhotoId + 0,
@@ -146,7 +148,9 @@ class Attributes implements JsonSerializable {
         Age : " . $this->Age . " <br>
         Update Date : " . $this->UpdateDate . " <br>
         Updated By User : " . $this->UpdatedByUser . " <br>";
-    } 
+    }
+	
 	#endregion Methods
+
 }
 ?>

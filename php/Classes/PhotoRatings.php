@@ -1,18 +1,22 @@
 <?php
 
-class PhotoRAtings implements JsonSerializeable{
+class PhotoRatings implements JsonSerializeable
+{
+	#region	Fields
+	private Id		   = -1; 
+	private IsHot  	   = NULL;
+	private PhotoId    = -1; 
+	private FacebookId = -1;
+	#endregion	Fields
 	
-	private Id = NULL; 
-	private IsHot = NULL;
-	private PhotoId = NULL; 
-	private FacebookId = NULL;
-	
-	public function __construct($id,$isHot,$PhotoId,$FacebookId){
+	#region	Constructors
+	public function __construct($id,$IsHot,$PhotoId,$FacebookId){
 		$this->Id = $id;
-		$this->IsHot = $isHot;
+		$this->IsHot = $IsHot;
 		$this->PhotoId = $PhotoId;
 		$this->FacebookId = $FacebookId;
 	}
+	#endregion	Constructors
 	
 	#region Setters
 	function setId($Id) {
@@ -22,7 +26,7 @@ class PhotoRAtings implements JsonSerializeable{
 		$this->FacebookId = $FacebookId);
 	}
 	function setIsHot($IsHot) {
-		$this->Comment = $IsHot;
+		$this->IsHot = $IsHot;
 	}
 	function setPhotoId($PhotoId) {
 		$this->PhotoId = $PhotoId;
@@ -42,12 +46,23 @@ class PhotoRAtings implements JsonSerializeable{
 	function getPhotoId() {
 		return $this->PhotoId;
 	}
+	#endregion Getters
+	
+	#region Methods
+	public function jsonSerialize() {
+        return Array(
+			'Id' => $this.Id + 0,
+			'IsHot'	=> $this->IsHot,
+			'PhotoId' => $this->PhotoId + 0,
+			'FacebookId' => $this->FacebookId + 0 
+        );
+    }
 	
 	#print
 	function __toString(){
 		return "Id : " . $this->Id . "<br>FacebookId : " . $this->FacebookId . "<br>IsHot : " . $this->IsHot .
 				"<br>PhotoId : " . $this->PhotoId . "<br>"; 
 	}
-	
+	#endregion Methods
 }
 ?>

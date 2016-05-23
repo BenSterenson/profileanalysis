@@ -1,6 +1,8 @@
 <?php
 include_once("Attributes.php");
 
+#region Defines
+
 define("DEFAULT_API_KEY", 'd45fd466-51e2-4701-8da8-04351c872236');
 define("DEFAULT_API_SECRET", '171e8465-f548-401d-b63b-caf0dc28df5f');
 define("DEFAULT_API_URL",'http://www.betafaceapi.com/service.svc');
@@ -9,9 +11,12 @@ define("DEFAULT_POLL_INTERVAL",1);
 define("D_PROXY_IP",'31.168.236.236');
 define("D_PROXY_PORT",'8080');
 
+#endregion Defines
 
 class betaFaceApi
 {
+	#region Fields
+	
     var $api_key;
     var $api_secret;
     var $api_url;
@@ -24,6 +29,8 @@ class betaFaceApi
     var $proxy_ip;
     var $limit = 60;
 
+	#endregion Fields
+	
     function _betaFaceApi($api_key,$api_secret,$api_url,$poll_interval,$PhotoId)
     {
         $this->api_key = $api_key;
@@ -46,7 +53,8 @@ class betaFaceApi
         return true;
     }
 	
-	function convertTextToBool($value){
+	function convertTextToBool($value)
+	{
 		if(!(strcmp($value,"no"))){
 			return 0;
 		}
@@ -126,7 +134,6 @@ class betaFaceApi
         return $result;
     }
     
-        
     function recognize_faces($url, $namespace)
     {
          // Step 1: upload image url
@@ -255,9 +262,6 @@ class betaFaceApi
         if($this->log_level>$level)
             echo $text."<BR>";
     }
-
-    
-    
     
     function render_template($template_file,$context)
     {

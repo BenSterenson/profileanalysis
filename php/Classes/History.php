@@ -2,22 +2,23 @@
 
 class History implements JsonSerializeable{
 	
+	#region Fields
 	private Id = NULL; 
 	private FacebookId = NULL;
 	private AttributeName = NULL; 
 	private FilterValue = NULL;
 	private SessionId = NULL;
-
+	#endregion Fields`
 		
+	#region Constructors
 	public function __construct($Id,$FBId,$AttributeName,$FilterValue,$SessionId){
 		$this->Id = $Id;
 		$this->FacebookId = $FBId;
 		$this->AttributeName = $AttributeName;
 		$this->FilterValue = $FilterValue;
 		$this->SessionId = $SessionId;
-		
 	}
-		
+	#endregion Constructors
 	
 	#region Setters
 	function setId($Id) {
@@ -55,6 +56,7 @@ class History implements JsonSerializeable{
 	}
 	#endregion Getters
 	
+	#region Methods
 	public function jsonSerialize() {
         return Array(
 			'Id' => $this.Id + 0,
@@ -62,7 +64,6 @@ class History implements JsonSerializeable{
 			'AttributeName' => $this->AttributeName,
 			'FilterValue' => $this->FilterValue,
 			'SessionId' => $this->SessionId + 0 
-         
         );
     }
 	
@@ -71,7 +72,7 @@ class History implements JsonSerializeable{
 		return "Id : " . $this->Id . "<br>FacebookId : " . $this->FacebookId . "<br>AttributeName : " . $this->AttributeName .
 				"<br>FilterValue : " . $this->FilterValue . "<br>SessionId : " . $this->SessionId . "<br>"; 
 	}
-	
+	#endregion Methods
 }
 
 ?>

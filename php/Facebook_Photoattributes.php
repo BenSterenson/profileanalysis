@@ -1,7 +1,7 @@
 <?php
 set_time_limit(0);
 include 'DbWrapper.php';
-include_once("../APi/api.php");
+include_once("../BetafaceAPI/BetafaceAPI.php");
 
 $startAttId = 1314;
 $endAttId = 1400;
@@ -42,7 +42,7 @@ function insert_attributes($id,$send) {
 
 	$picUrl = get_tiny_url($picUrl);
 	echo "pic url: ".$picUrl. "<br>";
-	chdir('../APi/');
+	chdir('../BetafaceAPI/');
 
 	// run in betaface
 	$api = new betaFaceApi($id);

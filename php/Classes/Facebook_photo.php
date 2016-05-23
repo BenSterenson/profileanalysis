@@ -1,5 +1,5 @@
 <?php
-include 'Facebook_user.php';
+//include 'Facebook_user.php'; // MICHAEL: DO WE NEED IT??
 set_time_limit(0);
 
 class Facebook_photo implements JsonSerializable { 

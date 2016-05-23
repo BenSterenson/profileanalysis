@@ -1,10 +1,8 @@
 <?php
-
-// Include DBWrapper
-	
 set_time_limit(0);
-$file = fopen("../fb_users/imported_data_cvs/Sorted_ALL_UID.txt", "r") or exit("Unable to open file!");
-$outputfile = fopen("../fb_users/imported_data_cvs/updated_UID.txt", "a") or die("Unable to open file!");
+
+$file = fopen("../DB_backup/imported_data_cvs/Sorted_ALL_UID.txt", "r") or exit("Unable to open file!");
+$outputfile = fopen("../DB_backup/imported_data_cvs/updated_UID.txt", "a") or die("Unable to open file!");
 
 //Output a line of the file until the end is reached
 while(!feof($file))

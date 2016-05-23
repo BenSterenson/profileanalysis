@@ -48,8 +48,9 @@
 		// FacebookId 		int
 #endregion Comments
 
-include 'Facebook_photo.php';
-include 'Attributes.php';
+include 'Classes/Facebook_photo.php'; // MICHAEL: if we remove facebook_user include from facebook_photo we'll have to add it here
+include 'Classes/Facebook_user.php';
+include 'Classes/Attributes.php';
 
 define("NUMOfCOLORS",11);
 

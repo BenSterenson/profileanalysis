@@ -172,7 +172,7 @@ class API extends abstract_api
 	{
 		if ($this->method == 'GET')
 		{
-			TODO
+			//TODO
 		}		
 		else 
 		{

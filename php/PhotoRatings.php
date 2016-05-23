@@ -4,16 +4,15 @@ class PhotoRatings implements JsonSerializeable
 {
 	#region	Fields
 	private Id		   = -1; 
-	private HotCount   = -1;
-	private NotCount   = -1;
+	private IsHot  	   = NULL;
 	private PhotoId    = -1; 
 	private FacebookId = -1;
 	#endregion	Fields
 	
 	#region	Constructors
-	public function __construct($id,$HotCount,$PhotoId,$FacebookId){
+	public function __construct($id,$IsHot,$PhotoId,$FacebookId){
 		$this->Id = $id;
-		$this->HotCount = $HotCount;
+		$this->IsHot = $IsHot;
 		$this->PhotoId = $PhotoId;
 		$this->FacebookId = $FacebookId;
 	}
@@ -26,11 +25,8 @@ class PhotoRatings implements JsonSerializeable
 	function setFacebookId($FacebookId) {
 		$this->FacebookId = $FacebookId);
 	}
-	function setHotCount($HotCount) {
-		$this->HotCount = $HotCount;
-	}
-	function setNotCount($NotCount) {
-		$this->NotCount = $NotCount;
+	function setIsHot($IsHot) {
+		$this->IsHot = $IsHot;
 	}
 	function setPhotoId($PhotoId) {
 		$this->PhotoId = $PhotoId;
@@ -44,11 +40,8 @@ class PhotoRatings implements JsonSerializeable
 	function getFacebookId() {
 		return $this->FacebookId;
 	}
-	function getHotCount() {
-		return $this->HotCount;
-	}
-	function getNotCount() {
-		return $this->NotCount;
+	function getIsHot() {
+		return $this->IsHot;
 	}
 	function getPhotoId() {
 		return $this->PhotoId;
@@ -59,8 +52,7 @@ class PhotoRatings implements JsonSerializeable
 	public function jsonSerialize() {
         return Array(
 			'Id' => $this.Id + 0,
-			'HotCount'	=> $this->HotCount + 0,
-			'NotCount'	=> $this->NotCount + 0,
+			'IsHot'	=> $this->IsHot,
 			'PhotoId' => $this->PhotoId + 0,
 			'FacebookId' => $this->FacebookId + 0 
         );
@@ -68,7 +60,7 @@ class PhotoRatings implements JsonSerializeable
 	
 	#print
 	function __toString(){
-		return "Id : " . $this->Id . "<br>FacebookId : " . $this->FacebookId . "<br>HotCount : " . $this->HotCount .
+		return "Id : " . $this->Id . "<br>FacebookId : " . $this->FacebookId . "<br>IsHot : " . $this->IsHot .
 				"<br>PhotoId : " . $this->PhotoId . "<br>"; 
 	}
 	#endregion Methods

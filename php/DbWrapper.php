@@ -27,30 +27,29 @@
 		// UpdateDate	 	date	// text format: date("Y-m-d:H:i:s")
 		// UpdatedByUser	bool
 		
-		/* PhotoComments:
-//Key	Id 			int 
-		Comment 	text 
-		PhotoId 	int  
-		FacebookId 	int 
-		Time 		date */
+		// PhotoComments:
+// KEY	// Id 			int 
+		// Comment	 	text 
+		// PhotoId 		int  
+		// FacebookId 	int 
+		// Time 		date
 		
-		/* History:
-//Key	Id 				int 
-		FacebookId 		int 
-		AttributeName 	text  
-		FilterValue 	text 
-		SessionId 		text  */
+		// History:
+// KEY	// Id 				int 
+		// FacebookId 		int 
+		// AttributeName 	text  
+		// FilterValue	 	text 
+		// SessionId 		text
 		
-/* 		PhotoRatings:
-//Key	Id 				int 
-		IsHot 			bool
-		PhotoId 		int 
-		FacebookId 		int */
+ 		// PhotoRatings:
+// KEY	// Id 				int 
+		// IsHot 			bool
+		// PhotoId 			int 
+		// FacebookId 		int
+#endregion Comments
 
-	#endregion Comments
-//include 'Facebook_user.php';
 include 'Facebook_photo.php';
-include("../APi/Attributes.php");
+include 'Attributes.php';
 
 define("NUMOfCOLORS",11);
 
@@ -70,12 +69,12 @@ class DbWrapper {
 	#region Constructors
 	public function __construct() {
 		$this->allowed_tables_array						= array('Users', 'Photos', 'PhotoAttributes','PhotoComments','History','PhotoRatings');
-		$this->allowed_columns_array['Users']				= array('FacebookId', 'FirstName', 'LastName');
+		$this->allowed_columns_array['Users']			= array('FacebookId', 'FirstName', 'LastName');
 		$this->allowed_columns_array['Photos'] 			= array('Id', 'FacebookPhotoId', 'FacebookId','UpdateDate', 'PhotoLink', 'NumOfLikes', 'IsValidPhoto');
-		$this->allowed_columns_array['PhotoAttributes'] 	= array('Id', 'PhotoId', 'Gender', 'EyeColor', 'HasBeard', 'HasGlasses', 'HasSmile', 'Age', 'UpdateDate', 'UpdatedByUser');
-		$this->allowed_columns_array['PhotoComments'] = array('Id','FacebookId','Comment','PhotoId','Time');
-		$this->allowed_columns_array['History'] = array('Id','FacebookId','AttributeName','FilterValue','SessionId');
-		$this->allowed_columns_array['PhotoRatings'] = array('Id','IsHot','PhotoId','FacebookId');
+		$this->allowed_columns_array['PhotoAttributes'] = array('Id', 'PhotoId', 'Gender', 'EyeColor', 'HasBeard', 'HasGlasses', 'HasSmile', 'Age', 'UpdateDate', 'UpdatedByUser');
+		$this->allowed_columns_array['PhotoComments'] 	= array('Id','FacebookId','Comment','PhotoId','Time');
+		$this->allowed_columns_array['History'] 		= array('Id','FacebookId','AttributeName','FilterValue','SessionId');
+		$this->allowed_columns_array['PhotoRatings'] 	= array('Id','IsHot','PhotoId','FacebookId');
 		
 		$this->connection = new mysqli($this->servername, $this->username, $this->password, $this->dbname);
 		// Check connection
@@ -207,7 +206,6 @@ class DbWrapper {
 				return 0xFFFFFF;
 		}
 	}
-	
 	public function ColorNUMtoTXT($num) {
 		if($num =="")
 			return $this->ColorStrToNUM("undetermined");
@@ -474,26 +472,28 @@ class DbWrapper {
 										$this->ColorNUMtoTXT($object->getHairColor()) . "', " . $object->getHasBeard()  . ", " . $object->getHasGlasses() . ", " .
 										$object->getHasSmile() . ", " . $object->getAge() . ", '" . $object->getUpdateDate() . "', " . $object->getUpdatedByUser() . ")";
 				break;
+				
 			case "History":
 				$string = "INSERT INTO History ";
 				$string = $string . " (Id,FacebookId,AttributeName,FilterValue,SessionId) VALUES ";
 				$string = $string . " (" . $object->getId() . ", " . $object->getFBID() . ", '" . $object->getAttributeName() . "', '" .
 										$object->getFilterValue() . "', " . $object->getSessionId() . ")";
 				break;
+				
 			case "PhotoComments":
 				$string = "INSERT INTO PhotoComments ";
 				$string = $string . " (Id,FacebookId,Comment,PhotoId,Time) VALUES ";
 				$string = $string . " (" . $object->getId() . ", " . $object->getFacebookId() . ", '" . $object->getComment() . "', '" .
 										$object->getPhotoId() . "', " . $object->getTime() . ")";
 				break;
+				
 			case "PhotoRatings":
 				$string = "INSERT INTO PhotoComments ";
-				$string = $string . " (Id,isHot,PhotoId,FacebookId) VALUES ";
-				$string = $string . " (" . $object->getId() . ", " . $object->getIsHot() . ", '" . $object->getPhotoId() . "', '" .
-										$object->getFacebookId() . ")";
+				$string = $string . " (Id,IsHot,PhotoId,FacebookId) VALUES ";
+				$string = $string . " (" . $object->getId() . ", " . $object->IsHot() .	", '" . 
+										$object->getPhotoId() . "', '" . $object->getFacebookId() . ")";
 				break;
 		}
-		////echo $string;
 		$this->execute($string);
 	}
 	

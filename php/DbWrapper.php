@@ -1,7 +1,7 @@
 <?php
 #region Comments
 		// Users:
-// KEY	// FacebookId 	int
+// KEY	// FacebookId 		int
 		// FirstName 	string
 		// LastName 	string
 		

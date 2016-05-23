@@ -3,8 +3,8 @@ set_time_limit(0);
 include 'DbWrapper.php';
 include_once("../BetafaceAPI/BetafaceAPI.php");
 
-$startAttId = 1314;
-$endAttId = 1400;
+$startAttId = 2612;
+$endAttId = 2983;
 $PROX_USE = 0;
 
 
@@ -84,7 +84,7 @@ function insert_att_all_photo() {
 		for ($i = $startAttId; $i <= $endAttId; $i++) {
 			ob_start();
 
-			if($count == 10) {
+		/*	if($count == 10) {
 				$count = 1;
 				echo "\n<br>#################################################<br>\n";
 				echo "\n<br>#################### reading ####################<br>\n";
@@ -96,7 +96,7 @@ function insert_att_all_photo() {
 				$read = 1;
 				sleep (60);
 				break 1;
-			}
+			}*/
 
 			echo "id : $i <br>\n";
 			insert_attributes($i,$read);
@@ -111,7 +111,7 @@ function insert_att_all_photo() {
 
 
 
-
+/*
 		for ($j = $startAttId; $j <= $endAttId; $j++) {
 			ob_start();
 			
@@ -133,7 +133,7 @@ function insert_att_all_photo() {
 				// close current session
 			if (session_id()) session_write_close();
 			$count ++;
-		}
+		}*/
 	}
 
 } 

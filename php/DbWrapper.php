@@ -650,7 +650,7 @@ class DbWrapper {
 	
 	public function getHistory($FBID)
 	{
-		$res_arr[] = $this->execute("SELECT AttributeName,FilterValue FROM History where FacebookId = " . $FBID );
+		$res_arr = $this->execute("SELECT AttributeName,FilterValue FROM History where FacebookId = " . $FBID );
 		
 			while ($row = $res_arr->fetch_assoc()) {
 			$AttributeName = $row['AttributeName'];
@@ -668,7 +668,28 @@ class DbWrapper {
 		return $res_arr;
 	}
 	
-	
+	public function getPhotoComments($PhotoId) {
+
+		$string = " SELECT PhotoComments.Comment, Users.FirstName, Users.LastName, photos.PhotoLink
+					FROM PhotoComments, Users, Photos
+					where PhotoComments.PhotoId = $PhotoId
+					AND PhotoComments.FacebookId = Users.FacebookId
+					AND PhotoComments.PhotoId = photos.Id
+					ORDER BY PhotoComments.Id ASC";
+
+		$res_arr = $this->execute($string);
+
+		while ($row = $res_arr->fetch_assoc()) {
+			$Comment = $row['Comment'];
+			$FirstName = $row['FirstName'];
+			$LastName = $row['LastName'];
+			$PhotoLink = $row['PhotoLink'];
+			$PhotoComments[] = array($Comment, $FirstName, $LastName, $PhotoLink);
+		}
+
+		return $PhotoComments;
+
+	}
 	#endregion Methods (public)
 
 }

@@ -172,7 +172,13 @@ class API extends abstract_api
 	{
 		if ($this->method == 'GET')
 		{
-			//TODO
+			$PhotoComments = API::$myDbWrapper->getPhotoComments($PhotoID);
+			$myArray = array(
+				"Comment" => $PhotoComments[0],
+				"FirstName" => $PhotoComments[1],
+				"LastName" => $PhotoComments[2],
+				"PhotoLink" => $PhotoComments[3]);
+			return json_encode($myArray);
 		}		
 		else 
 		{

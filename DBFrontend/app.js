@@ -120,9 +120,9 @@
 		var newArray = []
 		var colorDict = {
 			"red":"#d92626",
-			"green":"#80ff00",
+			"green":"#7EE831",
 			"yellow":"#ffbf00",
-			"blue":"#00bfff",
+			"blue":"#007FFF",
 			"orange":"#ff8000",
 			"purple":"#8000ff",
 			"pink":"#ff0040",
@@ -170,7 +170,7 @@
 	ChartService.getGender().then(function successCallback(data) {		
 		$scope.genderData = data.values;
 		$scope.genderLabels = data.keys;
-		$scope.genderChartColors = ['#ffc0cb', '#000066'];
+		$scope.genderChartColors = ['#ffc0cb', '#7AC8F5'];
 	});
     
 

@@ -1,13 +1,16 @@
 <?php
 
-class PhotoComments implements JsonSerializeable{
-	
+class PhotoComments implements JsonSerializeable
+{
+	#region Fields
 	private Id = NULL; 
 	private Comment = NULL;
 	private PhotoId = NULL; 
 	private FacebookId = NULL;
 	private Time = NULL;
+	#endregion Fields
 	
+	#region Constructors
 	public function __construct() {
         $argv = func_get_args();
         switch( func_num_args() ) {
@@ -36,7 +39,7 @@ class PhotoComments implements JsonSerializeable{
 		$this->Time = $Time;
 		
 	}
-		
+	#endregion Constructors
 	
 	#region Setters
 	function setId($Id) {
@@ -74,14 +77,14 @@ class PhotoComments implements JsonSerializeable{
 	}
 	#endregion Getters
 	
+	#region Methods
 	public function jsonSerialize() {
         return Array(
 			'Id' => $this.Id + 0,
 			'FacebookId'	=> $this->FacebookId + 0,
-			'Comment' => $this->Comment,
-			'PhotoId' => $this->PhotoId + 0,
-			'Time' => $this->Time + 0 
-         
+			'Comment' 		=> $this->Comment,
+			'PhotoId'		=> $this->PhotoId + 0,
+			'Time'			=> $this->Time + 0
         );
     }
 	
@@ -90,7 +93,7 @@ class PhotoComments implements JsonSerializeable{
 		return "Id : " . $this->Id . "<br>FacebookId : " . $this->FacebookId . "<br>Comment : " . $this->Comment .
 				"<br>PhotoId : " . $this->PhotoId . "<br>Time : " . $this->Time . "<br>"; 
 	}
-	
+	#endregion Methods	
 }
 
 ?>

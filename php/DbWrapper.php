@@ -435,7 +435,7 @@ class DbWrapper {
 			$string = $string . " AND Photos.AttUpdateDate >= " . $AttUpdateDateTO;
 		}
 
-		$string = $string " LIMIT " . $start . ", " .$stop;
+		$string = $string ." limit " . $start . ", " . $stop;
 
 		$result = $this->execute($string);
 		$rows = array();

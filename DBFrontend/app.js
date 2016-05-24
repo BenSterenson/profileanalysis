@@ -9,10 +9,11 @@
       colours: ['#97BBCD', '#DCDCDC', '#F7464A', '#46BFBD', '#FDB45C', '#949FB1', '#4D5360'],
       responsive: true
     });
+
   });
   app.service('UsersService', function ($http) {
-	  this.getPhotos = function (gender, eyeColor, hairColor, hasBeard, hasGlasses, hasSmile ,age) {
-          return $http.get('../php/api/getphotos/'+gender+'/'+eyeColor+'/'+hairColor+'/'+hasBeard+'/'+hasGlasses+'/'+hasSmile+'/'+age).then(function successCallback(response) {
+	  this.getPhotos = function (start,stop,gender, eyeColor, hairColor, hasBeard, hasGlasses, hasSmile ,age) {
+          return $http.get('../php/api/getphotos/'+start+'/'+stop+'/'+gender+'/'+eyeColor+'/'+hairColor+'/'+hasBeard+'/'+hasGlasses+'/'+hasSmile+'/'+age).then(function successCallback(response) {
 				return JSON.parse(response.data);
 			}, function errorCallback(response) {
 				alert("Error on getPhotos!");
@@ -88,38 +89,43 @@
 			});
       }
   });
-    app.controller('MainCtrl', function ($scope,$http, ChartService) {
+  app.controller('MainCtrl', function ($scope,$http, $uibModal, ChartService,UsersService) {
 
-      // Handle Facebook
-      $scope.loggedOnUser = {};
-      $scope.login = function (accessToken) {
-          FB.api('/me', function (response) {
-              $scope.loggedOnUser = response;
-              console.log(JSON.stringify(response));
-              $scope.$apply();
-          });
-          
-      }
+	// Init
+	$scope.size = 12;
+	$scope.start = 0;
+	$scope.stop = $scope.size;
 
-	  $scope.successRun = "none";
-	  $scope.run = function(i,stop){
-		  $http.get('../php/api/addattributes/'+i).then(function successCallback(response) {
-			$scope.successRun = i;
-			if(i<=stop){
-				$scope.run(i+1,stop);
-			}
-		  },
-		  function errorCallback(response) {
-			$scope.successRun = i + " Error: " + response.statusText;
-		  });
-	  }
+	// Handle Facebook
+	$scope.loggedOnUser = {};
+	$scope.login = function (accessToken) {
+	  FB.api('/me', function (response) {
+		  $scope.loggedOnUser = response;
+		  console.log(JSON.stringify(response));
+		  $scope.$apply();
+	  });
 	  
-      $scope.runApi = function () {
-          $scope.run($scope.from,$scope.to);
-          
-      }
+	}
+
+	$scope.successRun = "none";
+	$scope.run = function(i,stop){
+	  $http.get('../php/api/addattributes/'+i).then(function successCallback(response) {
+		$scope.successRun = i;
+		if(i<=stop){
+			$scope.run(i+1,stop);
+		}
+	  },
+	  function errorCallback(response) {
+		$scope.successRun = i + " Error: " + response.statusText;
+	  });
+	}
+
+	$scope.runApi = function () {
+	  $scope.run($scope.from,$scope.to);
+	  
+	}
       // Load the data
-	
+
 
 	
 	function convertColorsToViewable(colors){
@@ -214,7 +220,65 @@
 		$scope.beardChartColors = ['#003399', '#99bbff'];
 	});
 
-  });
+	
+		
+	// Get Photos
+	$scope.users = [];
+	$scope.getPhotos = function(start,stop){
+		if($scope.start <=0){
+			$scope.start = 0;
+			$scope.stop = $scope.size;
+		}
+		// TODO: check maximum right
+		$scope.start = start;
+		$scope.stop = stop;
+		UsersService.getPhotos($scope.start,$scope.stop,$scope.genderFilter, $scope.eyeColorFilter, $scope.hairColorFilter, $scope.beardFilter, $scope.glassesFilter, $scope.smilesFilter ,$scope.ageFilter).then(function successCallback(data) {
+			$scope.users = data;
+		});
+	}
+	$scope.getPhotos($scope.start,$scope.stop);
+	
+	$scope.open = function (user) {
 
+		var modalInstance = $uibModal.open({
+		  animation: true,
+		  templateUrl: 'image-modal.html',
+		  controller: 'ModalCtrl',
+		  size: 'lg',
+		  resolve: {
+			user: function () {
+			  return user;
+			},
+			labels: function(){
+				return {'hairColorLabels':$scope.hairColorLabels,'eyeColorLabels':$scope.eyeColorLabels};
+			}
+		  }
+		});
+
+	  };
+	  
+
+
+});
+  app.controller('ModalCtrl', function ($scope,$http, $uibModalInstance, user, labels) {
+		
+		var colorArr = ["red","green","yellow","blue","orange","purple","pink","brown","black","gray","white"];
+	  
+		$scope.user = user;
+		
+		// Fix Hair and eye color
+		$scope.user.EyeColorFix = colorArr[$scope.user.EyeColor];
+		$scope.user.HairColorFix = colorArr[$scope.user.HairColor];
+		$scope.eyeColorLabels = labels.eyeColorLabels;
+		$scope.hairColorLabels = labels.hairColorLabels;
+
+		$scope.ok = function () {
+			$uibModalInstance.close();
+		};
+
+		$scope.cancel = function () {
+			$uibModalInstance.dismiss('cancel');
+		};
+  });
 
 })();

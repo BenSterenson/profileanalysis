@@ -14,7 +14,8 @@
   ],
   "dependencies": {
     "angular": "1.x",
-    "Chart.js": "~1.1.1"
+    "Chart.js": "~1.1.1",
+    "angular-bootstrap-lightbox": "^0.12.0"
   },
   "devDependencies": {
     "Chart.StackedBar.js": "~1.0.1",

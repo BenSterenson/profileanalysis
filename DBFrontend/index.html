@@ -5,15 +5,15 @@
   <title>Facebook Analysis Project</title>
   <link rel="stylesheet" href="css/angular-chart.min.css">
   <script src="https://use.fontawesome.com/1b5f59f5ad.js"></script>
+  <link href="css/ui-bootstrap-csp.css" rel="stylesheet">
   <link href="css/bootstrap.css" rel="stylesheet">
   <link href="app.css" rel="stylesheet">
-    <script src="js/angular.min.js"></script>
     <script src="js/Chart.js"></script>
+    <script src="js/smoothscroll.min.js"></script>
+    <script src="js/angular.min.js"></script>
+    <script src="js/ui-bootstrap.min.js"></script>
     <script src="js/ui-bootstrap-tpls.min.js"></script>
     <script src="js/angular-chart.min.js"></script>
-    <script src="js/smoothscroll.min.js"></script>
-    <script src="http://chir.ag/projects/ntc/ntc.js"></script>
-
     <script src="app.js"></script>
 </head>
 <body ng-app="profileanalysis" id="top" ng-controller="MainCtrl">
@@ -169,75 +169,32 @@
                 <div class="page-header">
                     <h2>Users</h2>
                 </div>
-                <div class="row" style="padding:5px;" ng-repeat="user in [{name:'Dixie Normous',desc:'Porn Star'},
-                                                                     {name:'Jack Goff',desc:'Lonely'},
-                                                                     {name:'Chris P. Bacon',desc:'Crispy'},
-                                                                     {name:'Brock Lee',desc:'Green'}]">
-                    <div class="media col-md-2" style="padding:0px">
-                        <figure class="pull-left">
-                            <img class="media-object img-rounded img-responsive" src="http://placehold.it/50x50" />
-                        </figure>
-                    </div>
-                    <div class="col-md-2" ng-click="user.selected=!user.selected" style="cursor:pointer">
-                        <h4 class="list-group-item-heading"> {{user.name}} </h4>
-                        <p class="list-group-item-text">{{user.desc}} </p>
-                    </div>
-
-                    <div class="col-md-8" ng-show="user.selected">
-                        <section id="edituserSection">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <button class="fa fa-times pull-right" ng-click="user.selected=false"></button>
-                                    <h2>{{selectedUser.name}}</h2>
-
-                                </div>
-                                <div class="panel-body">
-                                    <div class="form-group">
-                                        <label for="eyeColorSelect">Eye Color</label>
-                                        <select id="eyeColorSelect" class="form-control">
-                                            <option ng-repeat="color in eyeColorLabels">{{color}}</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="hairColorSelect">Hair Color</label>
-                                        <select id="hairColorSelect" class="form-control">
-                                            <option ng-repeat="color in hairColorLabels">{{color}}</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="ageInput">Age</label>
-                                        <input type="number" id="ageInput">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="hasGlasses">Has Glasses</label>
-                                        <br />
-                                        Yes: <input type="radio" id="hasGlasses" value="Yes">
-                                        No: <input type="radio" id="hasGlasses" value="No">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="hasGlasses">Has Beard</label>
-                                        <br />
-                                        Yes: <input type="radio" id="hasBeard" value="Yes">
-                                        No: <input type="radio" id="hasBeard" value="No">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="smilesInput">Smiles</label>
-                                        <br />
-                                        Yes: <input type="radio" id="smilesInput" value="Yes">
-                                        No: <input type="radio" id="smilesInput" value="No">
-                                    </div>
-                                    <button type="submit" class="btn btn-default">Update</button>
-                                </div>
-                            </div>
-                        </section>
-                    </div>
-                </div>
+				<div class="row">
+					<div class="col-md-1" style="margin-top: 20%;height: 100px;">
+						<button class="btn btn-primary fa fa-chevron-left" aria-hidden="true" style="width: 100%;height:100%"
+						ng-click="getPhotos(start-size,stop-size)" ng-hide="start == 0">
+						</button>
+					</div>
+					<div class="col-md-10">
+						<ul>
+						 <li ng-repeat="user in users" style="display: inline-block;list-style-type: none; cursor:pointer;padding:10px;">
+							<a ng-click="open(user)">
+							  <img style="height:200px;width:200px" ng-src="{{user.PhotoLink}}" class="img-circle">
+							</a>
+						  </li>
+						</ul>
+					</div>
+					<div class="col-md-1" style="margin-top: 20%;height: 100px;">
+						<button class="btn btn-primary fa fa-chevron-right" aria-hidden="true" style="width: 100%;height:100%"
+							ng-click="getPhotos(start+size,stop+size)">
+						</button>
+					</div>
+				</div>
             </section>
         </div>
         
         
     </div>
-    
     <footer class="footer">
         <div class="container">
             <p>Built by Lior Shkiller, Royee Guy, Ben Sterenson and Michael Palarya  </p>

@@ -220,8 +220,7 @@ class API extends abstract_api
 	{
 		if ($this->method == 'GET')
 		{
-			$PhotosArr = API::$myDbWrapper->GetPhotos($gender, $eyeColor, $hairColor, $hasBeard, $hasGlasses, $hasSmile ,$age);
-			return;
+			return API::$myDbWrapper->GetPhotos($gender, $eyeColor, $hairColor, $hasBeard, $hasGlasses, $hasSmile ,$age);
 		}		
 		else 
 		{

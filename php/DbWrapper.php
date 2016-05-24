@@ -617,7 +617,7 @@ class DbWrapper {
 		//function returns list of top $limit liked profile pictures arr[0]-> userid, profilepic, num of likes
 		//SELECT FacebookId, PhotoLink, NumOfLikes FROM profilyze.Photos, profilyze.PhotoAttributes where Photos.Id = PhotoAttributes.PhotoId ORDER BY NumOfLikes DESC LIMIT 10 
 
-		$string = " SELECT FacebookId, PhotoLink, NumOfLikes, PhotoId, Gender, EyeColor, HairColor, HasBeard, HasGlasses, HasBeard, HasSmile, Age
+		$string = 	"SELECT FacebookId, PhotoLink, NumOfLikes, PhotoId, Gender, EyeColor, HairColor, HasBeard, HasGlasses, HasBeard, HasSmile, Age
 					FROM Photos, PhotoAttributes
 					where Photos.Id = PhotoAttributes.PhotoId";
 		
@@ -730,9 +730,22 @@ class DbWrapper {
 		// returns: [ {"FacebookId: Id, ... }, { ...} ]
 		return $res_arr;
 	}
-	
 	#endregion Methods (public)
 
+
+	public function countTotalByTbl($tblName = "PhotoAttributes" , $byUser = -1) {
+
+		$string = 	"SELECT count(*) as cnt FROM " . $tblName;
+
+		if ($byUser != -1 && strcmp($tblName,"PhotoAttributes") == 0)
+			$string = $string . " where UpdatedByUser = " . $byUser;
+
+		$res = $this->execute($string);
+		$res = $res->fetch_assoc()["cnt"];
+		
+		return $res;
+	}
+	#endregion Methods (public)
 }
 
 ?>

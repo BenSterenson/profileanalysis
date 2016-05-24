@@ -227,6 +227,20 @@ class API extends abstract_api
             return "Only accepts GET requests";
         }
 	}
+
+	protected function GetTotalAttNum($tblName="PhotoAttributes",$byUser = -1) 
+	{
+		if ($this->method == 'GET')
+		{
+			$totalAtt = API::$myDbWrapper->countTotalByTbl($tblName, $byUser);
+			$myArray = array("Total_$tblName" => $totalAtt);
+			return json_encode($myArray);
+		}		
+		else 
+		{
+            return "Only accepts GET requests";
+        }
+	}
 	
 	#endregion
 	

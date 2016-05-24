@@ -203,7 +203,8 @@ class API extends abstract_api
         }
 	}
 
-	protected function insertComment($PhotoID, $FacebookId, $Comment, $Time) {
+	protected function insertComment($PhotoID, $FacebookId, $Comment, $Time) 
+	{
 		if ($this->method == 'GET')
 		{
 			$PhotoComments = API::$myDbWrapper->insertComment($PhotoID, $FacebookId, $Comment, $Time);
@@ -215,15 +216,21 @@ class API extends abstract_api
         }
 	}
 
+	protected function GetPhotos($gender = -1, $eyeColor = -1, $hairColor = -1, $hasBeard = -1, $hasGlasses = -1, $hasSmile = -1 ,$age = -1) 
+	{
+		if ($this->method == 'GET')
+		{
+			$PhotosArr = API::$myDbWrapper->GetPhotos($gender, $eyeColor, $hairColor, $hasBeard, $hasGlasses, $hasSmile ,$age);
+			return;
+		}		
+		else 
+		{
+            return "Only accepts GET requests";
+        }
+	}
 	
 	#endregion
 	
-
-
-
-
-
-
 	protected function get_tiny_url($url)  {  
 		$ch = curl_init();  
 		$timeout = 5;  

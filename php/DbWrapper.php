@@ -322,7 +322,7 @@ class DbWrapper {
 	
 	public function filterBy_JSON($FacebookId, $FirstName, $LastName,
 						 $PhotoUpdatedDateFROM, $PhotoUpdatedDateTO, $NumOfLikesFROM, $NumOfLikesTO,
-						 $Gender, $EyeColor, $HasBeard, $HasGlasses, $HasSmile, $AgeFROM, $AgeTO,
+						 $Gender, $EyeColor, $HairColor, $HasBeard, $HasGlasses, $HasSmile, $AgeFROM, $AgeTO,
 						 $AttUpdateDateFROM, $AttUpdateDateTO) {
 
 		#region find a specific person
@@ -409,7 +409,11 @@ class DbWrapper {
 		}
 		
 		if ($EyeColor != NULL) {
-			$string = $string . " AND PhotoAttributes.EyeColor = " . "\"". $LastName . "\"";
+			$string = $string . " AND PhotoAttributes.EyeColor = " . $EyeColor;
+		}
+
+		if ($EyeColor != NULL) {
+			$string = $string . " AND PhotoAttributes.HairColor = " . $HairColor;
 		}
 		
 		if ($HasBeard != NULL) {
@@ -686,9 +690,7 @@ class DbWrapper {
 			$PhotoLink = $row['PhotoLink'];
 			$PhotoComments[] = array($Comment, $FirstName, $LastName, $PhotoLink);
 		}
-
 		return $PhotoComments;
-
 	}
 
 	public function insertComment($PhotoID, $FacebookId, $Comment, $Time) {
@@ -697,6 +699,48 @@ class DbWrapper {
 		$this->insert($PhotoComments);
 		
 	}
+
+	public function getAgeRange($age) {
+
+		switch ($age) {
+			case '0':
+				return array(NULL,17);
+			case '1':
+				return array(18,24);
+			case '2':
+				return array(25,35);
+			case '3':
+				return array(36,45);
+			case '4':
+				return array(46,55);
+			case '5':
+				return array(56,NULL);
+		}
+
+	}
+
+	public function GetPhotos($Gender, $EyeColor, $hairColor, $HasBeard, $HasGlasses, $HasSmile ,$age) {
+
+		$Gender 	= $Gender 		== -1 ? NULL : $Gender;
+		$EyeColor 	= $EyeColor 	== -1 ? NULL : $EyeColor;
+		$HairColor 	= $hairColor 	== -1 ? NULL : $hairColor;
+		$HasBeard 	= $HasBeard 	== -1 ? NULL : $HasBeard;
+		$HasGlasses = $HasGlasses 	== -1 ? NULL : $HasGlasses;
+		$HasSmile 	= $HasSmile 	== -1 ? NULL : $HasSmile;
+		$age 		= $age 			== -1 ? NULL : $this->getAgeRange($age);
+
+
+		$res_arr = $this->filterBy_JSON($FacebookId = NULL, $FirstName = NULL, $LastName = NULL,
+						 $PhotoUpdatedDateFROM  = NULL, $PhotoUpdatedDateTO  = NULL, $NumOfLikesFROM = NULL, $NumOfLikesTO  = NULL,
+						 $Gender, $EyeColor, $HairColor, $HasBeard, $HasGlasses, $HasSmile, $age[0], $age[1],
+						 $AttUpdateDateFROM  = NULL, $AttUpdateDateTO  = NULL);
+
+
+
+		// todo Returns: {[Id, FacebookId,FirstName,LastName,PhotoLink,NumOfLikes],[...]} 
+		return $res_arr;
+	}
+	
 	#endregion Methods (public)
 
 }

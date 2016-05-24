@@ -64,25 +64,20 @@
     <div class="container">
         <div class="page-header">
             <h1>Profilyze</h1>
+			<div class="panel panel-primary pull-right">
+				<div class="panel-body">
+					<span ng-if="loggedOnUser.name"><a ng-click="open(loggedOnUser)" style="cursor:pointer">Welcome {{loggedOnUser.name}}</a></span>
+					<div ng-if="!loggedOnUser.name">
+						<fb:login-button scope="public_profile,email" size="xlarge" onlogin="checkLoginState();">
+						</fb:login-button>
+					</div>
+				</div>
+				
+			</div>
         </div>
         <div class="row" >
 			<!-- <div class="row col-md-4">
-				<div class="panel panel-primary ">
-					<div class="panel-heading">
-						<span ng-if="!loggedOnUser.name">We dare you to login!</span>
-						<span ng-if="loggedOnUser.name">Welcome {{loggedOnUser.name}}</span>
-					</div>
-					<div class="panel-body">
-						<div ng-if="!loggedOnUser.name">
-							<fb:login-button scope="public_profile,email" size="xlarge" onlogin="checkLoginState();">
-							</fb:login-button>
-						</div>
-						<div ng-if="loggedOnUser.name">
-
-						</div>
-					</div>
-					
-				</div>
+				
 			</div> -->
             <section id="charts" class="col-md-12">
                 <div class="row">

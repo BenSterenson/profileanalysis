@@ -711,7 +711,7 @@ class DbWrapper {
 
 	}
 
-	public function GetPhotos($Gender, $EyeColor, $hairColor, $HasBeard, $HasGlasses, $HasSmile ,$age) {
+	public function GetPhotos($start,$stop, $Gender, $EyeColor, $hairColor, $HasBeard, $HasGlasses, $HasSmile ,$age) {
 
 		$Gender 	= $Gender 		== -1 ? NULL : $Gender;
 		$EyeColor 	= $EyeColor 	== -1 ? NULL : $EyeColor;

@@ -11,7 +11,13 @@
     });
   });
   app.service('UsersService', function ($http) {
-	  
+	  this.getPhotos = function (gender, eyeColor, hairColor, hasBeard, hasGlasses, hasSmile ,age) {
+          return $http.get('../php/api/getphotos/'+gender+'/'+eyeColor+'/'+hairColor+'/'+hasBeard+'/'+hasGlasses+'/'+hasSmile+'/'+age).then(function successCallback(response) {
+				return JSON.parse(response.data);
+			}, function errorCallback(response) {
+				alert("Error on getPhotos!");
+			});
+      }
   })
   app.service('ChartService', function ($http) {
 	  	  
@@ -138,6 +144,7 @@
 	}
 	
     // Eye Color Data
+	$scope.eyeColorFilter = -1;
 	$scope.eyeColorData =[];
 	$scope.eyeColorLabels =[];		
 	ChartService.getEyeColors().then(function successCallback(data) {
@@ -148,6 +155,7 @@
 	
 
     // Hair Color
+	$scope.hairColorFilter = -1;
 	$scope.hairColorData =[];
 	$scope.hairColorLabels =[];
 	ChartService.getHairColors().then(function successCallback(data) {
@@ -157,6 +165,7 @@
 	});
 
     // Age
+	$scope.ageFilter = -1;
 	$scope.ageData =[];
 	$scope.ageLabels =[];
 	ChartService.getAge().then(function successCallback(data) {
@@ -165,6 +174,7 @@
 	});
 
     // Gender
+	$scope.genderFilter = -1;
 	$scope.genderData =[];
 	$scope.genderLabels =[];
 	ChartService.getGender().then(function successCallback(data) {		
@@ -175,6 +185,7 @@
     
 
     // Smiles
+	$scope.smilesFilter = -1;
 	$scope.smilesData =[];
 	$scope.smilesLabels =[];
 	ChartService.getSmile().then(function successCallback(data) {		
@@ -184,6 +195,7 @@
 	});
 
     // Has Glasses	
+	$scope.glassesFilter = -1;
 	$scope.glassesData =[];
 	$scope.glassesLabels =[];
 	ChartService.getGlasses().then(function successCallback(data) {		
@@ -192,7 +204,8 @@
 		$scope.glassesChartColors = ['#39ac39', '#d9f2d9'];
 	});
 
-      // Has Beard
+    // Has Beard
+	$scope.beardFilter = -1;
 	$scope.beardData =[];
 	$scope.beardLabels =[];
 	ChartService.getBeard().then(function successCallback(data) {		

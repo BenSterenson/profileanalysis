@@ -219,7 +219,7 @@ class API extends abstract_api
 	protected function GetPhotos() 
 	{
 		$start = $this->args[0];
-		$stop = $this->args[1];
+		$stop = $this->args[1] - $start;
 		$gender = $this->args[2];
 		$eyeColor = $this->args[3];
 		$hairColor = $this->args[4];
@@ -230,7 +230,7 @@ class API extends abstract_api
 		
 		if ($this->method == 'GET')
 		{
-			return API::$myDbWrapper->GetPhotos($start,$stop,$gender, $eyeColor, $hairColor, $hasBeard, $hasGlasses, $hasSmile ,$age);
+			return API::$myDbWrapper->GetPhotos($start, $stop, $gender, $eyeColor, $hairColor, $hasBeard, $hasGlasses, $hasSmile ,$age);
 		}		
 		else 
 		{

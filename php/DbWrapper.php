@@ -320,7 +320,7 @@ class DbWrapper {
 		return NULL;
 	}
 	
-	public function filterBy_JSON($FacebookId, $FirstName, $LastName,
+	public function filterBy_JSON($start, $stop, $FacebookId, $FirstName, $LastName,
 						 $PhotoUpdatedDateFROM, $PhotoUpdatedDateTO, $NumOfLikesFROM, $NumOfLikesTO,
 						 $Gender, $EyeColor, $HairColor, $HasBeard, $HasGlasses, $HasSmile, $AgeFROM, $AgeTO,
 						 $AttUpdateDateFROM, $AttUpdateDateTO) {
@@ -434,6 +434,8 @@ class DbWrapper {
 		if ($AttUpdateDateTO != NULL) {
 			$string = $string . " AND Photos.AttUpdateDate >= " . $AttUpdateDateTO;
 		}
+
+		$string = $string " LIMIT " . $start . ", " .$stop;
 
 		$result = $this->execute($string);
 		$rows = array();
@@ -722,7 +724,7 @@ class DbWrapper {
 		$age 		= $age 			== -1 ? NULL : $this->getAgeRange($age);
 
 
-		$res_arr = $this->filterBy_JSON($FacebookId = NULL, $FirstName = NULL, $LastName = NULL,
+		$res_arr = $this->filterBy_JSON($start, $stop, $FacebookId = NULL, $FirstName = NULL, $LastName = NULL,
 						 $PhotoUpdatedDateFROM  = NULL, $PhotoUpdatedDateTO  = NULL, $NumOfLikesFROM = NULL, $NumOfLikesTO  = NULL,
 						 $Gender, $EyeColor, $HairColor, $HasBeard, $HasGlasses, $HasSmile, $age[0], $age[1],
 						 $AttUpdateDateFROM  = NULL, $AttUpdateDateTO  = NULL);

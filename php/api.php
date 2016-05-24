@@ -202,10 +202,28 @@ class API extends abstract_api
             return "Only accepts GET requests";
         }
 	}
-	
+
+	protected function insertComment($PhotoID, $FacebookId, $Comment, $Time) {
+		if ($this->method == 'GET')
+		{
+			$PhotoComments = API::$myDbWrapper->insertComment($PhotoID, $FacebookId, $Comment, $Time);
+			return;
+		}		
+		else 
+		{
+            return "Only accepts GET requests";
+        }
+	}
+
 	
 	#endregion
 	
+
+
+
+
+
+
 	protected function get_tiny_url($url)  {  
 		$ch = curl_init();  
 		$timeout = 5;  

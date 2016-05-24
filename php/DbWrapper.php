@@ -690,6 +690,13 @@ class DbWrapper {
 		return $PhotoComments;
 
 	}
+
+	public function insertComment($PhotoID, $FacebookId, $Comment, $Time) {
+
+		$PhotoComments = new PhotoComments($PhotoID, $FacebookId, $Comment, $Time);
+		$this->insert($PhotoComments);
+		
+	}
 	#endregion Methods (public)
 
 }

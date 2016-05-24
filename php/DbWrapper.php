@@ -370,7 +370,7 @@ class DbWrapper {
 		#region else: filter by parameters
 		$string = " SELECT *
 					FROM Users, Photos, PhotoAttributes
-					WHERE Users.FacebookId = photos.FacebookId AND photos.FacebookPhotoId = PhotoAttributes.PhotoId ";
+					WHERE Users.FacebookId = Photos.FacebookId AND Photos.Id = PhotoAttributes.PhotoId ";
 					
 		if ($FirstName != NULL) {
 			$string = $string . " AND Users.FirstName = " . "\"" . $FirstName . "\"";
@@ -396,15 +396,6 @@ class DbWrapper {
 		}
 
 		if ($Gender != NULL) {
-			switch (strtolower($Gender[0])) {
-				case 'f':
-				$gender = false;
-				break;
-				
-				default:
-				$gender = true;
-				break;
-			}
 			$string = $string . " AND PhotoAttributes.Gender = " . $gender;
 		}
 		
@@ -445,12 +436,13 @@ class DbWrapper {
 		}
 
 		$result = $this->execute($string);
-		
 		$rows = array();
+				
 		while($r = mysqli_fetch_assoc($result)) {
 			$rows[] = $r;
 		}
-		return json_encode($rows, JSON_NUMERIC_CHECK );
+
+		return json_encode($rows, JSON_NUMERIC_CHECK);
 		#endregion else
 	}
 	
@@ -735,12 +727,12 @@ class DbWrapper {
 						 $Gender, $EyeColor, $HairColor, $HasBeard, $HasGlasses, $HasSmile, $age[0], $age[1],
 						 $AttUpdateDateFROM  = NULL, $AttUpdateDateTO  = NULL);
 
-
-
-		// todo Returns: {[Id, FacebookId,FirstName,LastName,PhotoLink,NumOfLikes],[...]} 
+		// returns: [ {"FacebookId: Id, ... }, { ...} ]
 		return $res_arr;
 	}
 	
 	#endregion Methods (public)
 
 }
+
+?>

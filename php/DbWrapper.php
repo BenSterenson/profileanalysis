@@ -403,7 +403,7 @@ class DbWrapper {
 			$string = $string . " AND PhotoAttributes.EyeColor = " . $EyeColor;
 		}
 
-		if ($EyeColor != NULL) {
+		if ($HairColor != NULL) {
 			$string = $string . " AND PhotoAttributes.HairColor = " . $HairColor;
 		}
 		
@@ -439,7 +439,7 @@ class DbWrapper {
 
 		$result = $this->execute($string);
 		$rows = array();
-				
+		
 		while($r = mysqli_fetch_assoc($result)) {
 			$rows[] = $r;
 		}

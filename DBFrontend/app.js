@@ -19,6 +19,21 @@
 				alert("Error on getPhotos!");
 			});
       }
+	  
+	  this.getColor = function(getVal,val){		  
+		var colorArr = ["red","green","yellow","blue","orange","purple","pink","brown","black","gray","white"];
+		if(!getVal){ // val is index in this case
+			return colorArr[val];
+		}
+		else
+		{ // val is the value and we return the index
+			for (var i in colorArr){
+				if(colorArr[i] == val){
+					return i;
+				}
+			}
+		}
+	  }
   })
   app.service('ChartService', function ($http) {
 	  	  
@@ -148,7 +163,7 @@
 		}
 		return newArray;
 	}
-	
+		
     // Eye Color Data
 	$scope.eyeColorFilter = -1;
 	$scope.eyeColorData =[];
@@ -158,6 +173,10 @@
 		$scope.eyeColorLabels = data.keys;
 		$scope.eyeColorChartColors = convertColorsToViewable(data.keys);
 	});
+	$scope.eyeClick = function (elm, evt) {
+		$scope.eyeColorFilter = UsersService.getColor(true,elm[0].label);
+		$scope.getPhotos();
+	};
 	
 
     // Hair Color
@@ -169,6 +188,10 @@
 		$scope.hairColorLabels = data.keys;
 		$scope.hairColorChartColors = convertColorsToViewable(data.keys);
 	});
+	$scope.hairClick = function (elm, evt) {
+		$scope.hairColorFilter = UsersService.getColor(true,elm[0].label);
+		$scope.getPhotos();
+	};
 
     // Age
 	$scope.ageFilter = -1;
@@ -178,6 +201,10 @@
 		$scope.ageData = [data.values];
 		$scope.ageLabels = data.keys;
 	});
+	$scope.ageClick = function (elm, evt) {
+		$scope.ageFilter = $scope.ageLabels.indexOf(elm[0].label);
+		$scope.getPhotos();
+	};
 
     // Gender
 	$scope.genderFilter = -1;
@@ -188,7 +215,10 @@
 		$scope.genderLabels = data.keys;
 		$scope.genderChartColors = ['#ffc0cb', '#7AC8F5'];
 	});
-    
+    $scope.genderClick = function (elm, evt) {
+		$scope.genderFilter = $scope.genderLabels.indexOf(elm[0].label);
+		$scope.getPhotos();
+	};
 
     // Smiles
 	$scope.smilesFilter = -1;
@@ -199,7 +229,11 @@
 		$scope.smilesLabels = data.keys;
 		$scope.smilesChartColors = ['#004d4d', '#99ffff'];
 	});
-
+	$scope.smilesClick = function (elm, evt) {
+		$scope.smilesFilter = $scope.smilesLabels.indexOf(elm[0].label);
+		$scope.getPhotos();
+	};
+	
     // Has Glasses	
 	$scope.glassesFilter = -1;
 	$scope.glassesData =[];
@@ -209,6 +243,10 @@
 		$scope.glassesLabels = data.keys;
 		$scope.glassesChartColors = ['#39ac39', '#d9f2d9'];
 	});
+	$scope.glassesClick = function (elm, evt) {
+		$scope.glassesFilter = $scope.glassesLabels.indexOf(elm[0].label);
+		$scope.getPhotos();
+	};
 
     // Has Beard
 	$scope.beardFilter = -1;
@@ -219,19 +257,24 @@
 		$scope.beardLabels = data.keys;
 		$scope.beardChartColors = ['#003399', '#99bbff'];
 	});
-
+	$scope.beardClick = function (elm, evt) {
+		$scope.beardFilter = $scope.beardLabels.indexOf(elm[0].label);
+		$scope.getPhotos();
+	};
 	
 		
 	// Get Photos
 	$scope.users = [];
 	$scope.getPhotos = function(start,stop){
-		if($scope.start <=0){
-			$scope.start = 0;
-			$scope.stop = $scope.size;
+		if(start != undefined && stop != undefined){			
+			if($scope.start <=0){
+				$scope.start = 0;
+				$scope.stop = $scope.size;
+			}
+			// TODO: check maximum right
+			$scope.start = start;
+			$scope.stop = stop;
 		}
-		// TODO: check maximum right
-		$scope.start = start;
-		$scope.stop = stop;
 		UsersService.getPhotos($scope.start,$scope.stop,$scope.genderFilter, $scope.eyeColorFilter, $scope.hairColorFilter, $scope.beardFilter, $scope.glassesFilter, $scope.smilesFilter ,$scope.ageFilter).then(function successCallback(data) {
 			$scope.users = data;
 		});
@@ -260,15 +303,13 @@
 
 
 });
-  app.controller('ModalCtrl', function ($scope,$http, $uibModalInstance, user, labels) {
+  app.controller('ModalCtrl', function ($scope,$http, $uibModalInstance, UsersService, user, labels) {
 		
-		var colorArr = ["red","green","yellow","blue","orange","purple","pink","brown","black","gray","white"];
-	  
 		$scope.user = user;
 		
 		// Fix Hair and eye color
-		$scope.user.EyeColorFix = colorArr[$scope.user.EyeColor];
-		$scope.user.HairColorFix = colorArr[$scope.user.HairColor];
+		$scope.user.EyeColorFix = UsersService.getColor(false, $scope.user.EyeColor);
+		$scope.user.HairColorFix = UsersService.getColor(false, $scope.user.HairColor);
 		$scope.eyeColorLabels = labels.eyeColorLabels;
 		$scope.hairColorLabels = labels.hairColorLabels;
 

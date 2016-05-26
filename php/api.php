@@ -285,7 +285,7 @@ class API extends abstract_api
 
 	protected function getMostLiked() 
 	{	
-		$limit = $this->args[0];
+		$limit = $this->args[0] == -1 ? 10 : $this->args[0];
 		$gender = $this->args[1];
 
 		if ($this->method == 'GET')

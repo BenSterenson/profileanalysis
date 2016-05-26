@@ -678,7 +678,7 @@ class DbWrapper {
 					where PhotoComments.PhotoId = $PhotoId
 					AND PhotoComments.FacebookId = Users.FacebookId
 					AND PhotoComments.PhotoId = Photos.Id
-					ORDER BY PhotoComments.Id ASC";
+					ORDER BY PhotoComments.Time ASC";
 
 		$res_arr = $this->execute($string);
 

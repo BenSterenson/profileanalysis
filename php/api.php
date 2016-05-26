@@ -210,7 +210,7 @@ class API extends abstract_api
 		$PhotoID = $this->args[0];
 		$FacebookId = $this->args[1];
 		$Comment = $this->args[2];
-		$Time = $this->args[3];
+		$Time = date("Y-m-d H:i:s");;
 
 		if($PhotoID == -1 || $FacebookId == -1 || $Comment == "" || $Time == -1)
 			return "Missing information";
@@ -265,79 +265,6 @@ class API extends abstract_api
 	}
 	
 	#endregion
-	
-	protected function get_tiny_url($url)  {  
-		$ch = curl_init();  
-		$timeout = 5;  
-		curl_setopt($ch,CURLOPT_URL,'http://tinyurl.com/api-create.php?url='.$url);  
-		curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);  
-		curl_setopt($ch,CURLOPT_CONNECTTIMEOUT,$timeout);  
-		$data = curl_exec($ch);  
-		curl_close($ch);  
-		return $data;  
-	}
-
-
-	protected function insert_attributes($id, $debugPrint = 1) {
-		// connect to DB 
-		$dbWrapper = new DbWrapper();
-		//$getUrlQuery = 'SELECT `FacebookPhotoId`, `PhotoLink` FROM `Photos` WHERE `Id` = '. $id;
-		$getUrlQuery = "SELECT `PhotoLink` FROM `Photos` AS a
-						WHERE NOT EXISTS(SELECT *
-						FROM NoProfilePic AS b WHERE a.FacebookPhotoId = b.FakePhotoId)
-						AND `Id` = $id";
-		// run Query
-		if($debugPrint == 1){
-			echo "$getUrlQuery <br>";
-		}
-
-		$result = $dbWrapper->execute($getUrlQuery);
-
-		if ($result->num_rows == 0) {
-			//no profile pic
-			return;
-		}
-
-		$row = ($result->fetch_assoc());
-		$picUrl = $row['PhotoLink']; // extracted link
-
-		$picUrl = get_tiny_url($picUrl);
-		if($debugPrint == 1){
-			echo "pic url: ".$picUrl. "<br>";
-		}
-		chdir('../APi/');
-
-		// run in betaface
-		$api = new betaFaceApi($id);
-		$face = $api->get_Image_attributes($picUrl);
-
-		if($debugPrint == 1){
-			echo $api->image_Attributes;
-		}
-
-		$setIsValidPhoto = 0;
-
-		if($face != -1) {
-			// face found
-			if($debugPrint == 1){
-				echo "face found!!!! <br>";
-			}
-			$setIsValidPhoto = 1;
-			$dbWrapper->insert($api->image_Attributes);
-		}
-		$updateQuery = "UPDATE `Photos` SET `IsValidPhoto` = $setIsValidPhoto WHERE `Id` = $id";
-		if($debugPrint == 1){
-			echo "$updateQuery <br><br>";
-		}
-		$result = $dbWrapper->execute($updateQuery);
-		return;
-	} 
-	 
-	protected function addAttributes() {
-		if ($this->method == 'GET') {
-			return $this->insert_attributes($this->args[0]);
-		} 
-	}
  }
  API::$myDbWrapper = new DbWrapper();
  

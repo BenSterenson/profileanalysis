@@ -50,6 +50,7 @@
 
 include 'Classes/Facebook_photo.php'; // MICHAEL: if we remove facebook_user include from facebook_photo we'll have to add it here
 include 'Classes/Facebook_user.php';
+include 'Classes/PhotoComments.php';
 include 'Classes/Attributes.php';
 
 define("NUMOfCOLORS",11);
@@ -483,9 +484,9 @@ class DbWrapper {
 				
 			case "PhotoComments":
 				$string = "INSERT INTO PhotoComments ";
-				$string = $string . " (Id,FacebookId,Comment,PhotoId,Time) VALUES ";
-				$string = $string . " (" . $object->getId() . ", " . $object->getFacebookId() . ", '" . $object->getComment() . "', '" .
-										$object->getPhotoId() . "', " . $object->getTime() . ")";
+				$string = $string . " (FacebookId,Comment,PhotoId,Time) VALUES ";
+				$string = $string . " (" . $object->getFacebookId() . ", '" . $object->getComment() . "', '" .
+										$object->getPhotoId() . "', '" . $object->getTime() . "')";
 				break;
 				
 			case "PhotoRatings":
@@ -696,9 +697,9 @@ class DbWrapper {
 		return $PhotoComments;
 	}
 
-	public function insertComment($PhotoID, $FacebookId, $Comment, $Time) {
+	public function insertComment($PhotoID, $FacebookId, $Comment) {
 
-		$PhotoComments = new PhotoComments($PhotoID, $FacebookId, $Comment, $Time);
+		$PhotoComments = new PhotoComments($PhotoID, $FacebookId, $Comment);
 		$this->insert($PhotoComments);
 		
 	}

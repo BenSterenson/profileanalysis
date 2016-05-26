@@ -338,7 +338,7 @@ class betaFaceApi
         
         $tags = $response_xml->xpath(".//face_info/tags/TagInfo");
         
-        $UpdateDate = date("Y-m-d:H:i:s");
+        $UpdateDate = date("Y-m-d H:i:s");
        
         $this->image_Attributes->setUpdateDate($UpdateDate);
         $this->image_Attributes->setUpdatedByUser(0);

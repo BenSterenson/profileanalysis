@@ -701,40 +701,106 @@ class DbWrapper {
 		$PhotoComments = new PhotoComments($PhotoID, $FacebookId, $Comment);
 		$this->insert($PhotoComments);
 	}
+	
+	private function verifyExistance($FB_user, $FB_photo) {
+		
+		// assumes insert/update always works
+		if (!verifyExistance_user($FB_user))
+			return false;
+
+		if (!verifyExistance_user($FB_user, $FB_photo))
+			return false;
+		
+		// success:
+		return true;
+	}
+	
+	private function verifyExistance_user($FB_user) {
+		$FacebookId = $FB_user->getFacebookId();
+		$FirstName	= $FB_user->getFirstName();
+		$LastName	= $FB_user->getLastName();
+		
+		if (!$FacebookId)
+			return false;
+			
+		$myUser	 = new Facebook_user($FacebookId);
+	
+		$personExist = $this->execute("SELECT * FROM Users WHERE Users.FacebookId = " . $FacebookId);
+		
+		// user exists, only update
+		if ($personExist->num_rows > 0) {
+			
+			if ($myUser != NULL) {
+				
+				$myUser->setFirstName($FirstName);
+				$myUser->setLastName($LastName);
+		
+				$this->update($myUser);
+			}
+			else {
+				return false; // error
+			}
+		}
+		
+		// user doesn't exist, insert and return
+		else if ($myUser != NULL) {
+				
+				$myUser->setFirstName($FirstName);
+				$myUser->setLastName($LastName);
+		
+				$this->insert($myUser);
+		}
+		else {
+			return false; // error
+		}
+
+		return true;
+	}
+	
+	private function verifyExistance_photo($FB_user, $FB_photo) {
+		$FacebookId = $FB_user->getFacebookId();
+		$PhotoId	= $FB_photo->getPhotoId();
+		$NumOfLikes	= $FB_photo->getNumOfLikes();
+		
+		if (!$FacebookId || !$PhotoId)
+			return false;
+			
+		$myPhoto 	= new Facebook_photo($FacebookId);
+		$photoExist = $this->execute(
+								"SELECT PhotoId as pi FROM Users, Photos 
+								WHERE Users.FacebookId = Photos.FacebookId AND Photos.PhotoId = " . $PhotoId);
+		
+		if ($myPhoto != NULL) {
+
+			$myPhoto->SetNumOfLikes($NumOfLikes);
+			$photoExist = $this->execute("SELECT PhotoId as pi FROM " . $personExist . " WHERE pi = " . $myPhoto->getPhotoId());
+			
+			if ($photoExist->num_rows > 0) {
+				$this->update($myPhoto);
+			}
+			else {
+				$this->insert($myPhoto);
+			}
+		}
+		
+		else {
+			return false; // error
+		}
+
+		return true;
+	}
+	
 	public function insertNewUser($FacebookId, $FirstName, $LastName, $NumOfLikes) {
-		$FB_user = new Facebook_user($FacebookId, $FirstName, $LastName);
-		$FB_photo = new Facebook_photo($FacebookId, $NumOfLikes);
+		
+		$FB_user 	= new Facebook_user($FacebookId, $FirstName, $LastName);
+		$FB_photo 	= new Facebook_photo($FacebookId, $NumOfLikes);
+		
 		//echo $FB_user;
 		//echo $FB_photo;
 
-
-		// TODO - check if user exict if no insert user.
-		$exist = $this->check_existence($FB_user);
-
-		if ($exist == false)
-			$this->insert($FB_user);
-
-		// update first name and last name 
-		else 
-			$this->update($FB_user);
-
-		// check if photo exict by key(photoid,facebookid)
-		$exist = $this->check_existence($FB_user, $FB_photo);
-
-		// photo does not exist insert photo
-		if($exist == false)
-			$this->insert($FB_photo);
-
-		//photo exist update date and num of likes
-		else
-			$this->update($FB_photo);
-
-
-		// if no add photo to photos and start extracting info using beta face
-
-		//$this->insert($FB_user);
-		//$this->insert($FB_photo);
-
+		// update or insert as needed
+		verifyExistance($FB_user, $FB_photo); // returns true if exists (creates if needed)
+		
 	}
 
 	public function getAgeRange($age) {

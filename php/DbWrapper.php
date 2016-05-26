@@ -742,7 +742,7 @@ class DbWrapper {
 			}
 		}
 		
-		// user doesn't exist, insert and return
+		// user doesn't exist, insert
 		else if ($myUser != NULL) {
 				
 				$myUser->setFirstName($FirstName);
@@ -773,7 +773,6 @@ class DbWrapper {
 		if ($myPhoto != NULL) {
 
 			$myPhoto->SetNumOfLikes($NumOfLikes);
-			$photoExist = $this->execute("SELECT PhotoId as pi FROM " . $personExist . " WHERE pi = " . $myPhoto->getPhotoId());
 			
 			if ($photoExist->num_rows > 0) {
 				$this->update($myPhoto);

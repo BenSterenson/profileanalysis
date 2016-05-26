@@ -13,9 +13,9 @@ class API extends abstract_api
 
 	#region attributes count functions:
 	
-    protected static function getColors($attributeName)
+    protected static function getColors($attributeName, $arr)
 	{
-		$colorCountsArray = API::$myDbWrapper->getNumberByAtt($attributeName);
+		$colorCountsArray = API::$myDbWrapper->getNumberByAtt($attributeName, $arr);
 		
 		$myArray = array(
 			"red" 		=> $colorCountsArray[0],
@@ -34,11 +34,23 @@ class API extends abstract_api
 		return json_encode($myArray);
 	}
 
+	protected function extractVarsAtt($arr){
+		$arrName = array(	'gender' => $this->args[0],
+							'eyeColor' => $this->args[1],
+							'hairColor' => $this->args[2],
+							'hasBeard' => $this->args[3],
+							'hasGlasses' => $this->args[4],
+							'hasSmile' => $this->args[5],
+							'age' => $this->args[6]);		
+		return $arrName;
+	}
+
 	protected function getEyeColors()
 	{
+		$arrName = $this->extractVarsAtt($this->args);
 		if ($this->method == 'GET')
 		{
-			return API::getColors("EyeColor");
+			return API::getColors("EyeColor", $arrName);
         }
 		else
 		{
@@ -48,9 +60,10 @@ class API extends abstract_api
 	
     protected function getHairColors()
 	{
+		$arrName = $this->extractVarsAtt($this->args);
 		if ($this->method == 'GET')
 		{
-			return API::getColors("HairColor");
+			return API::getColors("HairColor", $arrName);
         }
 		else
 		{
@@ -60,9 +73,11 @@ class API extends abstract_api
 	 
     protected function getGender()
 	{
+		$arrName = $this->extractVarsAtt($this->args);
+
         if ($this->method == 'GET')
 		{
-            $genderCountArray = API::$myDbWrapper->getNumberByAtt("Gender");
+            $genderCountArray = API::$myDbWrapper->getNumberByAtt("Gender", $arrName);
 			
 			$myArray = array(
 				"female"	=> $genderCountArray[0],
@@ -78,9 +93,10 @@ class API extends abstract_api
 
     protected function getGlasses()
 	{
+		$arrName = $this->extractVarsAtt($this->args);
         if ($this->method == 'GET')
 		{
-            $glassesCountArray = API::$myDbWrapper->getNumberByAtt("HasGlasses");
+            $glassesCountArray = API::$myDbWrapper->getNumberByAtt("HasGlasses", $arrName);
 			
 			$myArray = array(
 				"no"	=> $glassesCountArray[0],
@@ -96,9 +112,10 @@ class API extends abstract_api
 	
 	protected function getBeard()
 	{
+		$arrName = $this->extractVarsAtt($this->args);
         if ($this->method == 'GET')
 		{
-            $beardCountArray = API::$myDbWrapper->getNumberByAtt("HasBeard");
+            $beardCountArray = API::$myDbWrapper->getNumberByAtt("HasBeard", $arrName);
 			
 			$myArray = array(
 				"no"	=> $beardCountArray[0],
@@ -114,9 +131,10 @@ class API extends abstract_api
     			
 	protected function getSmile()
 	{
+		$arrName = $this->extractVarsAtt($this->args);
         if ($this->method == 'GET')
 		{
-            $smileCountArray = API::$myDbWrapper->getNumberByAtt("HasSmile");
+            $smileCountArray = API::$myDbWrapper->getNumberByAtt("HasSmile", $arrName);
 			
 			$myArray = array(
 				"no"	=> $smileCountArray[0],
@@ -132,9 +150,10 @@ class API extends abstract_api
     
 	protected function getAge()
 	{
+		$arrName = $this->extractVarsAtt($this->args);
         if ($this->method == 'GET')
 		{
-            $ageCountArray = API::$myDbWrapper->getNumberByAtt("Age");
+            $ageCountArray = API::$myDbWrapper->getNumberByAtt("Age", $arrName);
 			
 			$myArray = array(
 				"17-"	=> $ageCountArray[0],

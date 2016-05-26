@@ -533,11 +533,11 @@ class DbWrapper {
 		}
 	}
 
-	public function getNumberAge($att) {
+	public function getNumberAge($att,$string) {
 		//SELECT count(*) FROM PhotoAttributes where Age > 0 AND Age < 5 AND UpdatedByUser = 0
-		$sql_format_s = 'SELECT count(*) as cnt FROM PhotoAttributes where  %1$s <= %2$d AND UpdatedByUser = 0';
-		$sql_format = 'SELECT count(*) as cnt FROM PhotoAttributes where  %1$s >= %2$d AND %1$s <= %3$d AND UpdatedByUser = 0';
-		$sql_format_b = 'SELECT count(*) as cnt FROM PhotoAttributes where  %1$s > %2$d AND UpdatedByUser = 0';
+		$sql_format_s = 'SELECT count(*) as cnt FROM PhotoAttributes where  %1$s <= %2$d AND UpdatedByUser = 0' . $string;
+		$sql_format = 'SELECT count(*) as cnt FROM PhotoAttributes where  %1$s >= %2$d AND %1$s <= %3$d AND UpdatedByUser = 0' . $string;
+		$sql_format_b = 'SELECT count(*) as cnt FROM PhotoAttributes where  %1$s > %2$d AND UpdatedByUser = 0' . $string;
 
 		$age_from = 24;
 		$age_to = $age_from + 10; 
@@ -555,14 +555,14 @@ class DbWrapper {
 		return $res_arr;
 	}
 
-	public function getNumberBinaryAtt($att) {
-		$res_arr[] = $this->execute("SELECT count(*) as cnt FROM PhotoAttributes where " . $att ." = 0 AND UpdatedByUser = 0");
-		$res_arr[] = $this->execute("SELECT count(*) as cnt FROM PhotoAttributes where " . $att ." = 1 AND UpdatedByUser = 0");
+	public function getNumberBinaryAtt($att, $string) {
+		$res_arr[] = $this->execute("SELECT count(*) as cnt FROM PhotoAttributes where " . $att ." = 0 AND UpdatedByUser = 0" . $string);
+		$res_arr[] = $this->execute("SELECT count(*) as cnt FROM PhotoAttributes where " . $att ." = 1 AND UpdatedByUser = 0" . $string);
 		return $res_arr;
 	}
 
-	public function getNumberByColor($colorType) {
-		$BaseString = "SELECT count(*) as cnt FROM PhotoAttributes where UpdatedByUser = 0";
+	public function getNumberByColor($colorType, $string) {
+		$BaseString = "SELECT count(*) as cnt FROM PhotoAttributes where UpdatedByUser = 0" . $string;
 
 		for ($i = 0; $i <= NUMOfCOLORS; $i++) {
 			$colorStr = $BaseString . " AND " . $colorType . " = " . $i;
@@ -571,23 +571,26 @@ class DbWrapper {
 		return $res_arr;
 	}
 
-	public function getNumberByAtt($att) {
+	public function getNumberByAtt($att, $arrAtt) {
 		$binAttArr = array('Gender', 'HasBeard', 'HasGlasses', 'HasSmile');
+
+		$string = $this->build_string_by_att($arrAtt);
+		echo $string;
 
 		// Age
 		if (strcmp($att,'Age') == 0) {
-			$res_arr = $this->getNumberAge($att);
+			$res_arr = $this->getNumberAge($att, $string);
 		}
 
 		//Gender', 'HasBeard', 'HasGlasses', 'HasSmile'
 		else if (in_array($att, $binAttArr)) {
-			$res_arr = $this->getNumberBinaryAtt($att);
+			$res_arr = $this->getNumberBinaryAtt($att, $string);
 		}
 
 		// Eyecolor, HairColor
 		else {
 			$color = strcmp($att,'EyeColor') == 0 ? 'EyeColor' : 'HairColor';
-			$res_arr = $this->getNumberByColor($color);
+			$res_arr = $this->getNumberByColor($color, $string);
 		}
 
 		// create list
@@ -704,6 +707,8 @@ class DbWrapper {
 	public function getAgeRange($age) {
 
 		switch ($age) {
+			case '-1':
+				return array(-1,-1);
 			case '0':
 				return array(NULL,17);
 			case '1':
@@ -755,6 +760,50 @@ class DbWrapper {
 		return $res;
 	}
 	#endregion Methods (public)
+
+
+
+	public function build_string_by_att($arrAtt) {
+		$string = "";
+
+		$age = $this->getAgeRange($arrAtt['age']);
+
+		if ($arrAtt['gender'] != -1) {
+			$string = $string . " AND PhotoAttributes.Gender = " . $arrAtt['gender'];
+		}
+		
+		if ($arrAtt['eyeColor'] != -1) {
+			$string = $string . " AND PhotoAttributes.EyeColor = " . $arrAtt['eyeColor'];
+		}
+
+		if ($arrAtt['hairColor'] != -1) {
+			$string = $string . " AND PhotoAttributes.HairColor = " . $arrAtt['hairColor'];
+		}
+		
+		if ($arrAtt['hasBeard'] != -1) {
+			$string = $string . " AND PhotoAttributes.HasBeard = " . $arrAtt['hasBeard'];	
+		}
+		
+		if ($arrAtt['hasGlasses'] != -1) {
+			$string = $string . " AND PhotoAttributes.HasGlasses = " . $arrAtt['hasGlasses'];
+		}
+		
+		if ($arrAtt['hasSmile'] != -1) {
+			$string = $string . " AND PhotoAttributes.HasSmile = " . $arrAtt['hasSmile'];
+		}
+
+		if ($age[0] != -1) {
+			$string = $string . " AND PhotoAttributes.Age >= " . $age[0];
+		}
+		
+		if ($age[1] != -1) {
+			$string = $string . " AND PhotoAttributes.Age <= " . $age[1];
+		}
+
+		return $string;
+	}
+
+
 }
 
 ?>

@@ -7,6 +7,10 @@
 			<img src="{{user.PhotoLink}}" class="col-md-8">
 			<div class="panel-body col-md-4">
 				<div class="form-group">
+					<label for="eyeColorSelect">Facebook Likes: </label>
+					{{user.NumOfLikes}}
+				</div>
+				<div class="form-group">
 					<label for="eyeColorSelect">Eye Color</label>
 					<select id="eyeColorSelect" class="form-control" ng-options="color for color in eyeColorLabels" ng-model="user.EyeColorFix" style="width:100px">
 					</select>
@@ -72,6 +76,39 @@
 		</div>
   </div>
 	</section>
+</div>
+<div ng-show="loggedOnUser.FacebookId">
+	 <div class="well" ng-hide="commentAdded">
+		<h4>Leave a Comment:</h4>
+		<form role="form">
+			<div class="form-group">
+				<textarea class="form-control" rows="3" ng-model="comment"></textarea>
+			</div>
+			<button type="submit" class="btn btn-primary" ng-click="addComment(user)">Submit</button>
+		</form>
+	</div>
+	<div class="bg-success" ng-show="commentAdded" style="margin: 10px;">Comment Added Successfully</div>
+	<hr>
+
+	<!-- Posted Comments -->
+
+	<!-- Comment -->
+	<div class="media" ng-repeat="comment in comments">
+		<a class="pull-left">{{comment.FirstName}} {{comment.LastName}}
+			<img class="media-object" src="{{comment.PhotoLink}}" alt="">
+		</a>
+		<div class="media-body">
+			<h4 class="media-heading">
+				<small>{{comment.Time}}</small>
+			</h4>
+			{{comment.Comment}}
+		</div>
+	</div>
+</div>
+<div class="bg-warning" ng-hide="loggedOnUser.FacebookId" style="margin: 10px;">
+	You must be logged on to view and add comments
+</div>
+
 </div>
 <div class="modal-footer">
 	<button class="btn btn-primary" type="button" ng-click="ok()">Update</button>

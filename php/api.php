@@ -198,7 +198,8 @@ class API extends abstract_api
 				"Comment" => $PhotoComments[0],
 				"FirstName" => $PhotoComments[1],
 				"LastName" => $PhotoComments[2],
-				"PhotoLink" => $PhotoComments[3]);
+				"PhotoLink" => $PhotoComments[3],
+				"Time" => $PhotoComments[4]);
 			return json_encode($myArray);
 		}		
 		else 

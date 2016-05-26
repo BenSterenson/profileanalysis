@@ -674,7 +674,7 @@ class DbWrapper {
 	
 	public function getPhotoComments($PhotoId) {
 
-		$string = 	"SELECT PhotoComments.Comment, Users.FirstName, Users.LastName, Photos.PhotoLink
+		$string = 	"SELECT PhotoComments.Time,PhotoComments.Comment, Users.FirstName, Users.LastName, Photos.PhotoLink,
 					FROM PhotoComments, Users, Photos
 					where PhotoComments.PhotoId = $PhotoId
 					AND PhotoComments.FacebookId = Users.FacebookId
@@ -684,11 +684,12 @@ class DbWrapper {
 		$res_arr = $this->execute($string);
 
 		while ($row = $res_arr->fetch_assoc()) {
+			$Time = $row['Time'];
 			$Comment = $row['Comment'];
 			$FirstName = $row['FirstName'];
 			$LastName = $row['LastName'];
 			$PhotoLink = $row['PhotoLink'];
-			$PhotoComments[] = array($Comment, $FirstName, $LastName, $PhotoLink);
+			$PhotoComments[] = array($Comment, $FirstName, $LastName, $PhotoLink,$Time);
 		}
 		if(empty($PhotoComments))
 			$PhotoComments = array(NULL,NULL,NULL,NULL);
@@ -708,7 +709,7 @@ class DbWrapper {
 			case '-1':
 				return array(-1,-1);
 			case '0':
-				return array(NULL,17);
+				return array(-1,17);
 			case '1':
 				return array(18,24);
 			case '2':
@@ -718,7 +719,7 @@ class DbWrapper {
 			case '4':
 				return array(46,55);
 			case '5':
-				return array(56,NULL);
+				return array(56,-1);
 		}
 
 	}

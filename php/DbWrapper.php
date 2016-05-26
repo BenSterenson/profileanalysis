@@ -575,7 +575,6 @@ class DbWrapper {
 		$binAttArr = array('Gender', 'HasBeard', 'HasGlasses', 'HasSmile');
 
 		$string = $this->build_string_by_att($arrAtt);
-		echo $string;
 
 		// Age
 		if (strcmp($att,'Age') == 0) {

@@ -674,7 +674,7 @@ class DbWrapper {
 	
 	public function getPhotoComments($PhotoId) {
 
-		$string = 	"SELECT PhotoComments.Time,PhotoComments.Comment, Users.FirstName, Users.LastName, Photos.PhotoLink,
+		$string = 	"SELECT PhotoComments.Time,PhotoComments.Comment, Users.FirstName, Users.LastName, Photos.PhotoLink
 					FROM PhotoComments, Users, Photos
 					where PhotoComments.PhotoId = $PhotoId
 					AND PhotoComments.FacebookId = Users.FacebookId
@@ -689,10 +689,10 @@ class DbWrapper {
 			$FirstName = $row['FirstName'];
 			$LastName = $row['LastName'];
 			$PhotoLink = $row['PhotoLink'];
-			$PhotoComments[] = array($Comment, $FirstName, $LastName, $PhotoLink,$Time);
+			$PhotoComments[] = array($Comment, $FirstName, $LastName, $PhotoLink, $Time);
 		}
 		if(empty($PhotoComments))
-			$PhotoComments = array(NULL,NULL,NULL,NULL);
+			$PhotoComments = array(NULL,NULL,NULL,NULL,NULL);
 		return $PhotoComments;
 	}
 

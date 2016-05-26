@@ -679,7 +679,7 @@ class DbWrapper {
 					FROM PhotoComments, Users, Photos
 					where PhotoComments.PhotoId = $PhotoId
 					AND PhotoComments.FacebookId = Users.FacebookId
-					AND PhotoComments.PhotoId = Photos.Id
+					AND Photos.Id = (SELECT Photos.Id from Photos,PhotoComments where PhotoComments.FacebookId = Photos.FacebookId ORDER BY UpdateDate DESC limit 1)
 					ORDER BY PhotoComments.Time ASC";
 
 		$res_arr = $this->execute($string);
@@ -799,7 +799,7 @@ class DbWrapper {
 
 		// update or insert as needed
 		verifyExistance($FB_user, $FB_photo); // returns true if exists (creates if needed)
-		
+		return;
 	}
 
 	public function getAgeRange($age) {

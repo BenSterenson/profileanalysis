@@ -394,7 +394,6 @@ class DbWrapper {
 		if ($NumOfLikesTO != NULL) {
 			$string = $string . " AND Photos.NumOfLikes <= " . $NumOfLikesTO;
 		}
-
 		if ($Gender != NULL) {
 			$string = $string . " AND PhotoAttributes.Gender = " . $Gender;
 		}
@@ -743,8 +742,6 @@ class DbWrapper {
 		// returns: [ {"FacebookId: Id, ... }, { ...} ]
 		return $res_arr;
 	}
-	#endregion Methods (public)
-
 
 	public function countTotalByTbl($tblName = "PhotoAttributes" , $byUser = -1) {
 
@@ -758,9 +755,6 @@ class DbWrapper {
 		
 		return $res;
 	}
-	#endregion Methods (public)
-
-
 
 	public function build_string_by_att($arrAtt) {
 		$string = "";
@@ -801,6 +795,7 @@ class DbWrapper {
 
 		return $string;
 	}
+	#endregion Methods (public)
 
 
 }

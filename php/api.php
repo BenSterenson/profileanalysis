@@ -282,6 +282,24 @@ class API extends abstract_api
             return "Only accepts GET requests";
         }
 	}
+
+	protected function getMostLiked() 
+	{	
+		$limit = $this->args[0];
+		$gender = $this->args[1];
+
+		if ($this->method == 'GET')
+		{
+			$totalAtt = API::$myDbWrapper->getMostLikedWithAtt($limit, $gender);
+			$myArray = array("Total_$tblName" => $totalAtt);
+			return json_encode($myArray);
+		}		
+		else 
+		{
+            return "Only accepts GET requests";
+        }
+	}
+	
 	
 	#endregion
  }

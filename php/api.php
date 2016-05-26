@@ -152,8 +152,9 @@ class API extends abstract_api
         }
      }
 	
-	protected function getHistory($FBID)
+	protected function getHistory()
 	{
+		$FBID = $this->args[0];
 		if ($this->method == 'GET')
 		{
 			$HistoryArr = API::$myDbWrapper->getHistory($FBID);
@@ -168,8 +169,9 @@ class API extends abstract_api
         }
 	}
 	
-	protected function getPhotoComments($PhotoID)
+	protected function getPhotoComments()
 	{
+		$PhotoID = $this->args[0];
 		if ($this->method == 'GET')
 		{
 			$PhotoComments = API::$myDbWrapper->getPhotoComments($PhotoID);
@@ -203,8 +205,12 @@ class API extends abstract_api
         }
 	}
 
-	protected function insertComment($PhotoID, $FacebookId, $Comment, $Time) 
+	protected function insertComment() 
 	{
+		$PhotoID = $this->args[0];
+		$FacebookId = $this->args[1];
+		$Comment = $this->args[2];
+		$Time = $this->args[3];
 		if ($this->method == 'GET')
 		{
 			$PhotoComments = API::$myDbWrapper->insertComment($PhotoID, $FacebookId, $Comment, $Time);
@@ -238,8 +244,10 @@ class API extends abstract_api
         }
 	}
 
-	protected function GetTotalAttNum($tblName="PhotoAttributes",$byUser = -1) 
-	{
+	protected function GetTotalAttNum() 
+	{	
+		$tblName = $this->args[0] == -1 ? "PhotoAttributes" : $this->args[0];
+		$byUser = $this->args[1];
 		if ($this->method == 'GET')
 		{
 			$totalAtt = API::$myDbWrapper->countTotalByTbl($tblName, $byUser);

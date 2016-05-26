@@ -704,24 +704,31 @@ class DbWrapper {
 	public function insertNewUser($FacebookId, $FirstName, $LastName, $NumOfLikes) {
 		$FB_user = new Facebook_user($FacebookId, $FirstName, $LastName);
 		$FB_photo = new Facebook_photo($FacebookId, $NumOfLikes);
-		echo $FB_user;
-		echo $FB_photo;
+		//echo $FB_user;
+		//echo $FB_photo;
 
 
 		// TODO - check if user exict if no insert user.
-		$exist = $this->check_existence($FB_user)
+		$exist = $this->check_existence($FB_user);
 
-		if ($exist == NULL)
+		if ($exist == false)
 			$this->insert($FB_user);
 
-		// if yes check if photo exict by key(photoid,facebookid)
-		$exist = $this->check_existence($FB_user, $FB_photo)
+		// update first name and last name 
+		else 
+			$this->update($FB_user);
 
-		// photo exist update date and num of likes
-		if($exist != NULL)
-			$this->update($FB_photo)
-		else
+		// check if photo exict by key(photoid,facebookid)
+		$exist = $this->check_existence($FB_user, $FB_photo);
+
+		// photo does not exist insert photo
+		if($exist == false)
 			$this->insert($FB_photo);
+
+		//photo exist update date and num of likes
+		else
+			$this->update($FB_photo);
+
 
 		// if no add photo to photos and start extracting info using beta face
 

@@ -698,10 +698,36 @@ class DbWrapper {
 	}
 
 	public function insertComment($PhotoID, $FacebookId, $Comment) {
-
 		$PhotoComments = new PhotoComments($PhotoID, $FacebookId, $Comment);
 		$this->insert($PhotoComments);
-		
+	}
+	public function insertNewUser($FacebookId, $FirstName, $LastName, $NumOfLikes) {
+		$FB_user = new Facebook_user($FacebookId, $FirstName, $LastName);
+		$FB_photo = new Facebook_photo($FacebookId, $NumOfLikes);
+		echo $FB_user;
+		echo $FB_photo;
+
+
+		// TODO - check if user exict if no insert user.
+		$exist = $this->check_existence($FB_user)
+
+		if ($exist == NULL)
+			$this->insert($FB_user);
+
+		// if yes check if photo exict by key(photoid,facebookid)
+		$exist = $this->check_existence($FB_user, $FB_photo)
+
+		// photo exist update date and num of likes
+		if($exist != NULL)
+			$this->update($FB_photo)
+		else
+			$this->insert($FB_photo);
+
+		// if no add photo to photos and start extracting info using beta face
+
+		//$this->insert($FB_user);
+		//$this->insert($FB_photo);
+
 	}
 
 	public function getAgeRange($age) {

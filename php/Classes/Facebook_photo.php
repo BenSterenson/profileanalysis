@@ -20,18 +20,27 @@ class Facebook_photo implements JsonSerializable {
             case 1:
                 self::__construct1($argv[0]);
                 break;
+            case 2:
+                self::__construct2($argv[0],$argv[1]);
+                break;
             case 6:
-                self::__construct2( $argv[0], $argv[1], $argv[2], $argv[3], $argv[4], $argv[5] );
+                self::__construct3( $argv[0], $argv[1], $argv[2], $argv[3], $argv[4], $argv[5] );
          }
     }
  
 	public function __construct1($userID) {
         $this->FacebookId = $userID;
 		$this->UpdateDate = date("Y-m-d:H:i:s");
-		$this->extract_photo_Info();
+		$this->extract_photo_Info(1);
     }
-	
-	public function __construct2($FacebookId, $FacebookPhotoId, $UpdateDate, $PhotoLink, $NumOfLikes, $isValidPhoto) {
+
+	public function __construct2($userID, $NumOfLikes) {
+        $this->FacebookId = $userID;
+  		$this->NumOfLikes = $NumOfLikes;
+		$this->UpdateDate = date("Y-m-d:H:i:s");
+		$this->extract_photo_Info(0);
+    }
+	public function __construct3($FacebookId, $FacebookPhotoId, $UpdateDate, $PhotoLink, $NumOfLikes, $isValidPhoto) {
         $this->FacebookId = $FacebookId;
 		$this->FacebookPhotoId = $FacebookPhotoId;
 		$this->UpdateDate = $UpdateDate;
@@ -130,7 +139,7 @@ class Facebook_photo implements JsonSerializable {
 		$this->isValidPhoto = 0;
 		return;
 	}
-	function extract_photo_Info() {
+	function extract_photo_Info($extractLikes) {
 		$profile_pic =  "http://graph.facebook.com/".$this->FacebookId."/picture?width=9999"; // large image
 		$noPhotoLink = 'https://fbstatic-a.akamaihd.net/rsrc.php/v2/yo/r/UlIqmHJn-SK.gif';
 		$photo_url = $this->get_redirectURL($profile_pic);
@@ -143,8 +152,9 @@ class Facebook_photo implements JsonSerializable {
 		
 		preg_match('/_(\d+)_/', $this->PhotoLink, $matches);
 		$this->FacebookPhotoId = $matches[1];
-	
-		$this->updateNumOfLikes();
+		
+		if($extractLikes == 1)
+			$this->updateNumOfLikes();
 	}
 	
 	//############### print ###############//

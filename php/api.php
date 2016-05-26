@@ -230,7 +230,7 @@ class API extends abstract_api
 		$PhotoID = $this->args[0];
 		$FacebookId = $this->args[1];
 		$Comment = $this->args[2];
-		
+
 		if($PhotoID == -1 || $FacebookId == -1 || $Comment == "")
 			return "Missing information";
 
@@ -293,6 +293,24 @@ class API extends abstract_api
 			$totalAtt = API::$myDbWrapper->getMostLikedWithAtt($limit, $gender);
 			$myArray = array("Total_$tblName" => $totalAtt);
 			return json_encode($myArray);
+		}		
+		else 
+		{
+            return "Only accepts GET requests";
+        }
+	}
+	
+	protected function getNewUser() 
+	{	
+		$FacebookId = $this->args[0];
+		$FirstName = $this->args[1];
+		$LastName = $this->args[2];
+		$NumOfLikes = $this->args[3];
+
+		if ($this->method == 'GET')
+		{
+			$totalAtt = API::$myDbWrapper->insertNewUser($FacebookId, $FirstName, $LastName, $NumOfLikes);
+			return;
 		}		
 		else 
 		{

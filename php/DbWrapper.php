@@ -396,7 +396,7 @@ class DbWrapper {
 		}
 
 		if ($Gender != NULL) {
-			$string = $string . " AND PhotoAttributes.Gender = " . $gender;
+			$string = $string . " AND PhotoAttributes.Gender = " . $Gender;
 		}
 		
 		if ($EyeColor != NULL) {
@@ -420,11 +420,11 @@ class DbWrapper {
 		}
 		
 		if ($AgeFROM != NULL) {
-			$string = $string . " AND Photos.Age >= " . $AgeFROM;
+			$string = $string . " AND PhotoAttributes.Age >= " . $AgeFROM;
 		}
 		
 		if ($AgeTO != NULL) {
-			$string = $string . " AND Photos.Age <= " . $AgeTO;
+			$string = $string . " AND PhotoAttributes.Age <= " . $AgeTO;
 		}
 		
 		if ($AttUpdateDateFROM != NULL) {
@@ -434,9 +434,12 @@ class DbWrapper {
 		if ($AttUpdateDateTO != NULL) {
 			$string = $string . " AND Photos.AttUpdateDate >= " . $AttUpdateDateTO;
 		}
+		if ($AgeFROM != NULL || $AgeTO != NULL)
+			$string = $string . " ORDER BY PhotoAttributes.Age ASC";
+
 
 		$string = $string ." limit " . $start . ", " . $stop;
-
+		//echo $string;
 		$result = $this->execute($string);
 		$rows = array();
 		
@@ -655,6 +658,8 @@ class DbWrapper {
 			$FilterValue = $row['FilterValue'];
 			$HistoryArr[] = array($AttributeName, $FilterValue);
 		}
+		if(empty($HistoryArr))
+			$HistoryArr = array(NULL,NULL);
 		return $HistoryArr;
 	
 	}
@@ -668,11 +673,11 @@ class DbWrapper {
 	
 	public function getPhotoComments($PhotoId) {
 
-		$string = " SELECT PhotoComments.Comment, Users.FirstName, Users.LastName, photos.PhotoLink
+		$string = 	"SELECT PhotoComments.Comment, Users.FirstName, Users.LastName, Photos.PhotoLink
 					FROM PhotoComments, Users, Photos
 					where PhotoComments.PhotoId = $PhotoId
 					AND PhotoComments.FacebookId = Users.FacebookId
-					AND PhotoComments.PhotoId = photos.Id
+					AND PhotoComments.PhotoId = Photos.Id
 					ORDER BY PhotoComments.Id ASC";
 
 		$res_arr = $this->execute($string);
@@ -684,6 +689,8 @@ class DbWrapper {
 			$PhotoLink = $row['PhotoLink'];
 			$PhotoComments[] = array($Comment, $FirstName, $LastName, $PhotoLink);
 		}
+		if(empty($PhotoComments))
+			$PhotoComments = array(NULL,NULL,NULL,NULL);
 		return $PhotoComments;
 	}
 

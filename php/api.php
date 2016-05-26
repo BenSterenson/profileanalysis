@@ -190,6 +190,7 @@ class API extends abstract_api
 	
 	protected function getPhotoRatings()
 	{
+		$PhotoID = $this->args[0];
 		if ($this->method == 'GET')
 		{
 			$RatingsArr = API::$myDbWrapper->getPhotoRatings($PhotoId);
@@ -197,7 +198,6 @@ class API extends abstract_api
 				"Hot" => $RatingsArr[0],
 				"Not" => $RatingsArr[1]);
 			return json_encode($myArray);
-		
 		}		
 		else 
 		{
@@ -211,6 +211,10 @@ class API extends abstract_api
 		$FacebookId = $this->args[1];
 		$Comment = $this->args[2];
 		$Time = $this->args[3];
+
+		if($PhotoID == -1 || $FacebookId == -1 || $Comment == "" || $Time == -1)
+			return "Missing information";
+
 		if ($this->method == 'GET')
 		{
 			$PhotoComments = API::$myDbWrapper->insertComment($PhotoID, $FacebookId, $Comment, $Time);

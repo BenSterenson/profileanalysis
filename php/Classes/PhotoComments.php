@@ -1,52 +1,44 @@
 <?php
 
-class PhotoComments implements JsonSerializeable
-{
+class PhotoComments implements JsonSerializable {
 	#region Fields
-	private Id = NULL; 
-	private Comment = NULL;
-	private PhotoId = NULL; 
-	private FacebookId = NULL;
-	private Time = NULL;
+	private $Id = NULL;
+	private $Comment = NULL;
+	private $PhotoId = NULL; 
+	private $FacebookId = NULL;
+	private $Time = NULL;
 	#endregion Fields
 	
 	#region Constructors
 	public function __construct() {
         $argv = func_get_args();
         switch( func_num_args() ) {
-            case 4:
-                self::__construct1($argv[0],$argv[1],$argv[2],$argv[3],$argv[4]);
+            case 3:
+                self::__construct1($argv[0],$argv[1],$argv[2]);
                 break;
-            case 5:
-                self::__construct2( $argv[0], $argv[1], $argv[2], $argv[3], $argv[4]);
+            case 4:
+                self::__construct2( $argv[0], $argv[1], $argv[2], $argv[3]);
          }
     }
 	
-	public function __construct1($Id,$FBId,$Comment,$PhotoId){
-		$this->Id = $Id;
-		$this->FacebookId = $FBId;
+	public function __construct1($PhotoID, $FacebookId, $Comment){
+		$this->PhotoId = $PhotoID;
+		$this->FacebookId = $FacebookId;
 		$this->Comment = $Comment;
-		$this->PhotoId = $PhotoId;
-		$this->Time = date("Y-m-d:H:i:s");
-		
+		$this->Time = date("Y-m-d H:i:s");
 	}
 		
-	public function __construct2($Id,$FBId,$Comment,$PhotoId,$Time){
-		$this->Id = $Id;
-		$this->FacebookId = $FBId;
-		$this->Comment = $Comment;
+	public function __construct2($PhotoID, $FacebookId, $Comment, $Time){
 		$this->PhotoId = $PhotoId;
-		$this->Time = $Time;
-		
+		$this->FacebookId = $FacebookId;
+		$this->Comment = $Comment;
+		$this->Time = $Time;	
 	}
 	#endregion Constructors
 	
 	#region Setters
-	function setId($Id) {
-		$this->Id = $Id;
-	}
 	function setFacebookId($FacebookId) {
-		$this->FacebookId = $FacebookId);
+		$this->FacebookId = $FacebookId;
 	}
 	function setComment($Comment) {
 		$this->Comment = $Comment;
@@ -55,13 +47,13 @@ class PhotoComments implements JsonSerializeable
 		$this->PhotoId = $PhotoId;
 	}
 	function setTime() {
-		$this->Time = date("Y-m-d:H:i:s");
+		$this->Time = date("Y-m-d H:i:s");
 	}
 	#endregion Setters
 	
 	#region Getters
 	function getId(){
-		return this->Id;
+		return $this->Id;
 	}
 	function getFacebookId() {
 		return $this->FacebookId;
@@ -80,13 +72,15 @@ class PhotoComments implements JsonSerializeable
 	#region Methods
 	public function jsonSerialize() {
         return Array(
-			'Id' => $this.Id + 0,
+        	'Id'	=> $this->Id + 0,
 			'FacebookId'	=> $this->FacebookId + 0,
 			'Comment' 		=> $this->Comment,
 			'PhotoId'		=> $this->PhotoId + 0,
-			'Time'			=> $this->Time + 0
-        );
+			'Time'			=> $this->Time
+		);
     }
+
+
 	
 	#print
 	function __toString(){

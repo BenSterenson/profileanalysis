@@ -50,6 +50,7 @@
 
 include 'Classes/Facebook_photo.php'; // MICHAEL: if we remove facebook_user include from facebook_photo we'll have to add it here
 include 'Classes/Facebook_user.php';
+include 'Classes/PhotoComments.php';
 include 'Classes/Attributes.php';
 
 define("NUMOfCOLORS",11);
@@ -483,9 +484,9 @@ class DbWrapper {
 				
 			case "PhotoComments":
 				$string = "INSERT INTO PhotoComments ";
-				$string = $string . " (Id,FacebookId,Comment,PhotoId,Time) VALUES ";
-				$string = $string . " (" . $object->getId() . ", " . $object->getFacebookId() . ", '" . $object->getComment() . "', '" .
-										$object->getPhotoId() . "', " . $object->getTime() . ")";
+				$string = $string . " (FacebookId,Comment,PhotoId,Time) VALUES ";
+				$string = $string . " (" . $object->getFacebookId() . ", '" . $object->getComment() . "', '" .
+										$object->getPhotoId() . "', '" . $object->getTime() . "')";
 				break;
 				
 			case "PhotoRatings":
@@ -674,7 +675,7 @@ class DbWrapper {
 	
 	public function getPhotoComments($PhotoId) {
 
-		$string = 	"SELECT PhotoComments.Time,PhotoComments.Comment, Users.FirstName, Users.LastName, Photos.PhotoLink,
+		$string = 	"SELECT PhotoComments.Time,PhotoComments.Comment, Users.FirstName, Users.LastName, Photos.PhotoLink
 					FROM PhotoComments, Users, Photos
 					where PhotoComments.PhotoId = $PhotoId
 					AND PhotoComments.FacebookId = Users.FacebookId
@@ -689,16 +690,16 @@ class DbWrapper {
 			$FirstName = $row['FirstName'];
 			$LastName = $row['LastName'];
 			$PhotoLink = $row['PhotoLink'];
-			$PhotoComments[] = array($Comment, $FirstName, $LastName, $PhotoLink,$Time);
+			$PhotoComments[] = array($Comment, $FirstName, $LastName, $PhotoLink, $Time);
 		}
 		if(empty($PhotoComments))
-			$PhotoComments = array(NULL,NULL,NULL,NULL);
+			$PhotoComments = array(NULL,NULL,NULL,NULL,NULL);
 		return $PhotoComments;
 	}
 
-	public function insertComment($PhotoID, $FacebookId, $Comment, $Time) {
+	public function insertComment($PhotoID, $FacebookId, $Comment) {
 
-		$PhotoComments = new PhotoComments($PhotoID, $FacebookId, $Comment, $Time);
+		$PhotoComments = new PhotoComments($PhotoID, $FacebookId, $Comment);
 		$this->insert($PhotoComments);
 		
 	}

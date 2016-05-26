@@ -230,14 +230,13 @@ class API extends abstract_api
 		$PhotoID = $this->args[0];
 		$FacebookId = $this->args[1];
 		$Comment = $this->args[2];
-		$Time = date("Y-m-d H:i:s");;
-
-		if($PhotoID == -1 || $FacebookId == -1 || $Comment == "" || $Time == -1)
+		
+		if($PhotoID == -1 || $FacebookId == -1 || $Comment == "")
 			return "Missing information";
 
 		if ($this->method == 'GET')
 		{
-			$PhotoComments = API::$myDbWrapper->insertComment($PhotoID, $FacebookId, $Comment, $Time);
+			$PhotoComments = API::$myDbWrapper->insertComment($PhotoID, $FacebookId, $Comment);
 			return;
 		}		
 		else 

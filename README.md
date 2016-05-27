@@ -35,3 +35,5 @@ tinyurl.com/api-create.php?url={url}
 
 ###Database layout
 To support individual users having several profile pictures, and profile pictures having both algorithm-based concluded results and application users’ ranking feeding the database, the database layout agreed is -
+
+![dbLayout](dbLayout.png)

@@ -37,3 +37,21 @@ tinyurl.com/api-create.php?url={url}
 To support individual users having several profile pictures, and profile pictures having both algorithm-based concluded results and application users’ ranking feeding the database, the database layout agreed is -
 
 ![dbLayout](dbLayout.png)
+
+* Primary keys are as follows -
+	* **User** : FacebookId
+	* **Photos** : Id
+	* **PhotoAttributes** : Id
+
+* Users table is connected to photos in One To Many relationship
+	* Each user can have many photos
+	* CONSTRAINT Users_To_Photos FOREIGN KEY Users_To_Photos (FacebookId) REFERENCES Users (FacebookId);
+
+* Photos table is connected to attributes in One To Many relationship 
+	* Each photo can be rated by multiple users and an algorithm
+	* CONSTRAINT Photos_To_Attributes FOREIGN KEY Photos_To_Attributes (PhotoId) REFERENCES Photos (Id);
+
+* PhotoAttributes table hold a UpdatedByUser boolean value to distinguish between users’ input and Betaface’s analysis.
+
+* FakePhotoId is used to save facebook photo ids that are used by more than one user (facebook creates a fake facebook profile and links all the users that have no profile picture to that user)
+

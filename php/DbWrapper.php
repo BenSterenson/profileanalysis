@@ -763,10 +763,10 @@ class DbWrapper {
 								. " AND Users.FacebookId = " . $FacebookId);
 				
 		if ($photoExist->num_rows > 0)
-			$this->update($myPhoto);
+			$this->update($FB_photo);
 			
 		else
-			$this->insert($myPhoto);
+			$this->insert($FB_photo);
 		
 		return true;
 	}

@@ -244,6 +244,23 @@ class API extends abstract_api
             return "Only accepts GET requests";
         }
 	}
+	protected function InsertHistory() 
+	{
+		$FacebookId = $this->args[0];
+		$AttributeName = $this->args[1];
+		$FilterValue = $this->args[2];
+		$SessionId = $this->args[3];
+
+		if ($this->method == 'GET')
+		{
+			$PhotoComments = API::$myDbWrapper->InsertHistory($FacebookId, $AttributeName, $FilterValue, $SessionId);
+			return;
+		}		
+		else 
+		{
+            return "Only accepts GET requests";
+        }
+	}
 
 	protected function GetPhotos() 
 	{

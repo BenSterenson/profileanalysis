@@ -798,7 +798,40 @@ class DbWrapper {
 		//echo $FB_photo;
 
 		// update or insert as needed
-		verifyExistance($FB_user, $FB_photo); // returns true if exists (creates if needed)
+		$exist = verifyExistance($FB_user, $FB_photo); // returns true if exists (creates if needed)
+
+		// betaface
+		if($exist == true){
+			$string = 	"SELECT *
+						FROM Users, Photos, PhotoAttributes
+						WHERE Users.FacebookId = Photos.FacebookId
+                        AND Photos.Id = PhotoAttributes.PhotoId
+                        AND PhotoAttributes.UpdatedByUser = 0
+						AND Users.FacebookId = $FacebookId
+						AND Photos.FacebookPhotoId = $FB_photo->getPhotoId();
+                        order by Photos.UpdateDate DESC
+                        limit 1 ";
+
+            $result = $this->execute($string);
+
+            // found attributes in betaface
+            if ($result->num_rows > 0)
+				$r = mysqli_fetch_assoc($result);
+			// send pic to betaface
+			else {
+				// extract photos.Id
+				// send to function insert_attributes($id,$send) might need changes
+				// sleep for 30 sec
+				// send pic again try to get attributes if not found return -1.
+				return -1;
+			}
+			// no attributes found
+			$r = -1;
+
+
+			return json_encode($r, JSON_NUMERIC_CHECK);
+		}
+
 		return;
 	}
 

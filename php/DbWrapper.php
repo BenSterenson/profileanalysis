@@ -51,6 +51,7 @@
 include 'Classes/Facebook_photo.php'; // MICHAEL: if we remove facebook_user include from facebook_photo we'll have to add it here
 include 'Classes/Facebook_user.php';
 include 'Classes/PhotoComments.php';
+include 'Classes/History.php';
 include 'Classes/Attributes.php';
 
 define("NUMOfCOLORS",11);
@@ -477,8 +478,8 @@ class DbWrapper {
 				
 			case "History":
 				$string = "INSERT INTO History ";
-				$string = $string . " (Id,FacebookId,AttributeName,FilterValue,SessionId) VALUES ";
-				$string = $string . " (" . $object->getId() . ", " . $object->getFBID() . ", '" . $object->getAttributeName() . "', '" .
+				$string = $string . " (FacebookId,AttributeName,FilterValue,SessionId) VALUES ";
+				$string = $string . " (" . $object->getFBID() . ", '" . $object->getAttributeName() . "', '" .
 										$object->getFilterValue() . "', " . $object->getSessionId() . ")";
 				break;
 				
@@ -653,14 +654,17 @@ class DbWrapper {
 	
 	public function getHistory($FBID)
 	{
-		$res_arr = $this->execute("SELECT AttributeName,FilterValue,SessionId FROM History where FacebookId = " . $FBID );
+		$res_arr = $this->execute("SELECT AttributeName, FilterValue, SessionId FROM History where FacebookId = " . $FBID . " ORDER BY SessionId DESC");
 		
-			while ($row = $res_arr->fetch_assoc()) {
+		while ($row = $res_arr->fetch_assoc()) {
 			$AttributeName = $row['AttributeName'];
 			$FilterValue = $row['FilterValue'];
 			$SessionId = $row['SessionId'];
 
-			$HistoryArr[] = array($AttributeName, $FilterValue, $SessionId);
+			$HistoryArr[] = array(
+				"AttributeName" => $AttributeName,
+				"FilterValue" => $FilterValue,
+				"SessionId" => $SessionId);
 		}
 		if(empty($HistoryArr))
 			$HistoryArr = array(NULL,NULL,NULL);
@@ -702,6 +706,11 @@ class DbWrapper {
 	public function insertComment($PhotoID, $FacebookId, $Comment) {
 		$PhotoComments = new PhotoComments($PhotoID, $FacebookId, $Comment);
 		$this->insert($PhotoComments);
+	}
+
+	public function InsertHistory($FacebookId, $AttributeName, $FilterValue, $SessionId) {
+		$HistorySession = new History($FacebookId, $AttributeName, $FilterValue, $SessionId);
+		$this->insert($HistorySession);
 	}
 	
 	private function verifyExistance($FB_user, $FB_photo) {

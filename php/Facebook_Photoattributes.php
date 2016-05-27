@@ -3,8 +3,8 @@ set_time_limit(0);
 include 'DbWrapper.php';
 include_once("../BetafaceAPI/BetafaceAPI.php");
 
-$startAttId = 5736;
-$endAttId = 5953;
+$startAttId = 6020;
+$endAttId = 7000;
 $PROX_USE = 0;
 
 

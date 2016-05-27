@@ -177,11 +177,7 @@ class API extends abstract_api
 		if ($this->method == 'GET')
 		{
 			$HistoryArr = API::$myDbWrapper->getHistory($FBID);
-			$myArray = array(
-				"AttributeName" => $HistoryArr[0],
-				"FilterValue" => $HistoryArr[1],
-				"SessionId" => $HistoryArr[2]);
-			return json_encode($myArray);
+			return json_encode($HistoryArr);
 		}		
 		else 
 		{
@@ -254,7 +250,7 @@ class API extends abstract_api
 
 		if ($this->method == 'GET')
 		{
-			$PhotoComments = API::$myDbWrapper->InsertHistory($FacebookId, $AttributeName, $FilterValue, $SessionId);
+			$HistorySession = API::$myDbWrapper->InsertHistory($FacebookId, $AttributeName, $FilterValue, $SessionId);
 			return;
 		}		
 		else 

@@ -691,12 +691,11 @@ class DbWrapper {
 		$res_arr = $this->execute($string);
 
 		while ($row = $res_arr->fetch_assoc()) {
-			$Time = $row['Time'];
-			$Comment = $row['Comment'];
-			$FirstName = $row['FirstName'];
-			$LastName = $row['LastName'];
-			$PhotoLink = $row['PhotoLink'];
-			$PhotoComments[] = array($Comment, $FirstName, $LastName, $PhotoLink, $Time);
+			$PhotoComments[] = array(	"Comment" => $row['Comment'],
+										"FirstName" => $row['FirstName'],
+										"LastName" => $row['LastName'],
+										"PhotoLink" => $row['PhotoLink'],
+										"Time" => $row['Time']);
 		}
 		if(empty($PhotoComments))
 			$PhotoComments = array(NULL,NULL,NULL,NULL,NULL);

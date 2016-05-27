@@ -190,14 +190,8 @@ class API extends abstract_api
 		$PhotoID = $this->args[0];
 		if ($this->method == 'GET')
 		{
-			$PhotoComments = API::$myDbWrapper->getPhotoComments($PhotoID);
-			$myArray = array(
-				"Comment" => $PhotoComments[0],
-				"FirstName" => $PhotoComments[1],
-				"LastName" => $PhotoComments[2],
-				"PhotoLink" => $PhotoComments[3],
-				"Time" => $PhotoComments[4]);
-			return json_encode($myArray);
+			$PhotoCommentsArr = API::$myDbWrapper->getPhotoComments($PhotoID);
+			return json_encode($PhotoCommentsArr);
 		}		
 		else 
 		{

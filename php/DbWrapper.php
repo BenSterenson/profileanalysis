@@ -726,76 +726,48 @@ class DbWrapper {
 	}
 	
 	private function verifyExistance_user($FB_user) {
+		if (!$FB_user)
+			return false;
+		
 		$FacebookId = $FB_user->getFacebookId();
-		$FirstName	= $FB_user->getFirstName();
-		$LastName	= $FB_user->getLastName();
 		
 		if (!$FacebookId)
 			return false;
-			
-		$myUser	 = new Facebook_user($FacebookId);
 	
 		$personExist = $this->execute("SELECT * FROM Users WHERE Users.FacebookId = " . $FacebookId);
 		
 		// user exists, only update
-		if ($personExist->num_rows > 0) {
-			
-			if ($myUser != NULL) {
-				
-				$myUser->setFirstName($FirstName);
-				$myUser->setLastName($LastName);
+		if ($personExist->num_rows > 0)
+			$this->update($FB_user);
 		
-				$this->update($myUser);
-			}
-			else {
-				return false; // error
-			}
-		}
-		
-		// user doesn't exist, insert
-		else if ($myUser != NULL) {
-				
-				$myUser->setFirstName($FirstName);
-				$myUser->setLastName($LastName);
-		
-				$this->insert($myUser);
-		}
-		else {
-			return false; // error
-		}
+		else
+			$this->insert($FB_user);
 
 		return true;
 	}
 	
 	private function verifyExistance_photo($FB_user, $FB_photo) {
+		if (!$FB_photo || !$FB_user)
+			return false;
+		
 		$FacebookId = $FB_user->getFacebookId();
 		$PhotoId	= $FB_photo->getPhotoId();
-		$NumOfLikes	= $FB_photo->getNumOfLikes();
 		
 		if (!$FacebookId || !$PhotoId)
 			return false;
 			
-		$myPhoto 	= new Facebook_photo($FacebookId);
 		$photoExist = $this->execute(
 								"SELECT PhotoId as pi FROM Users, Photos 
-								WHERE Users.FacebookId = Photos.FacebookId AND Photos.PhotoId = " . $PhotoId);
-		
-		if ($myPhoto != NULL) {
-
-			$myPhoto->SetNumOfLikes($NumOfLikes);
+								WHERE Users.FacebookId = Photos.FacebookId
+								AND Photos.PhotoId = " . $PhotoId
+								. " AND Users.FacebookId = " . $FacebookId);
+				
+		if ($photoExist->num_rows > 0)
+			$this->update($myPhoto);
 			
-			if ($photoExist->num_rows > 0) {
-				$this->update($myPhoto);
-			}
-			else {
-				$this->insert($myPhoto);
-			}
-		}
+		else
+			$this->insert($myPhoto);
 		
-		else {
-			return false; // error
-		}
-
 		return true;
 	}
 	

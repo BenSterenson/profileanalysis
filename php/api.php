@@ -300,7 +300,7 @@ class API extends abstract_api
         }
 	}
 	
-	protected function getNewUser() 
+	protected function login() 
 	{	
 		$FacebookId = $this->args[0];
 		$FirstName = $this->args[1];
@@ -309,7 +309,7 @@ class API extends abstract_api
 
 		if ($this->method == 'GET')
 		{
-			$totalAtt = API::$myDbWrapper->insertNewUser($FacebookId, $FirstName, $LastName, $NumOfLikes);
+			$totalAtt = API::$myDbWrapper->login($FacebookId, $FirstName, $LastName, $NumOfLikes);
 			return;
 		}		
 		else 

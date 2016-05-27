@@ -789,7 +789,7 @@ class DbWrapper {
 		return true;
 	}
 	
-	public function insertNewUser($FacebookId, $FirstName, $LastName, $NumOfLikes) {
+	public function login($FacebookId, $FirstName, $LastName, $NumOfLikes) {
 		
 		$FB_user 	= new Facebook_user($FacebookId, $FirstName, $LastName);
 		$FB_photo 	= new Facebook_photo($FacebookId, $NumOfLikes);

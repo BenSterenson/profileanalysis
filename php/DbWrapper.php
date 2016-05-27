@@ -653,15 +653,17 @@ class DbWrapper {
 	
 	public function getHistory($FBID)
 	{
-		$res_arr = $this->execute("SELECT AttributeName,FilterValue FROM History where FacebookId = " . $FBID );
+		$res_arr = $this->execute("SELECT AttributeName,FilterValue,SessionId FROM History where FacebookId = " . $FBID );
 		
 			while ($row = $res_arr->fetch_assoc()) {
 			$AttributeName = $row['AttributeName'];
 			$FilterValue = $row['FilterValue'];
-			$HistoryArr[] = array($AttributeName, $FilterValue);
+			$SessionId = $row['SessionId'];
+
+			$HistoryArr[] = array($AttributeName, $FilterValue, $SessionId);
 		}
 		if(empty($HistoryArr))
-			$HistoryArr = array(NULL,NULL);
+			$HistoryArr = array(NULL,NULL,NULL);
 		return $HistoryArr;
 	
 	}

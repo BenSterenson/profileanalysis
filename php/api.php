@@ -179,7 +179,8 @@ class API extends abstract_api
 			$HistoryArr = API::$myDbWrapper->getHistory($FBID);
 			$myArray = array(
 				"AttributeName" => $HistoryArr[0],
-				"FilterValue" => $HistoryArr[1]);
+				"FilterValue" => $HistoryArr[1],
+				"SessionId" => $HistoryArr[2]);
 			return json_encode($myArray);
 		}		
 		else 

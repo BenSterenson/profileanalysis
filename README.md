@@ -45,11 +45,11 @@ To support individual users having several profile pictures, and profile picture
 
 * Users table is connected to photos in One To Many relationship
 	* Each user can have many photos
-	* CONSTRAINT Users_To_Photos FOREIGN KEY Users_To_Photos (FacebookId) REFERENCES Users (FacebookId);
+	* `CONSTRAINT Users_To_Photos FOREIGN KEY Users_To_Photos (FacebookId) REFERENCES Users (FacebookId);`
 
 * Photos table is connected to attributes in One To Many relationship 
 	* Each photo can be rated by multiple users and an algorithm
-	* CONSTRAINT Photos_To_Attributes FOREIGN KEY Photos_To_Attributes (PhotoId) REFERENCES Photos (Id);
+	* `CONSTRAINT Photos_To_Attributes FOREIGN KEY Photos_To_Attributes (PhotoId) REFERENCES Photos (Id);`
 
 * PhotoAttributes table hold a UpdatedByUser boolean value to distinguish between users’ input and Betaface’s analysis.
 

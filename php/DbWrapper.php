@@ -250,13 +250,14 @@ class DbWrapper {
 			case "Facebook_photo":
 				$tableName  = "Photos";
 				$primaryKey = "FacebookPhotoId";
-				$primaryVal = $object->getPhotoId();
-				
-				$this->update_cell($tableName, $primaryKey, $primaryVal, "FacebookId",   $object->getUserID());
-				$this->update_cell($tableName, $primaryKey, $primaryVal, "UpdateDate",   $object->getUpdateDate());
-				$this->update_cell($tableName, $primaryKey, $primaryVal, "PhotoLink",    $object->getPhotoLink());
-				$this->update_cell($tableName, $primaryKey, $primaryVal, "NumOfLikes",   $object->getNumOfLikes());
-				$this->update_cell($tableName, $primaryKey, $primaryVal, "IsValidPhoto", $object->getIsValidPhoto());
+				$primaryVal = $object->getId();
+
+				$this->update_cell($tableName, $primaryKey, $primaryVal, "FacebookPhotoId", $object->getPhotoId());
+				$this->update_cell($tableName, $primaryKey, $primaryVal, "FacebookId",  	$object->getUserID());
+				$this->update_cell($tableName, $primaryKey, $primaryVal, "UpdateDate",		$object->getUpdateDate());
+				$this->update_cell($tableName, $primaryKey, $primaryVal, "PhotoLink",		$object->getPhotoLink());
+				$this->update_cell($tableName, $primaryKey, $primaryVal, "NumOfLikes",  	$object->getNumOfLikes());
+				$this->update_cell($tableName, $primaryKey, $primaryVal, "IsValidPhoto",	$object->getIsValidPhoto());
 				break;
 				
 			case "Attributes":
@@ -713,12 +714,13 @@ class DbWrapper {
 	}
 	
 	private function verifyExistance($FB_user, $FB_photo) {
-		
+		//TODO FIX NEVER GETS TO SECOND VERIFY
+	
 		// assumes insert/update always works
-		if (!verifyExistance_user($FB_user))
+		if (!$this->verifyExistance_user($FB_user))
 			return false;
 
-		if (!verifyExistance_user($FB_user, $FB_photo))
+		if (!$this->verifyExistance_photo($FB_user, $FB_photo))
 			return false;
 		
 		// success:
@@ -729,7 +731,7 @@ class DbWrapper {
 		if (!$FB_user)
 			return false;
 		
-		$FacebookId = $FB_user->getFacebookId();
+		$FacebookId = $FB_user->getUserID();
 		
 		if (!$FacebookId)
 			return false;
@@ -750,23 +752,27 @@ class DbWrapper {
 		if (!$FB_photo || !$FB_user)
 			return false;
 		
-		$FacebookId = $FB_user->getFacebookId();
+		$FacebookId = $FB_user->getUserID();
 		$PhotoId	= $FB_photo->getPhotoId();
-		
 		if (!$FacebookId || !$PhotoId)
 			return false;
 			
 		$photoExist = $this->execute(
-								"SELECT PhotoId as pi FROM Users, Photos 
+								"SELECT Id as pi FROM Users, Photos 
 								WHERE Users.FacebookId = Photos.FacebookId
-								AND Photos.PhotoId = " . $PhotoId
+								AND Photos.FacebookPhotoId = " . $PhotoId
 								. " AND Users.FacebookId = " . $FacebookId);
-				
-		if ($photoExist->num_rows > 0)
+		
+		if ($photoExist->num_rows > 0){
+			$id=$photoExist->fetch_assoc()["pi"];
+			$FB_photo->setId($id);
 			$this->update($FB_photo);
+		}
 			
-		else
+		else{
+			//todo GET PICTURE ID
 			$this->insert($FB_photo);
+		}
 		
 		return true;
 	}
@@ -776,12 +782,15 @@ class DbWrapper {
 		$FB_user 	= new Facebook_user($FacebookId, $FirstName, $LastName);
 		$FB_photo 	= new Facebook_photo($FacebookId, $NumOfLikes);
 		
+		$FacebookPhotoId = $FB_photo->getPhotoId();
 		//echo $FB_user;
 		//echo $FB_photo;
 
 		// update or insert as needed
-		$exist = verifyExistance($FB_user, $FB_photo); // returns true if exists (creates if needed)
+		$exist = $this->verifyExistance($FB_user, $FB_photo); // returns true if exists (creates if needed)
+		
 
+		echo $FB_photo;
 		// betaface
 		if($exist == true){
 			$string = 	"SELECT *
@@ -790,7 +799,7 @@ class DbWrapper {
                         AND Photos.Id = PhotoAttributes.PhotoId
                         AND PhotoAttributes.UpdatedByUser = 0
 						AND Users.FacebookId = $FacebookId
-						AND Photos.FacebookPhotoId = $FB_photo->getPhotoId();
+						AND Photos.FacebookPhotoId = $FacebookPhotoId
                         order by Photos.UpdateDate DESC
                         limit 1 ";
 

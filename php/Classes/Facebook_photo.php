@@ -5,6 +5,7 @@ set_time_limit(0);
 class Facebook_photo implements JsonSerializable { 
 
 	#region Fields
+    private $Id = NULL;
     private $FacebookId = NULL;
     private $FacebookPhotoId = NULL;
     private $UpdateDate = NULL;
@@ -51,6 +52,9 @@ class Facebook_photo implements JsonSerializable {
 	#endregion Constructors
 	
 	#region Setters
+	function setId($Id) {
+		$this->Id = $Id;
+	}
 	function setPhotoId($photoID) {
 		$this->FacebookPhotoId = $photoID;
 	}
@@ -69,6 +73,9 @@ class Facebook_photo implements JsonSerializable {
 	#endregion Setters
 	
 	#region Getters
+	function getId() {
+		return $this->Id;
+	}	
 	function getUserID() {
 		return $this->FacebookId;
 	}
@@ -92,6 +99,7 @@ class Facebook_photo implements JsonSerializable {
 	#region Methods
 		public function jsonSerialize() {
         return Array(
+        	'Id'				=> $this->FacebookId + 0,
            'FacebookId'			=> $this->FacebookId + 0,
            'FacebookPhotoId' 	=> $this->FacebookPhotoId + 0,
            'UpdateDate' 		=> $this->UpdateDate + 0,
@@ -131,6 +139,7 @@ class Facebook_photo implements JsonSerializable {
 		$this->setNumOfLikes($this->extract_likes_number($this->FacebookPhotoId));
 	}
 	function unsetPhoto(){
+		$this->Id = NULL;
 		$this->FacebookId = NULL;
 		$this->FacebookPhotoId = NULL;
 		$this->UpdateDate = NULL;
@@ -159,7 +168,7 @@ class Facebook_photo implements JsonSerializable {
 	
 	//############### print ###############//
     function __toString() { 
-        return "FacebookId : " . $this->FacebookId . " <br>Photo Id : " . $this->FacebookPhotoId . " <br>Update Date : " . $this->UpdateDate . " <br>Photo Link : " . $this->PhotoLink . " <br>Num Of Likes : " . $this->NumOfLikes . " <br>is Valid Photo : " . $this->isValidPhoto; 
+        return "Id : " . $this->Id . " <br>FacebookId : " . $this->FacebookId . " <br>Photo Id : " . $this->FacebookPhotoId . " <br>Update Date : " . $this->UpdateDate . " <br>Photo Link : " . $this->PhotoLink . " <br>Num Of Likes : " . $this->NumOfLikes . " <br>is Valid Photo : " . $this->isValidPhoto; 
     } 
 	#endregion Methods
 } 

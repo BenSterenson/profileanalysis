@@ -17,7 +17,7 @@ Solution Stack:
 
 ###APIs
 * Facebook’s [Graph](https://developers.facebook.com/docs/graph-api) API:
-	* Used for scraping Facebook HTML files and retrieving profile information
+	* Used for retrieving profile picture's information
 	* Method examples:
 graph.facebook.com/{uid}/picture?type=large
 
@@ -55,3 +55,15 @@ To support individual users having several profile pictures, and profile picture
 
 * FakePhotoId is used to save facebook photo ids that are used by more than one user (facebook creates a fake facebook profile and links all the users that have no profile picture to that user)
 
+###The Workplan
+The project was split four ways:
+* Under the hood:	Database creation, Facebook data management
+	- Ben
+* Interface:		Wrapper communication between DB, API and FrontEnd
+	- Michael
+* Image Processing: 	API usage and data manipulation			
+ 	- Royee
+* Web Application:	Frontend design and connection to Backend
+	- Lior
+
+Besides main responsibility distribution, each project member took part in writing the SQL queries, connecting the pieces of code together, reviewing one another’s work and assembling this document.

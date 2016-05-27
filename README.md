@@ -39,9 +39,9 @@ To support individual users having several profile pictures, and profile picture
 ![dbLayout](dbLayout.png)
 
 * Primary keys are as follows -
-	* **User** : FacebookId
-	* **Photos** : Id
-	* **PhotoAttributes** : Id
+	* *User* : `FacebookId`
+	* *Photos* : `Id`
+	* *PhotoAttributes* : `Id`
 
 * Users table is connected to photos in One To Many relationship
 	* Each user can have many photos
@@ -57,13 +57,9 @@ To support individual users having several profile pictures, and profile picture
 
 ###The Workplan
 The project was split four ways:
-* Under the hood:	Database creation, Facebook data management
-	- Ben
-* Interface:		Wrapper communication between DB, API and FrontEnd
-	- Michael
-* Image Processing: 	API usage and data manipulation			
- 	- Royee
-* Web Application:	Frontend design and connection to Backend
-	- Lior
+* Under the hood:	Database creation, Facebook data management - `Ben`
+* Interface:		Wrapper communication between DB, API and FrontEnd - `Michael`
+* Image Processing: 	API usage and data manipulation	- `Royee`
+* Web Application:	Frontend design and connection to Backend - `Lior`
 
 Besides main responsibility distribution, each project member took part in writing the SQL queries, connecting the pieces of code together, reviewing one another’s work and assembling this document.

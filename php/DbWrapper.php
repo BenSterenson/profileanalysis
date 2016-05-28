@@ -249,7 +249,7 @@ class DbWrapper {
 				
 			case "Facebook_photo":
 				$tableName  = "Photos";
-				$primaryKey = "FacebookPhotoId";
+				$primaryKey = "Id";
 				$primaryVal = $object->getId();
 
 				$this->update_cell($tableName, $primaryKey, $primaryVal, "FacebookPhotoId", $object->getPhotoId());
@@ -454,20 +454,18 @@ class DbWrapper {
 	}
 	
 	public function insert($object) {
-	
 		switch (get_class($object)) {
-			case "Users":
+			case "Facebook_user":
 				$string = "INSERT INTO Users ";
 				$string = $string . " (FacebookId, FirstName, LastName) VALUES ";
 				$string = $string . " (" . $object->getUserID() . ", '" . $object->getFirstName() . "', '" . $object->getLastName() . "')";
 				break;
 				
-			case "Photos":
-				echo $object;
+			case "Facebook_photo":
 				$string = "INSERT INTO Photos ";
 				$string = $string . " (FacebookPhotoId, FacebookId, UpdateDate, PhotoLink, NumOfLikes, IsValidPhoto) VALUES ";
 				$string = $string . " (" . $object->getPhotoId() . ", " . $object->getUserID() . ", '" . $object->getUpdateDate() . "', '" .
-										$object->getPhotoLink() . "', " . $object->getNumOfLikes()  . ", " . getisValidPhoto() . ")";
+										$object->getPhotoLink() . "', " . $object->getNumOfLikes()  . ", " . $object->getIsValidPhoto() . ")";
 				break;
 			
 			case "Attributes":
@@ -499,7 +497,6 @@ class DbWrapper {
 										$object->getPhotoId() . "', '" . $object->getFacebookId() . ")";
 				break;
 		}
-		echo $string;
 		$this->execute($string);
 	}
 	
@@ -766,17 +763,19 @@ class DbWrapper {
 
 		$photoExist = $this->execute($photoExistStr);
 		
-		if ($photoExist->num_rows > 0)
-			$this->update($FB_photo);
-		else{
-			//echo $FB_photo;
-			$this->insert($FB_photo);
-			$photoExist = $this->execute($photoExistStr);
-		}
-		
-		$id=$photoExist->fetch_assoc()["pi"];
-		$FB_photo->setId($id);
+		if ($photoExist->num_rows > 0){
+			$id = $photoExist->fetch_assoc()["pi"];
+			$FB_photo->setId($id);
 
+			$this->update($FB_photo);
+		}
+		else{
+			$this->insert($FB_photo);
+
+			$photoExist = $this->execute($photoExistStr);
+			$id=$photoExist->fetch_assoc()["pi"];
+			$FB_photo->setId($id);
+		}
 		return true;
 	}
 

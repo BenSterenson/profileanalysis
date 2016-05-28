@@ -35,13 +35,13 @@ class API extends abstract_api
 	}
 
 	protected function extractVarsAtt($arr){
-		$arrName = array(	'gender' => $this->args[0],
-							'eyeColor' => $this->args[1],
-							'hairColor' => $this->args[2],
-							'hasBeard' => $this->args[3],
-							'hasGlasses' => $this->args[4],
-							'hasSmile' => $this->args[5],
-							'age' => $this->args[6]);		
+		$arrName = array('gender' 	 => $this->args[0],
+						'eyeColor' 	 => $this->args[1],
+						'hairColor'  => $this->args[2],
+						'hasBeard' 	 => $this->args[3],
+						'hasGlasses' => $this->args[4],
+						'hasSmile' 	 => $this->args[5],
+						'age' 		 => $this->args[6]);		
 		return $arrName;
 	}
 

@@ -48,7 +48,7 @@
 		// FacebookId 		int
 #endregion Comments
 
-include 'Classes/Facebook_photo.php'; // MICHAEL: if we remove facebook_user include from facebook_photo we'll have to add it here
+include 'Classes/Facebook_photo.php';
 include 'Classes/Facebook_user.php';
 include 'Classes/PhotoComments.php';
 include 'Classes/History.php';
@@ -534,8 +534,8 @@ class DbWrapper {
 			$this->execute($sqladdDupNoPic);
 		}
 	}
-
-	public function getNumberAge($att,$string) {
+	
+	public function getNumberAge_algo($att, $string) {
 		//SELECT count(*) FROM PhotoAttributes where Age > 0 AND Age < 5 AND UpdatedByUser = 0
 		$sql_format_s = 'SELECT count(*) as cnt FROM PhotoAttributes where  %1$s <= %2$d AND UpdatedByUser = 0' . $string;
 		$sql_format = 'SELECT count(*) as cnt FROM PhotoAttributes where  %1$s >= %2$d AND %1$s <= %3$d AND UpdatedByUser = 0' . $string;
@@ -557,6 +557,15 @@ class DbWrapper {
 		return $res_arr;
 	}
 
+	public function getNumberAge($att, $string, $byUser = false) {
+		switch ($byUser) {
+			case false:
+				return API::$myDbWrapper->getNumberAge_algo($att, $string);
+			case true:
+				return API::$myDbWrapper->getNumberAge_user($att, $string);
+		}
+	}
+	
 	public function getNumberBinaryAtt($att, $string) {
 		$res_arr[] = $this->execute("SELECT count(*) as cnt FROM PhotoAttributes where " . $att ." = 0 AND UpdatedByUser = 0" . $string);
 		$res_arr[] = $this->execute("SELECT count(*) as cnt FROM PhotoAttributes where " . $att ." = 1 AND UpdatedByUser = 0" . $string);
@@ -711,6 +720,19 @@ class DbWrapper {
 	public function InsertHistory($FacebookId, $AttributeName, $FilterValue, $SessionId) {
 		$HistorySession = new History($FacebookId, $AttributeName, $FilterValue, $SessionId);
 		$this->insert($HistorySession);
+	}
+	
+	public function insertAttributesByUser($PhotoId, $Gender, $EyeColor, $HairColor, $HasBeard, $HasGlasses, $HasSmile, $Age) {
+		$myAttributes = new Attributes($PhotoId);
+		$myAttributes->setGender($Gender);
+		$myAttributes->setGender($EyeColor);
+		$myAttributes->setGender($HairColor);
+		$myAttributes->setGender($HasBeard);
+		$myAttributes->setGender($HasGlasses);
+		$myAttributes->setGender($HasSmile);
+		$myAttributes->setGender($Age);
+		$myAttributes->setUpdatedByUser(true);
+		insert($myAttributes);
 	}
 	
 	private function verifyExistance($FB_user, $FB_photo) {

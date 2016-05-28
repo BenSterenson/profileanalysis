@@ -46,6 +46,8 @@ class Attributes implements JsonSerializable {
 		$this->HasGlasses = $row['HasGlasses'];
 		$this->HasSmile = $row['HasSmile'];
 		$this->Age = $row['Age'];
+		$this->UpdateDate = $row['UpdateDate'];
+		$this->UpdatedByUser = $row['UpdatedByUser'];
     }
 
 	#endregion Constructors

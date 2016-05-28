@@ -52,7 +52,8 @@ include 'Classes/Facebook_photo.php'; // MICHAEL: if we remove facebook_user inc
 include 'Classes/Facebook_user.php';
 include 'Classes/PhotoComments.php';
 include 'Classes/History.php';
-include 'Classes/Attributes.php';
+//include 'Classes/Attributes.php';
+include '../BetafaceAPI/BetafaceAPI.php';
 
 define("NUMOfCOLORS",11);
 
@@ -799,8 +800,9 @@ class DbWrapper {
 		$picUrl = $row['PhotoLink']; // extracted link
 
         $picUrl = $api->get_tiny_url($picUrl);
-		$face = $api->get_Image_attributes($picUrl,0,0); //($picUrl,proxyuse,send)
+       	chdir('../BetafaceAPI/');
 
+		$face = $api->get_Image_attributes($picUrl,0,1); //($picUrl,proxyuse,send)
         $setIsValidPhoto = 0;
 
         if($face != -1) {
@@ -812,7 +814,6 @@ class DbWrapper {
             $updateQuery = "UPDATE `Photos` SET `IsValidPhoto` = $setIsValidPhoto WHERE `Id` = $id";
             $result = $this->execute($updateQuery);
         }
-        $FB_photo->setIsValidPhoto($setIsValidPhoto);
         return $setIsValidPhoto;	
 	}
 
@@ -830,6 +831,7 @@ class DbWrapper {
 	}
 
 	public function extractAttributes($photoId, $iteration) {
+		$skip = 0;
 		if ($iteration == 0){
 			$string = 	"SELECT *
 						FROM PhotoAttributes
@@ -839,12 +841,13 @@ class DbWrapper {
 
 	   	    // found attributes in sql betaface
 		    if ($result->num_rows > 0){
-		    	$row = $res_arr->fetch_assoc();
+		    	$row = $result->fetch_assoc();
 				$attributes = new attributes($row,0);
+				$skip = 1;
 		    }
 		}
 		// no attributes yet in sql
-		else {
+		if($skip == 0) {
       		$api = new betaFaceApi($photoId);
 			$validPhoto = $this->extractAttByPhoto($api);
 			if($validPhoto == 0 && $iteration == 0) {

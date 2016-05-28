@@ -67,7 +67,7 @@ class Facebook_photo implements JsonSerializable {
 	function setNumOfLikes($NumOfLikes) {
 		$this->NumOfLikes = $NumOfLikes;
 	}
-	function setisValidPhoto($isValidPhoto) {
+	function setIsValidPhoto($isValidPhoto) {
 		$this->isValidPhoto = $isValidPhoto;
 	}
 	#endregion Setters

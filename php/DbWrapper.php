@@ -463,6 +463,7 @@ class DbWrapper {
 				break;
 				
 			case "Photos":
+				echo $object;
 				$string = "INSERT INTO Photos ";
 				$string = $string . " (FacebookPhotoId, FacebookId, UpdateDate, PhotoLink, NumOfLikes, IsValidPhoto) VALUES ";
 				$string = $string . " (" . $object->getPhotoId() . ", " . $object->getUserID() . ", '" . $object->getUpdateDate() . "', '" .
@@ -498,6 +499,7 @@ class DbWrapper {
 										$object->getPhotoId() . "', '" . $object->getFacebookId() . ")";
 				break;
 		}
+		echo $string;
 		$this->execute($string);
 	}
 	
@@ -756,24 +758,25 @@ class DbWrapper {
 		$PhotoId	= $FB_photo->getPhotoId();
 		if (!$FacebookId || !$PhotoId)
 			return false;
-			
-		$photoExist = $this->execute(
-								"SELECT Id as pi FROM Users, Photos 
+		
+		$photoExistStr = "SELECT Id as pi FROM Users, Photos 
 								WHERE Users.FacebookId = Photos.FacebookId
 								AND Photos.FacebookPhotoId = $PhotoId
-								AND Users.FacebookId = $FacebookId");
+								AND Users.FacebookId = $FacebookId";
+
+		$photoExist = $this->execute($photoExistStr);
 		
-		if ($photoExist->num_rows > 0){
-			$id=$photoExist->fetch_assoc()["pi"];
-			$FB_photo->setId($id);
+		if ($photoExist->num_rows > 0)
 			$this->update($FB_photo);
-		}
-			
 		else{
-			//todo GET PICTURE ID
+			//echo $FB_photo;
 			$this->insert($FB_photo);
+			$photoExist = $this->execute($photoExistStr);
 		}
 		
+		$id=$photoExist->fetch_assoc()["pi"];
+		$FB_photo->setId($id);
+
 		return true;
 	}
 
@@ -810,6 +813,7 @@ class DbWrapper {
             $updateQuery = "UPDATE `Photos` SET `IsValidPhoto` = $setIsValidPhoto WHERE `Id` = $id";
             $result = $this->execute($updateQuery);
         }
+        $FB_photo->setIsValidPhoto($setIsValidPhoto);
         return $setIsValidPhoto;	
 	}
 
@@ -819,44 +823,45 @@ class DbWrapper {
 		$FB_user 	= new Facebook_user($FacebookId, $FirstName, $LastName);
 		$FB_photo 	= new Facebook_photo($FacebookId, $NumOfLikes);
 		
-		//echo $FB_user;
-		//echo $FB_photo;
-
 		// update or insert as needed
 		$exist = $this->verifyExistance($FB_user, $FB_photo); // returns true if exists (creates if needed)
-		
+		//echo $FB_user;
+		//echo $FB_photo;
+		return json_encode(array($FB_user->jsonSerialize(),$FB_photo->jsonSerialize()));
+	}
 
-		echo $FB_photo;
-		// betaface
-		if($exist == true){
+	public function extractAttributes($photoId, $iteration) {
+		if ($iteration == 0){
 			$string = 	"SELECT *
-					FROM PhotoAttributes
-					Where PhotoAttributes.PhotoId = " . $FB_photo->getId() . " AND PhotoAttributes.UpdatedByUser = 0";
+						FROM PhotoAttributes
+						Where PhotoAttributes.PhotoId = " . $photoId . " AND PhotoAttributes.UpdatedByUser = 0 LIMIT 1";
 
-      		$result = $this->execute($string);
+	      	$result = $this->execute($string);
 
-      		$api = new betaFaceApi($FB_photo->getId());
-	        // found attributes in sql betaface
-	        if ($result->num_rows > 0)
-				$r = mysqli_fetch_assoc($result);
-
-			// no attributes found
-			else {
-				$validPhoto = $this->extractAttByPhoto($api);
-				if($validPhoto == 0){
-					// no photo found call extractAttByPhoto again in 1 min.
-					$string = " SELECT *
-					FROM Users, Photos, PhotoAttributes
-					WHERE Users.FacebookId = Photos.FacebookId";
-				}
-			}
-			$r = -1;
-
-//			$tempAttributes = Attributes($r);
-//			return json_encode(array($FB_user->jsonSerialize(),$FB_photo->jsonSerialize(),json_encode($r, JSON_NUMERIC_CHECK));
+	   	    // found attributes in sql betaface
+		    if ($result->num_rows > 0){
+		    	$row = $res_arr->fetch_assoc();
+				$attributes = new attributes($row,0);
+		    }
 		}
-
-		return;
+		// no attributes yet in sql
+		else {
+      		$api = new betaFaceApi($photoId);
+			$validPhoto = $this->extractAttByPhoto($api);
+			if($validPhoto == 0 && $iteration == 0) {
+				// no photo found call extractAttByPhoto again in 1 min.
+				return 1;
+			}
+			else if($validPhoto == 0 && $iteration == 1) {
+				//no face found.
+				return -1;
+			}
+			else {
+				//attributes found
+				$attributes = $api->image_Attributes;
+			}
+		}
+		return json_encode($attributes->jsonSerialize());
 	}
 
 	public function getAgeRange($age) {

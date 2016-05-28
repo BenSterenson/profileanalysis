@@ -317,14 +317,29 @@ class API extends abstract_api
 
 		if ($this->method == 'GET')
 		{
-			$totalAtt = API::$myDbWrapper->login($FacebookId, $FirstName, $LastName, $NumOfLikes);
-			return;
+			return API::$myDbWrapper->login($FacebookId, $FirstName, $LastName, $NumOfLikes);
 		}		
 		else 
 		{
             return "Only accepts GET requests";
         }
 	}
+
+	protected function extractAttributes() 
+	{	
+		$photoId = $this->args[0];
+		$iteration = $this->args[1];
+
+		if ($this->method == 'GET')
+		{
+			return API::$myDbWrapper->extractAttributes($photoId, $iteration);
+		}		
+		else 
+		{
+            return "Only accepts GET requests";
+        }
+	}
+	
 	
 	
 	#endregion

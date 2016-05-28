@@ -284,7 +284,7 @@ class DbWrapper {
 				execute("UPDATE PhotoAttributes SET " . $coloumnName . " = \"" . $value . "\" WHERE PhotoId = " . $photoId . " AND UpdatedByUser = false");				
 
 				$coloumnName = "HasSmile";
-				$value = $object->getHasSmile();
+				$value = $obect->getHasSmile();
 				execute("UPDATE PhotoAttributes SET " . $coloumnName . " = \"" . $value . "\" WHERE PhotoId = " . $photoId . " AND UpdatedByUser = false");
 				
 				$coloumnName = "Age";
@@ -295,6 +295,13 @@ class DbWrapper {
 				$value = $object->getUpdateDate();
 				execute("UPDATE PhotoAttributes SET " . $coloumnName . " = \"" . $value . "\" WHERE PhotoId = " . $photoId . " AND UpdatedByUser = false");
 				
+				break;
+			
+			case "PhotoRatings":
+				$tableName  = "PhotoRatings";
+				$primaryKey = "Id";
+				$primaryVal = $object->getId();
+				$this->update_cell($tableName, $primaryKey, $primaryVal, "IsHot", $object->getIsHot());
 				break;
 		}
 	}
@@ -493,9 +500,9 @@ class DbWrapper {
 				break;
 				
 			case "PhotoRatings":
-				$string = "INSERT INTO PhotoComments ";
-				$string = $string . " (Id,IsHot,PhotoId,FacebookId) VALUES ";
-				$string = $string . " (" . $object->getId() . ", " . $object->IsHot() .	", '" . 
+				$string = "INSERT INTO PhotoRatings ";
+				$string = $string . " (IsHot, PhotoId, FacebookId) VALUES ";
+				$string = $string . " (" . $object->IsHot() .	", '" . 
 										$object->getPhotoId() . "', '" . $object->getFacebookId() . ")";
 				break;
 		}
@@ -992,6 +999,23 @@ class DbWrapper {
 
 		return $string;
 	}
+	
+	public function setPhotoRatings($PhotoId, $isHot, $FacebookId) {
+		$photoRating = new PhotoRatings(-1, $isHot, $PhotoId, $FacebookId);
+		
+		$exist = $this->execute(
+		"SELECT * FROM PhotoRatings WHERE PhotosId = " . $PhotoId . " AND FacebookId = " . $FacebookId);
+		
+		if ($exist->num_rows > 0) {
+			$photoRating->setId($exist->fetch_assoc()["Id"]);
+			$this->update($photoRating);
+		}
+		
+		else {
+			$this->insert($photoRating);
+		}
+	}
+	
 	#endregion Methods (public)
 
 

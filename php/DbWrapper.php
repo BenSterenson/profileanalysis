@@ -48,7 +48,7 @@
 		// FacebookId 		int
 #endregion Comments
 
-include 'Classes/Facebook_photo.php'; // MICHAEL: if we remove facebook_user include from facebook_photo we'll have to add it here
+include 'Classes/Facebook_photo.php';
 include 'Classes/Facebook_user.php';
 include 'Classes/PhotoComments.php';
 include 'Classes/History.php';
@@ -713,6 +713,19 @@ class DbWrapper {
 	public function InsertHistory($FacebookId, $AttributeName, $FilterValue, $SessionId) {
 		$HistorySession = new History($FacebookId, $AttributeName, $FilterValue, $SessionId);
 		$this->insert($HistorySession);
+	}
+	
+	public function insertAttributesByUser($PhotoId, $Gender, $EyeColor, $HairColor, $HasBeard, $HasGlasses, $HasSmile, $Age) {
+		$myAttributes = new Attributes($PhotoId);
+		$myAttributes->setGender($Gender);
+		$myAttributes->setGender($EyeColor);
+		$myAttributes->setGender($HairColor);
+		$myAttributes->setGender($HasBeard);
+		$myAttributes->setGender($HasGlasses);
+		$myAttributes->setGender($HasSmile);
+		$myAttributes->setGender($Age);
+		$myAttributes->setUpdatedByUser(true);
+		insert($myAttributes);
 	}
 	
 	private function verifyExistance($FB_user, $FB_photo) {

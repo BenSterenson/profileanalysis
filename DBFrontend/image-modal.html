@@ -1,10 +1,12 @@
 <div class="modal-header">
+    <button class="fa fa-times pull-right" ng-click="cancel()"></button>
 	<h3 class="modal-title" style="font-weight:bold">{{user.FirstName}} {{user.LastName}}</h3>
+
 </div>
 <div class="modal-body">
 	<section id="edituserSection">
 		<div class="row">
-			<img src="{{user.PhotoLink}}" class="col-md-8">
+			<img ng-src="{{user.PhotoLink}}" class="col-md-8">
 			<div class="panel-body col-md-4">
 				<div class="form-group">
 					<label for="eyeColorSelect">Facebook Likes: </label>
@@ -44,64 +46,93 @@
 				</div>
 				<div class="imagemodelbox">
 					<label for="ageInput">Age</label>
-					<div class="input-group spinner">
-						<input type="text" class="form-control" ng-model="user.Age">
-						<div class="input-group-btn-vertical">
-						  <button class="btn btn-primary" type="button" ng-click="user.Age=user.Age+1"><i class="fa fa-caret-up"></i></button>
-						  <button class="btn btn-primary" type="button"ng-click="user.Age=user.Age-1"><i class="fa fa-caret-down"></i></button>
+					<div class="row" style="height:130px">
+						<div class="col-md-4">
+							<div class="input-group spinner">
+								<input type="text" class="form-control" ng-model="user.Age">
+								<div class="input-group-btn-vertical">
+								  <button class="btn btn-info" type="button" ng-click="user.Age=user.Age+1"><i class="fa fa-caret-up"></i></button>
+								  <button class="btn btn-info" type="button"ng-click="user.Age=user.Age-1"><i class="fa fa-caret-down"></i></button>
+								</div>
+							  </div>
 						</div>
-					  </div>
+						<div class="col-md-8" style="height:130px;" ng-if="!isAgeEmpty()">
+							<canvas id="bar" class="chart chart-bar" chart-data="ageData" chart-labels="ageLabels" chart-click="ageClick" style="height:130px;width:100%;"></canvas>
+						</div>
+					</div>
 				</div>
 				<div class="imagemodelbox">
 					<label for="hasGlasses">Has Glasses</label>
-					<br />
-					<div class="input-group">
-						<div class="btn-group" data-toggle="buttons">
-							<label class="btn btn-primary" ng-class="{active:user.HasGlasses==1}" ng-click="user.HasGlasses=0">
-							  Yes
-							</label>
-							<label class="btn btn-primary" ng-class="{active:user.HasGlasses==0}" ng-click="user.HasGlasses=1">
-							  No
-							</label>
+					<div class="row">
+						<div class="col-md-6">
+							<div class="input-group">
+								<div class="btn-group" data-toggle="buttons">
+									<label class="btn btn-info" ng-class="{active:user.HasGlasses==1}" ng-click="user.HasGlasses=1">
+									  Yes
+									</label>
+									<label class="btn btn-info" ng-class="{active:user.HasGlasses==0}" ng-click="user.HasGlasses=0">
+									  No
+									</label>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6">
+                                <canvas id="pie" class="chart chart-doughnut chart-xs" chart-data="glassesData" chart-labels="glassesLabels" chart-colours="glassesChartColors"></canvas>
 						</div>
 					</div>
 				</div>
 				<div class="imagemodelbox">
 					<label for="hasBeard">Has Beard</label>
-					<br />
-					<div class="input-group">
-						<div class="btn-group" data-toggle="buttons">
-							<label class="btn btn-primary" ng-class="{active:user.HasBeard==1}" ng-click="user.HasBeard=0">
-							  Yes
-							</label>
-							<label class="btn btn-primary" ng-class="{active:user.HasBeard==0}" ng-click="user.HasBeard=1">
-							  No
-							</label>
+					<div class="row">
+						<div class="col-md-6">
+							<div class="input-group">
+								<div class="btn-group" data-toggle="buttons">
+									<label class="btn btn-info" ng-class="{active:user.HasBeard==1}" ng-click="user.HasBeard=1">
+									  Yes
+									</label>
+									<label class="btn btn-info" ng-class="{active:user.HasBeard==0}" ng-click="user.HasBeard=0">
+									  No
+									</label>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6">
+                                <canvas id="pie" class="chart chart-doughnut chart-xs" chart-data="beardData" chart-labels="beardLabels" chart-colours="beardChartColors"></canvas>
 						</div>
 					</div>
 				</div>
 				<div class="imagemodelbox">
 					<label for="smilesInput">Smiles</label>
-					<br />
-					<div class="input-group">
-						<div class="btn-group" data-toggle="buttons">
-							<label class="btn btn-primary" ng-class="{active:user.HasSmile==1}" ng-click="user.HasSmile=0">
-							  Yes
-							</label>
-							<label class="btn btn-primary" ng-class="{active:user.HasSmile==0}" ng-click="user.HasSmile=1">
-							  No
-							</label>
+					<div class="row">
+						<div class="col-md-6">
+							<div class="input-group">
+								<div class="btn-group" data-toggle="buttons">
+									<label class="btn btn-info" ng-class="{active:user.HasSmile==1}" ng-click="user.HasSmile=1">
+									  Yes
+									</label>
+									<label class="btn btn-info" ng-class="{active:user.HasSmile==0}" ng-click="user.HasSmile=0">
+									  No
+									</label>
+								</div>
+							</div>
 						</div>
+						<div class="col-md-6">
+                                <canvas id="pie" class="chart chart-pie chart-xs" chart-data="smilesData" chart-labels="smilesLabels" chart-colours="smilesChartColors"></canvas>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="panel panel-body panel-info col-md-6">
+						<button class="btn btn-primary" type="button" ng-click="ok()" style="width:100%;height:100%;">Update</button>
+					</div>
+					<div class="col-md-6">
+						
 					</div>
 				</div>
 			</div>
 		</div>
   </div>
 	</section>
-</div>
-<div class="modal-footer">
-	<button class="btn btn-primary" type="button" ng-click="ok()">Update</button>
-	<button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
 </div>
 <div ng-show="loggedOnUser.FacebookId">
 	 <div class="well" ng-hide="commentAdded">
@@ -118,9 +149,9 @@
 
 	<!-- Posted Comments -->
 	<!-- Comment -->
-	<div class="media" ng-repeat="comment in comments" style="margin:15px;">
+	<div ng-if="comments" class="media" ng-repeat="comment in comments" style="margin:15px;">
 		<a class="pull-left">{{comment.FirstName}} {{comment.LastName}}
-			<img class="media-object" src="{{comment.PhotoLink}}" alt="" style="height:100px;width:100px;">
+			<img class="media-object" ng-src="{{comment.PhotoLink}}" alt="" style="height:100px;width:100px;">
 		</a>
 		<div class="media-body">
 			<h4 class="media-heading">

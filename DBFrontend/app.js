@@ -336,9 +336,6 @@
 		  resolve: {
 			user: function () {
 			  return user;
-			},
-			labels: function(){
-				return {'hairColorLabels':$scope.hairColorLabels,'eyeColorLabels':$scope.eyeColorLabels};
 			}
 		  }
 		});
@@ -348,7 +345,7 @@
 
 
 });
-  app.controller('ModalCtrl', function ($scope,$http, $uibModalInstance, UsersService, user, labels) {
+  app.controller('ModalCtrl', function ($scope,$http, $uibModalInstance, UsersService, user) {
 		
 		$scope.user = user;
 		$scope.comment = "";
@@ -364,9 +361,7 @@
 		// Fix Hair and eye color
 		$scope.user.EyeColorFix = UsersService.getColor(false, $scope.user.EyeColor);
 		$scope.user.HairColorFix = UsersService.getColor(false, $scope.user.HairColor);
-		$scope.eyeColorLabels = labels.eyeColorLabels;
-		$scope.hairColorLabels = labels.hairColorLabels;
-
+		
 		$scope.ok = function () {
 			
 			$scope.user.EyeColor = UsersService.getColor(true, $scope.user.EyeColorFix);
@@ -401,7 +396,14 @@
 			$scope.getComments();
 		}
 		
-		
+		$scope.isAgeEmpty = function(){
+			for(var i in $scope.ageData[0]){
+				if($scope.ageData[0][i] != "0"){
+					return false;
+				}
+			}
+			return true;
+		}
 		$scope.refreshPlots(user.PhotoId);
   });
 

@@ -344,7 +344,7 @@ class API extends abstract_api
 	protected function extractAttributes() 
 	{	
 		$photoId = $this->args[0];
-		$iteration = $this->args[1];
+		$iteration = $this->args[1]; // 0 - try to get from db or insert (first try) , 1 - second try to get attributes
 
 		if ($this->method == 'GET')
 		{

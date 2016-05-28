@@ -834,6 +834,17 @@ class DbWrapper {
 	
 	public function login($FacebookId, $FirstName, $LastName, $NumOfLikes) {
 		
+		$string = 	"SELECT *
+						FROM  Users, Photos, PhotoAttributes
+						Where Users.FacebookId = " . $FacebookId . " LIMIT 1";
+
+		$result = $this->execute($string);
+		// found user
+		if ($result->num_rows > 0){
+			$row = $result->fetch_assoc();
+			return json_encode($row, JSON_NUMERIC_CHECK);
+		}
+		
 		$FB_user 	= new Facebook_user($FacebookId, $FirstName, $LastName);
 		$FB_photo 	= new Facebook_photo($FacebookId, $NumOfLikes);
 		
@@ -848,8 +859,8 @@ class DbWrapper {
 		$skip = 0;
 		if ($iteration == 0){
 			$string = 	"SELECT *
-						FROM PhotoAttributes
-						Where PhotoAttributes.PhotoId = " . $photoId . " AND PhotoAttributes.UpdatedByUser = 0 LIMIT 1";
+						FROM  Users, Photos, PhotoAttributes
+						Where Users.FacebookId = Photos.FacebookId AND PhotoAttributes.PhotoId = " . $photoId . " AND PhotoAttributes.UpdatedByUser = 0 LIMIT 1";
 
 	      	$result = $this->execute($string);
 

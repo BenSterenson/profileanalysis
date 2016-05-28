@@ -91,11 +91,10 @@
 	<hr>
 
 	<!-- Posted Comments -->
-
 	<!-- Comment -->
-	<div class="media" ng-repeat="comment in comments">
+	<div class="media" ng-repeat="comment in comments" style="margin:15px;">
 		<a class="pull-left">{{comment.FirstName}} {{comment.LastName}}
-			<img class="media-object" src="{{comment.PhotoLink}}" alt="">
+			<img class="media-object" src="{{comment.PhotoLink}}" alt="" style="height:100px;width:100px;">
 		</a>
 		<div class="media-body">
 			<h4 class="media-heading">

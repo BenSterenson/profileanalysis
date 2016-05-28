@@ -188,6 +188,7 @@ class API extends abstract_api
 	protected function getPhotoComments()
 	{
 		$PhotoID = $this->args[0];
+
 		if ($this->method == 'GET')
 		{
 			$PhotoCommentsArr = API::$myDbWrapper->getPhotoComments($PhotoID);

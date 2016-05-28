@@ -25,7 +25,7 @@ class Facebook_photo implements JsonSerializable {
                 self::__construct2($argv[0],$argv[1]);
                 break;
             case 6:
-                self::__construct3( $argv[0], $argv[1], $argv[2], $argv[3], $argv[4], $argv[5] );
+                self::__construct3($argv[0], $argv[1], $argv[2], $argv[3], $argv[4], $argv[5] );
          }
     }
  

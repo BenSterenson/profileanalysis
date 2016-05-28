@@ -533,8 +533,8 @@ class DbWrapper {
 			$this->execute($sqladdDupNoPic);
 		}
 	}
-
-	public function getNumberAge($att,$string) {
+	
+	public function getNumberAge_algo($att, $string) {
 		//SELECT count(*) FROM PhotoAttributes where Age > 0 AND Age < 5 AND UpdatedByUser = 0
 		$sql_format_s = 'SELECT count(*) as cnt FROM PhotoAttributes where  %1$s <= %2$d AND UpdatedByUser = 0' . $string;
 		$sql_format = 'SELECT count(*) as cnt FROM PhotoAttributes where  %1$s >= %2$d AND %1$s <= %3$d AND UpdatedByUser = 0' . $string;
@@ -556,6 +556,15 @@ class DbWrapper {
 		return $res_arr;
 	}
 
+	public function getNumberAge($att, $string, $byUser = false) {
+		switch ($byUser) {
+			case false:
+				return API::$myDbWrapper->getNumberAge_algo($att, $string);
+			case true:
+				return API::$myDbWrapper->getNumberAge_user($att, $string);
+		}
+	}
+	
 	public function getNumberBinaryAtt($att, $string) {
 		$res_arr[] = $this->execute("SELECT count(*) as cnt FROM PhotoAttributes where " . $att ." = 0 AND UpdatedByUser = 0" . $string);
 		$res_arr[] = $this->execute("SELECT count(*) as cnt FROM PhotoAttributes where " . $att ." = 1 AND UpdatedByUser = 0" . $string);

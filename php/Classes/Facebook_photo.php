@@ -86,12 +86,12 @@ class Facebook_photo implements JsonSerializable {
 		return $this->UpdateDate;
 	}
 	function getPhotoLink() {
-		return $this->getPhotoLink;
+		return $this->PhotoLink;
 	}
 	function getNumOfLikes() {
 		return $this->NumOfLikes;
 	}
-	function getisValidPhoto() {
+	function getIsValidPhoto() {
 		return $this->isValidPhoto;
 	}
 	#endregion Getters
@@ -99,7 +99,7 @@ class Facebook_photo implements JsonSerializable {
 	#region Methods
 		public function jsonSerialize() {
         return Array(
-        	'Id'				=> $this->FacebookId + 0,
+        	'Id'				=> $this->Id + 0,
            'FacebookId'			=> $this->FacebookId + 0,
            'FacebookPhotoId' 	=> $this->FacebookPhotoId + 0,
            'UpdateDate' 		=> $this->UpdateDate + 0,

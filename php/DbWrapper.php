@@ -717,12 +717,12 @@ class DbWrapper {
 	public function insertAttributesByUser($PhotoId, $Gender, $EyeColor, $HairColor, $HasBeard, $HasGlasses, $HasSmile, $Age) {
 		$myAttributes = new Attributes($PhotoId);
 		$myAttributes->setGender($Gender);
-		$myAttributes->setGender($EyeColor);
-		$myAttributes->setGender($HairColor);
-		$myAttributes->setGender($HasBeard);
-		$myAttributes->setGender($HasGlasses);
-		$myAttributes->setGender($HasSmile);
-		$myAttributes->setGender($Age);
+		$myAttributes->setEyeColor($EyeColor);
+		$myAttributes->setHairColor($HairColor);
+		$myAttributes->setHasBeard($HasBeard);
+		$myAttributes->setHasGlasses($HasGlasses);
+		$myAttributes->setHasSmile($HasSmile);
+		$myAttributes->setAge($Age);
 		$myAttributes->setUpdatedByUser(true);
 		insert($myAttributes);
 	}

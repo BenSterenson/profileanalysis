@@ -66,9 +66,9 @@
             <h1>Profilyze</h1>
 			<div class="panel panel-primary pull-right">
 				<div class="panel-body">
-					<span ng-if="loggedOnUser.name"><a ng-click="open(loggedOnUser)" style="cursor:pointer">Welcome {{loggedOnUser.name}} Your Id is: {{loggedOnUser.id}}</a></span>
-					<div ng-if="!loggedOnUser.name">
-						<fb:login-button scope="public_profile,email" size="xlarge" onlogin="checkLoginState();">
+					<span ng-if="loggedOnUser.FirstName"><a ng-click="open(loggedOnUser)" style="cursor:pointer">Welcome {{loggedOnUser.FirstName}} {{loggedOnUser.LastName}}</a></span>
+					<div ng-if="!loggedOnUser.FirstName">
+						<fb:login-button scope="public_profile,email,user_photos,user_likes,user_about_me" size="xlarge" onlogin="checkLoginState();">
 						</fb:login-button>
 					</div>
 				</div>

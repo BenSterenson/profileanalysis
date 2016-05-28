@@ -50,6 +50,22 @@
 				alert("Error on getComments!");
 			});
 	  }
+	  
+		this.login = function(facebookId, firstName,lastName,numOfLikes){
+		   return $http.get('../php/api/login/'+facebookId+'/'+firstName+'/'+lastName+'/'+numOfLikes).then(function successCallback(response) {
+				return JSON.parse(response.data);
+			}, function errorCallback(response) {
+				alert("Error on addComment!");
+			});
+	  }
+	  
+	  this.extractAttributes = function(photoId, iteration){
+		   return $http.get('../php/api/extractAttributes/'+photoId+'/'+iteration).then(function successCallback(response) {
+				return JSON.parse(response.data);
+			}, function errorCallback(response) {
+				alert("Error on extractAttributes!");
+			});
+	  }
   })
   app.service('ChartService', function ($http) {
 	  	  
@@ -64,59 +80,11 @@
 			return  {keys:keys,values:values};
 		}
 	  
-      this.getEyeColors = function (args) {
-          return $http.get('../php/api/geteyecolors/'+args.join("/")).then(function successCallback(response) {
+      this.getChart = function (name,args) {
+          return $http.get('../php/api/'+name+'/'+args.join("/")).then(function successCallback(response) {
 				return getKeysAndValuesOfObject(JSON.parse(response.data));
 			}, function errorCallback(response) {
-				alert("Error on GetEyeColors!");
-			});
-      }
-	  
-	  this.getHairColors = function (args) {
-          return $http.get('../php/api/getHairColors/'+args.join("/")).then(function successCallback(response) {
-				return getKeysAndValuesOfObject(JSON.parse(response.data));
-				}, function errorCallback(response) {
-				alert("Error on getHairColors!");
-			});
-      }
-	  
-	  this.getGender = function (args) {
-          return $http.get('../php/api/getGender/'+args.join("/")).then(function successCallback(response) {
-				return getKeysAndValuesOfObject(JSON.parse(response.data));
-			}, function errorCallback(response) {
-				alert("Error on getGender!");
-			});
-      }
-	  
-	  this.getGlasses = function (args) {
-          return $http.get('../php/api/getGlasses/'+args.join("/")).then(function successCallback(response) {
-				return getKeysAndValuesOfObject(JSON.parse(response.data));
-			}, function errorCallback(response) {
-				alert("Error on getGlasses!");
-			});
-      }
-	  
-	  this.getBeard = function (args) {
-          return $http.get('../php/api/getBeard/'+args.join("/")).then(function successCallback(response) {
-				return getKeysAndValuesOfObject(JSON.parse(response.data));
-			}, function errorCallback(response) {
-				alert("Error on getBeard!");
-			});
-      }
-	  
-	  this.getSmile = function (args) {
-          return $http.get('../php/api/getSmile/'+args.join("/")).then(function successCallback(response) {
-				return getKeysAndValuesOfObject(JSON.parse(response.data));
-			}, function errorCallback(response) {
-				alert("Error on getSmile!");
-			});
-      }
-	  
-	  this.getAge = function (args) {
-          return $http.get('../php/api/getAge/'+args.join("/")).then(function successCallback(response) {
-				return getKeysAndValuesOfObject(JSON.parse(response.data));
-			}, function errorCallback(response) {
-				alert("Error on getAge!");
+				alert("Error on "+name+"!");
 			});
       }
   });
@@ -134,13 +102,50 @@
 		$scope.loggedOnUser = JSON.parse(stored);
 	}
 	$scope.login = function (accessToken) {
-	  FB.api('/me', function (response) {
-		  $scope.loggedOnUser = response;
-		  console.log(JSON.stringify(response));
-		  
-		  localStorage['profilyzeFacebook'] = JSON.stringify(response);
-		  
-		  $scope.$apply();
+	  FB.api('/me?fields=picture,first_name,last_name', function (response) {
+		  if(response.first_name){		
+			UsersService.login(response.id,response.first_name,response.last_name,0).then(function successCallback(login) {
+				
+				if(login.PhotoId && login.EyeColor){					
+						$scope.loggedOnUser = login;
+						localStorage['profilyzeFacebook'] = JSON.stringify($scope.loggedOnUser);
+						return;
+				}
+				var photoID = login.PhotoId;
+				UsersService.extractAttributes(photoID,0).then(function successCallback(attributes) {
+					if(attributes == 1){
+						console.log("Waiting for betaface..");
+						setTimeout(function(){ 
+							console.log("Sending another request to betaface");
+							UsersService.extractAttributes(login.id,1).then(function successCallback(sAtt) {
+								if(sAtt != -1 && sAtt != 1){
+									$scope.loggedOnUser = sAtt;						
+									localStorage['profilyzeFacebook'] = JSON.stringify($scope.loggedOnUser);
+									$scope.$apply();
+								}
+								else
+								{
+									console.log("Failed to get attributes");
+								}
+								
+							});
+						}, 60000);
+					}
+					else if(attributes == -1){
+						console.log("Error occured from betaface");
+					}
+					else{
+						$scope.loggedOnUser = attributes;
+						localStorage['profilyzeFacebook'] = JSON.stringify($scope.loggedOnUser);
+					    $scope.$apply();
+					}
+					
+				});
+			});
+
+
+		  }
+		 
 	  });
 	  
 	}
@@ -181,20 +186,20 @@
 		
 		if(refresh){					
 			$scope.getPhotos($scope.start,$scope.stop);
-			$scope.refreshPlots();
+			$scope.refreshPlots(-1);
 		}
 	}
 	
 	
-	$scope.refreshPlots = function(){
+	$scope.refreshPlots = function(photoID){
 		
-		$scope.args = [$scope.genderFilter,$scope.eyeColorFilter,$scope.hairColorFilter,$scope.beardFilter,$scope.glassesFilter,$scope.smilesFilter,$scope.ageFilter];
+		$scope.args = [photoID,$scope.genderFilter,$scope.eyeColorFilter,$scope.hairColorFilter,$scope.beardFilter,$scope.glassesFilter,$scope.smilesFilter,$scope.ageFilter];
 	
 		// Eye Color Data
 		$scope.eyeColorData =[];
 		$scope.eyeColorLabels =[];		
-
-		ChartService.getEyeColors($scope.args).then(function successCallback(data) {
+0
+		ChartService.getChart('getEyeColors',$scope.args).then(function successCallback(data) {
 			$scope.eyeColorData = data.values;
 			$scope.eyeColorLabels = data.keys;
 			$scope.eyeColorChartColors = convertColorsToViewable(data.keys);
@@ -202,14 +207,14 @@
 		$scope.eyeClick = function (elm, evt) {
 			$scope.eyeColorFilter = UsersService.getColor(true,elm[0].label);
 			$scope.getPhotos();
-			$scope.refreshPlots();
+			$scope.refreshPlots(-1);
 		};
 		
 
 		// Hair Color
 		$scope.hairColorData =[];
 		$scope.hairColorLabels =[];
-		ChartService.getHairColors($scope.args).then(function successCallback(data) {
+		ChartService.getChart('getHairColors',$scope.args).then(function successCallback(data) {
 			$scope.hairColorData = data.values;
 			$scope.hairColorLabels = data.keys;
 			$scope.hairColorChartColors = convertColorsToViewable(data.keys);
@@ -217,26 +222,26 @@
 		$scope.hairClick = function (elm, evt) {
 			$scope.hairColorFilter = UsersService.getColor(true,elm[0].label);
 			$scope.getPhotos();
-			$scope.refreshPlots();
+			$scope.refreshPlots(-1);
 		};
 
 		// Age
 		$scope.ageData =[];
 		$scope.ageLabels =[];
-		ChartService.getAge($scope.args).then(function successCallback(data) {
+		ChartService.getChart('getAge',$scope.args).then(function successCallback(data) {
 			$scope.ageData = [data.values];
 			$scope.ageLabels = data.keys;
 		});
 		$scope.ageClick = function (elm, evt) {
 			$scope.ageFilter = $scope.ageLabels.indexOf(elm[0].label);
 			$scope.getPhotos();
-			$scope.refreshPlots();
+			$scope.refreshPlots(-1);
 		};
 
 		// Gender
 		$scope.genderData =[];
 		$scope.genderLabels =[];
-		ChartService.getGender($scope.args).then(function successCallback(data) {		
+		ChartService.getChart('getGender',$scope.args).then(function successCallback(data) {		
 			$scope.genderData = data.values;
 			$scope.genderLabels = data.keys;
 			$scope.genderChartColors = ['#ffc0cb', '#7AC8F5'];
@@ -244,13 +249,13 @@
 		$scope.genderClick = function (elm, evt) {
 			$scope.genderFilter = $scope.genderLabels.indexOf(elm[0].label);
 			$scope.getPhotos();
-			$scope.refreshPlots();
+			$scope.refreshPlots(-1);
 		};
 
 		// Smiles
 		$scope.smilesData =[];
 		$scope.smilesLabels =[];
-		ChartService.getSmile($scope.args).then(function successCallback(data) {		
+		ChartService.getChart('getSmile',$scope.args).then(function successCallback(data) {		
 			$scope.smilesData = data.values;
 			$scope.smilesLabels = data.keys;
 			$scope.smilesChartColors = ['#004d4d', '#99ffff'];
@@ -258,13 +263,13 @@
 		$scope.smilesClick = function (elm, evt) {
 			$scope.smilesFilter = $scope.smilesLabels.indexOf(elm[0].label);
 			$scope.getPhotos();
-			$scope.refreshPlots();
+			$scope.refreshPlots(-1);
 		};
 		
 		// Has Glasses	
 		$scope.glassesData =[];
 		$scope.glassesLabels =[];
-		ChartService.getGlasses($scope.args).then(function successCallback(data) {		
+		ChartService.getChart('getGlasses',$scope.args).then(function successCallback(data) {		
 			$scope.glassesData = data.values;
 			$scope.glassesLabels = data.keys;
 			$scope.glassesChartColors = ['#39ac39', '#d9f2d9'];
@@ -272,13 +277,13 @@
 		$scope.glassesClick = function (elm, evt) {
 			$scope.glassesFilter = $scope.glassesLabels.indexOf(elm[0].label);
 			$scope.getPhotos();
-			$scope.refreshPlots();
+			$scope.refreshPlots(-1);
 		};
 
 		// Has Beard
 		$scope.beardData =[];
 		$scope.beardLabels =[];
-		ChartService.getBeard($scope.args).then(function successCallback(data) {		
+		ChartService.getChart('getBeard',$scope.args).then(function successCallback(data) {		
 			$scope.beardData = data.values;
 			$scope.beardLabels = data.keys;
 			$scope.beardChartColors = ['#003399', '#99bbff'];
@@ -286,7 +291,7 @@
 		$scope.beardClick = function (elm, evt) {
 			$scope.beardFilter = $scope.beardLabels.indexOf(elm[0].label);
 			$scope.getPhotos();
-			$scope.refreshPlots();
+			$scope.refreshPlots(-1);
 		};
 	}
     
@@ -310,7 +315,7 @@
 	}
 	$scope.clearFilter();
 	$scope.getPhotos($scope.start,$scope.stop);
-	$scope.refreshPlots();
+	$scope.refreshPlots(-1);
 	
 	$scope.open = function (user) {
 
@@ -345,7 +350,6 @@
 		var stored = localStorage['profilyzeFacebook'];
 		if (stored) {
 			$scope.loggedOnUser = JSON.parse(stored);
-			$scope.loggedOnUser.FacebookId = $scope.loggedOnUser.id;
 		}
 		
 		// Fix Hair and eye color
@@ -375,7 +379,9 @@
 			});
 		}
 		
-		$scope.getComments();
+		if($scope.loggedOnUser && $scope.loggedOnUser.FacebookId){
+			$scope.getComments();
+		}
   });
 
 })();

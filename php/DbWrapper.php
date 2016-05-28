@@ -183,7 +183,6 @@ class DbWrapper {
 		}
 	}
 	
-	
 	public function ColorTXTtoNUM($txt) {
 		switch(strtolower($txt)) {
 			case "red":
@@ -535,11 +534,11 @@ class DbWrapper {
 		}
 	}
 	
-	public function getNumberAge_algo($att, $string) {
+	public function getNumberAge($att, $string) {
 		//SELECT count(*) FROM PhotoAttributes where Age > 0 AND Age < 5 AND UpdatedByUser = 0
-		$sql_format_s = 'SELECT count(*) as cnt FROM PhotoAttributes where  %1$s <= %2$d AND UpdatedByUser = 0' . $string;
-		$sql_format = 'SELECT count(*) as cnt FROM PhotoAttributes where  %1$s >= %2$d AND %1$s <= %3$d AND UpdatedByUser = 0' . $string;
-		$sql_format_b = 'SELECT count(*) as cnt FROM PhotoAttributes where  %1$s > %2$d AND UpdatedByUser = 0' . $string;
+		$sql_format_s = 'SELECT count(*) as cnt FROM PhotoAttributes where  %1$s <= %2$d' . $string;
+		$sql_format = 'SELECT count(*) as cnt FROM PhotoAttributes where  %1$s >= %2$d AND %1$s <= %3$d' . $string;
+		$sql_format_b = 'SELECT count(*) as cnt FROM PhotoAttributes where  %1$s > %2$d' . $string;
 
 		$age_from = 24;
 		$age_to = $age_from + 10; 
@@ -556,27 +555,18 @@ class DbWrapper {
 		$res_arr[] = $this->execute(sprintf($sql_format_b, $att, $age_from));
 		return $res_arr;
 	}
-
-	public function getNumberAge($att, $string, $byUser = false) {
-		switch ($byUser) {
-			case false:
-				return API::$myDbWrapper->getNumberAge_algo($att, $string);
-			case true:
-				return API::$myDbWrapper->getNumberAge_user($att, $string);
-		}
-	}
 	
 	public function getNumberBinaryAtt($att, $string) {
-		$res_arr[] = $this->execute("SELECT count(*) as cnt FROM PhotoAttributes where " . $att ." = 0 AND UpdatedByUser = 0" . $string);
-		$res_arr[] = $this->execute("SELECT count(*) as cnt FROM PhotoAttributes where " . $att ." = 1 AND UpdatedByUser = 0" . $string);
+		$res_arr[] = $this->execute("SELECT count(*) as cnt FROM PhotoAttributes where " . $att ." = 0" . $string);
+		$res_arr[] = $this->execute("SELECT count(*) as cnt FROM PhotoAttributes where " . $att ." = 1" . $string);
 		return $res_arr;
 	}
 
 	public function getNumberByColor($colorType, $string) {
-		$BaseString = "SELECT count(*) as cnt FROM PhotoAttributes where UpdatedByUser = 0" . $string;
+		$BaseString = "SELECT count(*) as cnt FROM PhotoAttributes WHERE " . $colorType . " = ";
 
 		for ($i = 0; $i <= NUMOfCOLORS; $i++) {
-			$colorStr = $BaseString . " AND " . $colorType . " = " . $i;
+			$colorStr = $BaseString . $i . $string;
 			$res_arr[] = $this->execute($colorStr);
 		}
 		return $res_arr;
@@ -947,6 +937,14 @@ class DbWrapper {
 
 		$age = $this->getAgeRange($arrAtt['age']);
 
+		if ($arrAtt['photoId'] != -1) {
+			$string = $string . " AND PhotoAttributes.PhotoId = " . $arrAtt['photoId'];
+			$string = $string . " AND PhotoAttributes.UpdatedByUser = 1";
+		}
+		else {
+			$string = $string . " AND PhotoAttributes.UpdatedByUser = 0";
+		}
+		
 		if ($arrAtt['gender'] != -1) {
 			$string = $string . " AND PhotoAttributes.Gender = " . $arrAtt['gender'];
 		}

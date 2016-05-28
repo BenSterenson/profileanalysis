@@ -10,17 +10,39 @@
 					<label for="eyeColorSelect">Facebook Likes: </label>
 					{{user.NumOfLikes}}
 				</div>
-				<div class="form-group">
+				<div style="font-weight:bold">
+					<div class="col-md-6">
+						Attribute
+						</div>
+					<div class="col-md-6">
+						User's Input Distribution
+					</div>
+				</div>
+				<div class="imagemodelbox">
 					<label for="eyeColorSelect">Eye Color</label>
-					<select id="eyeColorSelect" class="form-control" ng-options="color for color in eyeColorLabels" ng-model="user.EyeColorFix" style="width:100px">
-					</select>
+					<div class="row">
+						<div class="col-md-6">
+							<select id="eyeColorSelect" class="form-control" ng-options="color for color in eyeColorLabels" ng-model="user.EyeColorFix">
+							</select>
+							</div>
+						<div class="col-md-6">
+							<canvas id="pie" class="chart chart-pie" chart-data="eyeColorData" chart-labels="eyeColorLabels" chart-colours="eyeColorChartColors"></canvas>
+						</div>
+					</div>
 				</div>
-				<div class="form-group">
+				<div class="imagemodelbox">
 					<label for="hairColorSelect">Hair Color</label>
-					<select id="hairColorSelect" class="form-control" ng-options="color for color in hairColorLabels" ng-model="user.HairColorFix" style="width:100px">
-					</select>
+					<div class="row">
+						<div class="col-md-6">
+							<select id="hairColorSelect" class="form-control" ng-options="color for color in hairColorLabels" ng-model="user.HairColorFix" style="width:100px">
+							</select>
+						</div>
+						<div class="col-md-6">
+							<canvas id="pie" class="chart chart-pie chart-xs" chart-data="hairColorData" chart-labels="hairColorLabels" chart-colours="hairColorChartColors"></canvas>
+						</div>
+					</div>
 				</div>
-				<div class="form-group">
+				<div class="imagemodelbox">
 					<label for="ageInput">Age</label>
 					<div class="input-group spinner">
 						<input type="text" class="form-control" ng-model="user.Age">
@@ -30,7 +52,7 @@
 						</div>
 					  </div>
 				</div>
-				<div class="form-group">
+				<div class="imagemodelbox">
 					<label for="hasGlasses">Has Glasses</label>
 					<br />
 					<div class="input-group">
@@ -44,7 +66,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="form-group">
+				<div class="imagemodelbox">
 					<label for="hasBeard">Has Beard</label>
 					<br />
 					<div class="input-group">
@@ -58,7 +80,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="form-group">
+				<div class="imagemodelbox">
 					<label for="smilesInput">Smiles</label>
 					<br />
 					<div class="input-group">
@@ -76,6 +98,10 @@
 		</div>
   </div>
 	</section>
+</div>
+<div class="modal-footer">
+	<button class="btn btn-primary" type="button" ng-click="ok()">Update</button>
+	<button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
 </div>
 <div ng-show="loggedOnUser.FacebookId">
 	 <div class="well" ng-hide="commentAdded">
@@ -108,8 +134,4 @@
 	You must be logged on to view and add comments
 </div>
 
-</div>
-<div class="modal-footer">
-	<button class="btn btn-primary" type="button" ng-click="ok()">Update</button>
-	<button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
 </div>

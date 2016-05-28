@@ -724,7 +724,7 @@ class DbWrapper {
 		$myAttributes->setGender($HasSmile);
 		$myAttributes->setGender($Age);
 		$myAttributes->setUpdatedByUser(true);
-		insert($myAttributes);
+		$this->insert($myAttributes);
 	}
 	
 	private function verifyExistance($FB_user, $FB_photo) {

@@ -66,6 +66,14 @@
 				alert("Error on extractAttributes!");
 			});
 	  }
+	  
+	  this.insertAttributes = function(photoId, gender, eyeColor, hairColor, hasBeard, hasGlasses, hasSmile ,age){
+		   return $http.get('../php/api/insertAttributes/'+photoId+'/'+gender+'/'+eyeColor+'/'+hairColor+'/'+hasBeard+'/'+hasGlasses+'/'+hasSmile+'/'+age).then(function successCallback(response) {
+				return response;
+			}, function errorCallback(response) {
+				alert("Error on insertAttributes!");
+			});
+	  }
   })
   app.service('ChartService', function ($http) {
 	  	  
@@ -198,7 +206,7 @@
 		// Eye Color Data
 		$scope.eyeColorData =[];
 		$scope.eyeColorLabels =[];		
-0
+
 		ChartService.getChart('getEyeColors',$scope.args).then(function successCallback(data) {
 			$scope.eyeColorData = data.values;
 			$scope.eyeColorLabels = data.keys;
@@ -324,6 +332,7 @@
 		  templateUrl: 'image-modal.html',
 		  controller: 'ModalCtrl',
 		  size: 'lg',
+		  scope: $scope,
 		  resolve: {
 			user: function () {
 			  return user;
@@ -359,10 +368,19 @@
 		$scope.hairColorLabels = labels.hairColorLabels;
 
 		$scope.ok = function () {
-			$uibModalInstance.close();
+			
+			$scope.user.EyeColor = UsersService.getColor(true, $scope.user.EyeColorFix);
+			$scope.user.HairColor = UsersService.getColor(true, $scope.user.HairColorFix);
+			
+			UsersService.insertAttributes(user.PhotoId, $scope.user.Gender, $scope.user.EyeColor, $scope.user.HairColor, $scope.user.HasBeard, $scope.user.HasGlasses, $scope.user.HasSmile ,$scope.user.Age).then(function successCallback(data) {
+				alert("Thanks for the input!")
+				$scope.refreshPlots(user.PhotoId);
+			});
+			//$uibModalInstance.close();
 		};
 
 		$scope.cancel = function () {
+			$scope.refreshPlots(-1);
 			$uibModalInstance.dismiss('cancel');
 		};
 		
@@ -382,6 +400,9 @@
 		if($scope.loggedOnUser && $scope.loggedOnUser.FacebookId){
 			$scope.getComments();
 		}
+		
+		
+		$scope.refreshPlots(user.PhotoId);
   });
 
 })();

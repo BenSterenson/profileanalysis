@@ -470,10 +470,12 @@ class DbWrapper {
 				break;
 			
 			case "Attributes":
+				$object->setEyeColor($this->ColorNUMtoTXT($object->getEyeColor()));
+				$object->setHairColor($this->ColorNUMtoTXT($object->getHairColor()));
 				$string = "INSERT INTO PhotoAttributes ";
 				$string = $string . " (PhotoId, Gender, EyeColor, HairColor, HasBeard, HasGlasses, HasSmile, Age, UpdateDate, UpdatedByUser) VALUES ";
-				$string = $string . " (" . $object->getPhotoId() . ", " . $object->getGender() . ", '" . $this->ColorNUMtoTXT($object->getEyeColor()) . "', '" .
-										$this->ColorNUMtoTXT($object->getHairColor()) . "', " . $object->getHasBeard()  . ", " . $object->getHasGlasses() . ", " .
+				$string = $string . " (" . $object->getPhotoId() . ", " . $object->getGender() . ", '" . $object->getEyeColor() . "', '" .
+										$object->getHairColor() . "', " . $object->getHasBeard()  . ", " . $object->getHasGlasses() . ", " .
 										$object->getHasSmile() . ", " . $object->getAge() . ", '" . $object->getUpdateDate() . "', " . $object->getUpdatedByUser() . ")";
 				break;
 				

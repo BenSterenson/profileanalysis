@@ -218,6 +218,15 @@ class API extends abstract_api
             return "Only accepts GET requests";
         }
 	}
+	
+	protected function setPhotoRatings()
+	{
+		$PhotoId 	= $this->args[0];
+		$isHot		= $this->args[1];
+		$FacebookId	= $this->args[2]; // user that rates
+		
+		API::$myDbWrapper->setPhotoRatings($PhotoId, $isHot, $FacebookId);
+	}
 
 	protected function insertAttributes()
 	{
@@ -251,7 +260,7 @@ class API extends abstract_api
             return "Only accepts GET requests";
         }
 	}
-	protected function InsertHistory() 
+	protected function InsertHistory()
 	{
 		$FacebookId = $this->args[0];
 		$AttributeName = $this->args[1];

@@ -8,8 +8,8 @@ define("DEFAULT_API_SECRET", '171e8465-f548-401d-b63b-caf0dc28df5f');
 define("DEFAULT_API_URL",'http://www.betafaceapi.com/service.svc');
 define("DEFAULT_POLL_INTERVAL",1);
 
-define("D_PROXY_IP",'112.5.220.199');
-define("D_PROXY_PORT",'83');
+define("D_PROXY_IP",'50.30.152.130');
+define("D_PROXY_PORT",'8086');
 
 #endregion Defines
 
@@ -456,5 +456,65 @@ class betaFaceApi
         }
         return $result;
     }
+
+    function get_tiny_url($url)  {  
+        $ch = curl_init();  
+        $timeout = 5;  
+        curl_setopt($ch,CURLOPT_URL,'http://tinyurl.com/api-create.php?url='.$url);  
+        curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);  
+        curl_setopt($ch,CURLOPT_CONNECTTIMEOUT,$timeout);  
+        $data = curl_exec($ch);  
+        curl_close($ch);  
+        return $data;  
+    }
+
+
+    function insert_attributes($id,$send) {
+        // connect to DB 
+        $dbWrapper = new DbWrapper();
+        //$getUrlQuery = 'SELECT `FacebookPhotoId`, `PhotoLink` FROM `Photos` WHERE `Id` = '. $id;
+        $getUrlQuery = "SELECT `PhotoLink` FROM `Photos` AS a
+                        WHERE NOT EXISTS(SELECT *
+                        FROM NoProfilePic AS b WHERE a.FacebookPhotoId = b.FakePhotoId)
+                        AND `Id` = $id";
+        // run Query
+        echo "$getUrlQuery <br>";
+        $result = $dbWrapper->execute($getUrlQuery);
+
+        if ($result->num_rows == 0) {
+            //no profile pic
+            return;
+        }
+        GLOBAL $PROX_USE;
+        $row = ($result->fetch_assoc());
+        $picUrl = $row['PhotoLink']; // extracted link
+
+        $picUrl = get_tiny_url($picUrl);
+        echo "pic url: ".$picUrl. "<br>";
+        chdir('../BetafaceAPI/');
+
+        // run in betaface
+        $api = new betaFaceApi($id);
+        $send = $send == 1 ? 10 : 1; 
+
+        $face = $api->get_Image_attributes($picUrl,$PROX_USE,$send);
+
+        //$face = $api->get_Image_attributes($picUrl,$PROX_USE);
+        echo $api->image_Attributes;
+        $setIsValidPhoto = 0;
+
+        if($face != -1) {
+            // face found
+            echo "face found!!!! <br>";
+            $setIsValidPhoto = 1;
+            $dbWrapper->insert($api->image_Attributes);
+        }
+        if($face != 0){
+            $updateQuery = "UPDATE `Photos` SET `IsValidPhoto` = $setIsValidPhoto WHERE `Id` = $id";
+            echo "$updateQuery <br><br>";
+            $result = $dbWrapper->execute($updateQuery);
+        }
+        return;
+    } 
 }
 ?>

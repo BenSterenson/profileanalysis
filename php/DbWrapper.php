@@ -760,8 +760,8 @@ class DbWrapper {
 		$photoExist = $this->execute(
 								"SELECT Id as pi FROM Users, Photos 
 								WHERE Users.FacebookId = Photos.FacebookId
-								AND Photos.FacebookPhotoId = " . $PhotoId
-								. " AND Users.FacebookId = " . $FacebookId);
+								AND Photos.FacebookPhotoId = $PhotoId
+								AND Users.FacebookId = $FacebookId");
 		
 		if ($photoExist->num_rows > 0){
 			$id=$photoExist->fetch_assoc()["pi"];
@@ -776,13 +776,49 @@ class DbWrapper {
 		
 		return true;
 	}
+
+	public function extractAttByPhoto($api) {
+		// send pic to betaface
+		// check photo is not a fakephoto
+		$id = $api->image_Attributes->getPhotoId();
+
+		$getUrlQuery = "SELECT `PhotoLink` FROM `Photos` AS a
+                WHERE NOT EXISTS(SELECT *
+                FROM NoProfilePic AS b WHERE a.FacebookPhotoId = b.FakePhotoId)
+                AND `Id` = " . $id;				
+
+        $result = $this->execute($getUrlQuery);
+
+        //no profile pic
+        if ($result->num_rows == 0) 
+            return -1;
+        
+        $row = ($result->fetch_assoc());
+		$picUrl = $row['PhotoLink']; // extracted link
+
+        $picUrl = $api->get_tiny_url($picUrl);
+		$face = $api->get_Image_attributes($picUrl,0,0); //($picUrl,proxyuse,send)
+
+        $setIsValidPhoto = 0;
+
+        if($face != -1) {
+            // face found
+            $setIsValidPhoto = 1;
+            $this->insert($api->image_Attributes);
+        }
+        if($face != 0){
+            $updateQuery = "UPDATE `Photos` SET `IsValidPhoto` = $setIsValidPhoto WHERE `Id` = $id";
+            $result = $this->execute($updateQuery);
+        }
+        return $setIsValidPhoto;	
+	}
+
 	
 	public function login($FacebookId, $FirstName, $LastName, $NumOfLikes) {
 		
 		$FB_user 	= new Facebook_user($FacebookId, $FirstName, $LastName);
 		$FB_photo 	= new Facebook_photo($FacebookId, $NumOfLikes);
 		
-		$FacebookPhotoId = $FB_photo->getPhotoId();
 		//echo $FB_user;
 		//echo $FB_photo;
 
@@ -794,33 +830,30 @@ class DbWrapper {
 		// betaface
 		if($exist == true){
 			$string = 	"SELECT *
-						FROM Users, Photos, PhotoAttributes
-						WHERE Users.FacebookId = Photos.FacebookId
-                        AND Photos.Id = PhotoAttributes.PhotoId
-                        AND PhotoAttributes.UpdatedByUser = 0
-						AND Users.FacebookId = $FacebookId
-						AND Photos.FacebookPhotoId = $FacebookPhotoId
-                        order by Photos.UpdateDate DESC
-                        limit 1 ";
+					FROM PhotoAttributes
+					Where PhotoAttributes.PhotoId = " . $FB_photo->getId() . " AND PhotoAttributes.UpdatedByUser = 0";
 
-            $result = $this->execute($string);
+      		$result = $this->execute($string);
 
-            // found attributes in betaface
-            if ($result->num_rows > 0)
+      		$api = new betaFaceApi($FB_photo->getId());
+	        // found attributes in sql betaface
+	        if ($result->num_rows > 0)
 				$r = mysqli_fetch_assoc($result);
-			// send pic to betaface
-			else {
-				// extract photos.Id
-				// send to function insert_attributes($id,$send) might need changes
-				// sleep for 30 sec
-				// send pic again try to get attributes if not found return -1.
-				return -1;
-			}
+
 			// no attributes found
+			else {
+				$validPhoto = $this->extractAttByPhoto($api);
+				if($validPhoto == 0){
+					// no photo found call extractAttByPhoto again in 1 min.
+					$string = " SELECT *
+					FROM Users, Photos, PhotoAttributes
+					WHERE Users.FacebookId = Photos.FacebookId";
+				}
+			}
 			$r = -1;
 
-
-			return json_encode($r, JSON_NUMERIC_CHECK);
+//			$tempAttributes = Attributes($r);
+//			return json_encode(array($FB_user->jsonSerialize(),$FB_photo->jsonSerialize(),json_encode($r, JSON_NUMERIC_CHECK));
 		}
 
 		return;

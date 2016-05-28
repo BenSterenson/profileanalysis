@@ -694,7 +694,7 @@ class DbWrapper {
 					FROM PhotoComments, Users, Photos
 					where PhotoComments.PhotoId = $PhotoId
 					AND PhotoComments.FacebookId = Users.FacebookId
-					AND Photos.Id = (SELECT Photos.Id from Photos,PhotoComments where PhotoComments.FacebookId = Photos.FacebookId ORDER BY UpdateDate DESC limit 1)
+					AND Photos.Id = (SELECT Photos.Id from Photos,PhotoComments where PhotoComments.FacebookId = Photos.FacebookId and Photos.FacebookId = Users.FacebookId ORDER BY UpdateDate DESC limit 1)
 					ORDER BY PhotoComments.Time ASC";
 
 		$res_arr = $this->execute($string);

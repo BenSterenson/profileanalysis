@@ -841,25 +841,29 @@ class DbWrapper {
 	
 	public function login($FacebookId, $FirstName, $LastName, $NumOfLikes) {
 		
-		$string = 	"SELECT *
+		/*$string = 	"SELECT *
 						FROM  Users, Photos, PhotoAttributes
-						Where Users.FacebookId = " . $FacebookId . " LIMIT 1";
+						Where Users.FacebookId = $FacebookId  
+						AND Users.FacebookId = Photos.FacebookId LIMIT 1";
 
 		$result = $this->execute($string);
 		// found user
 		if ($result->num_rows > 0){
 			$row = $result->fetch_assoc();
 			return json_encode($row, JSON_NUMERIC_CHECK);
-		}
+		}*/
 		
 		$FB_user 	= new Facebook_user($FacebookId, $FirstName, $LastName);
 		$FB_photo 	= new Facebook_photo($FacebookId, $NumOfLikes);
 		
 		// update or insert as needed
 		$exist = $this->verifyExistance($FB_user, $FB_photo); // returns true if exists (creates if needed)
-		//echo $FB_user;
-		//echo $FB_photo;
-		return json_encode(array($FB_user->jsonSerialize(),$FB_photo->jsonSerialize()));
+
+
+		$empty_att = new Attributes(null);
+		$result = $FB_user->jsonSerialize() + $FB_photo->jsonSerialize() + $empty_att->jsonSerialize();
+
+		return json_encode($result);
 	}
 
 	public function extractAttributes($photoId, $iteration) {

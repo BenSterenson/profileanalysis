@@ -81,7 +81,7 @@
 		   return $http.get('../php/api/login/'+facebookId+'/'+firstName+'/'+lastName+'/'+numOfLikes).then(function successCallback(response) {
 				return JSON.parse(response.data);
 			}, function errorCallback(response) {
-				alert("Error on addComment!");
+				alert("Error on login!");
 			});
 	  }
 	  
@@ -132,7 +132,7 @@
 	// Handle Facebook
 	$scope.loggedOnUser = {};
 	var stored = localStorage['profilyzeFacebook'];
-	if (stored) {
+	if (stored != "undefined") {
 		$scope.loggedOnUser = JSON.parse(stored);
 	}
 	$scope.login = function (accessToken) {
@@ -145,7 +145,7 @@
 						localStorage['profilyzeFacebook'] = JSON.stringify($scope.loggedOnUser);
 						return;
 				}
-				var photoID = login.PhotoId;
+				var photoID = login.Id;
 				UsersService.extractAttributes(photoID,0).then(function successCallback(attributes) {
 					if(attributes == 1){
 						console.log("Waiting for betaface..");
@@ -496,7 +496,7 @@
 				
 		$scope.loggedOnUser = {};
 		var stored = localStorage['profilyzeFacebook'];
-		if (stored) {
+		if (stored != "undefined") {
 			$scope.loggedOnUser = JSON.parse(stored);
 		}
 		

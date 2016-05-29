@@ -22,7 +22,7 @@ class betaFaceApi
     var $api_url;
     var $poll_interval;
     var $image_Attributes;
-    var $log_level = 1;
+    var $log_level = 0;
     var $countConnect = 0;
     var $proxy_use = 0;
     var $proxy_port;
@@ -216,7 +216,7 @@ class betaFaceApi
         //curl_setopt($ch, CURLOPT_COOKIESESSION , 1);
 
         if($this->proxy_use == 1){
-            echo "using proxy";
+            //echo "using proxy";
             curl_setopt($ch, CURLOPT_PROXYPORT, $this->proxy_port);
             curl_setopt($ch, CURLOPT_PROXYTYPE, 'HTTP');
             curl_setopt($ch, CURLOPT_PROXY, $this->proxy_ip);

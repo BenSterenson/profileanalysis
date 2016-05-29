@@ -23,7 +23,7 @@ class PhotoRatings implements JsonSerializeable
 		$this->Id = $Id;
 	}
 	function setFacebookId($FacebookId) {
-		$this->FacebookId = $FacebookId);
+		$this->FacebookId = $FacebookId;
 	}
 	function setIsHot($IsHot) {
 		$this->IsHot = $IsHot;

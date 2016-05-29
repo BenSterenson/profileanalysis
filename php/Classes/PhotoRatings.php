@@ -1,6 +1,6 @@
 <?php
 
-class PhotoRatings implements JsonSerializeable
+class PhotoRatings implements JsonSerializable
 {
 	#region	Fields
 	private $Id		   = -1; 

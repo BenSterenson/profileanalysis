@@ -1005,7 +1005,7 @@ class DbWrapper {
 			case '4':
 				return array(46,55);
 			case '5':
-				return array(56,-1);
+				return array(56,1000);
 		}
 
 	}

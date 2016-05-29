@@ -204,7 +204,7 @@ class API extends abstract_api
 	
 	protected function getPhotoRatings()
 	{
-		$PhotoID = $this->args[0];
+		$PhotoId = $this->args[0];
 		if ($this->method == 'GET')
 		{
 			$RatingsArr = API::$myDbWrapper->getPhotoRatings($PhotoId);

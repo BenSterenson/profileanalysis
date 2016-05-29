@@ -246,7 +246,7 @@ class API extends abstract_api
 		$PhotoID = $this->args[0];
 		$FacebookId = $this->args[1];
 		$Comment = $this->args[2];
-
+		echo $FacebookId;
 		if($PhotoID == -1 || $FacebookId == -1 || $Comment == "")
 			return "Missing information";
 

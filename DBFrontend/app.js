@@ -11,6 +11,23 @@
     });
 
   });
+  app.service('HistoryService', function ($http) {
+		this.insertHistory = function (facebookId,attributeName,filterValue,sessionId) {
+          return $http.get('../php/api/InsertHistory/'+facebookId+'/'+attributeName+'/'+filterValue+'/'+sessionId).then(function successCallback(response) {
+				return response;
+			}, function errorCallback(response) {
+				alert("Error on insertHistory!");
+			});
+		}
+		
+		this.getHistory = function (facebookId) {
+          return $http.get('../php/api/getHistory/'+facebookId).then(function successCallback(response) {
+				return JSON.parse(response.data);
+			}, function errorCallback(response) {
+				alert("Error on getHistory!");
+			});
+		}
+  })
   app.service('UsersService', function ($http) {
 	  this.getPhotos = function (start,stop,gender, eyeColor, hairColor, hasBeard, hasGlasses, hasSmile ,age) {
           return $http.get('../php/api/getphotos/'+start+'/'+stop+'/'+gender+'/'+eyeColor+'/'+hairColor+'/'+hasBeard+'/'+hasGlasses+'/'+hasSmile+'/'+age).then(function successCallback(response) {
@@ -96,7 +113,7 @@
 			});
       }
   });
-  app.controller('MainCtrl', function ($scope,$http, $uibModal, ChartService,UsersService) {
+  app.controller('MainCtrl', function ($scope,$http, $uibModal, ChartService,UsersService,HistoryService) {
 
 	// Init
 	$scope.size = 12;
@@ -160,7 +177,20 @@
 
       // Load the data
 
-
+	function generateUUID(){
+		var d = new Date().getTime();
+		if(window.performance && typeof window.performance.now === "function"){
+			d += performance.now(); //use high-precision timer if available
+		}
+		var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+			var r = (d + Math.random()*16)%16 | 0;
+			d = Math.floor(d/16);
+			return (c=='x' ? r : (r&0x3|0x8)).toString(16);
+		});
+		return uuid;
+	}
+	
+	$scope.sessionId = generateUUID();
 	
 	function convertColorsToViewable(colors){
 		var newArray = []
@@ -191,14 +221,16 @@
 		$scope.smilesFilter = -1;
 		$scope.glassesFilter = -1;
 		$scope.beardFilter = -1;
+		$scope.sessionId = generateUUID();
 		
-		if(refresh){					
+		if(refresh){		
+			$scope.start = 0;
+			$scope.stop = $scope.size;
 			$scope.getPhotos($scope.start,$scope.stop);
 			$scope.refreshPlots(-1);
 		}
 	}
-	
-	
+		
 	$scope.refreshPlots = function(photoID){
 		
 		$scope.args = [photoID,$scope.genderFilter,$scope.eyeColorFilter,$scope.hairColorFilter,$scope.beardFilter,$scope.glassesFilter,$scope.smilesFilter,$scope.ageFilter];
@@ -216,6 +248,10 @@
 			$scope.eyeColorFilter = UsersService.getColor(true,elm[0].label);
 			$scope.getPhotos();
 			$scope.refreshPlots(-1);
+			if($scope.loggedOnUser.FacebookId){
+				HistoryService.insertHistory($scope.loggedOnUser.FacebookId,"Eye",elm[0].label,$scope.sessionId);
+			}
+			
 		};
 		
 
@@ -231,6 +267,9 @@
 			$scope.hairColorFilter = UsersService.getColor(true,elm[0].label);
 			$scope.getPhotos();
 			$scope.refreshPlots(-1);
+			if($scope.loggedOnUser.FacebookId){
+				HistoryService.insertHistory($scope.loggedOnUser.FacebookId,"Hair",elm[0].label,$scope.sessionId);
+			}
 		};
 
 		// Age
@@ -244,6 +283,9 @@
 			$scope.ageFilter = $scope.ageLabels.indexOf(elm[0].label);
 			$scope.getPhotos();
 			$scope.refreshPlots(-1);
+			if($scope.loggedOnUser.FacebookId){
+				HistoryService.insertHistory($scope.loggedOnUser.FacebookId,"Age",elm[0].label,$scope.sessionId);
+			}
 		};
 
 		// Gender
@@ -258,6 +300,9 @@
 			$scope.genderFilter = $scope.genderLabels.indexOf(elm[0].label);
 			$scope.getPhotos();
 			$scope.refreshPlots(-1);
+			if($scope.loggedOnUser.FacebookId){
+				HistoryService.insertHistory($scope.loggedOnUser.FacebookId,"Gender",elm[0].label,$scope.sessionId);
+			}
 		};
 
 		// Smiles
@@ -272,6 +317,9 @@
 			$scope.smilesFilter = $scope.smilesLabels.indexOf(elm[0].label);
 			$scope.getPhotos();
 			$scope.refreshPlots(-1);
+			if($scope.loggedOnUser.FacebookId){
+				HistoryService.insertHistory($scope.loggedOnUser.FacebookId,"Smiles",elm[0].label,$scope.sessionId);
+			}
 		};
 		
 		// Has Glasses	
@@ -286,6 +334,9 @@
 			$scope.glassesFilter = $scope.glassesLabels.indexOf(elm[0].label);
 			$scope.getPhotos();
 			$scope.refreshPlots(-1);
+			if($scope.loggedOnUser.FacebookId){
+				HistoryService.insertHistory($scope.loggedOnUser.FacebookId,"Glasses",elm[0].label,$scope.sessionId);
+			}
 		};
 
 		// Has Beard
@@ -300,6 +351,9 @@
 			$scope.beardFilter = $scope.beardLabels.indexOf(elm[0].label);
 			$scope.getPhotos();
 			$scope.refreshPlots(-1);
+			if($scope.loggedOnUser.FacebookId){
+				HistoryService.insertHistory($scope.loggedOnUser.FacebookId,"Beard",elm[0].label,$scope.sessionId);
+			}
 		};
 	}
     
@@ -324,14 +378,15 @@
 	$scope.clearFilter();
 	$scope.getPhotos($scope.start,$scope.stop);
 	$scope.refreshPlots(-1);
-	
+
 	$scope.open = function (user) {
 
 		var modalInstance = $uibModal.open({
 		  animation: true,
 		  templateUrl: 'image-modal.html',
-		  controller: 'ModalCtrl',
+		  controller: 'ImageModalCtrl',
 		  size: 'lg',
+		  backdrop: 'static',
 		  scope: $scope,
 		  resolve: {
 			user: function () {
@@ -342,10 +397,23 @@
 
 	  };
 	  
+	$scope.openHistory = function (user) {
 
+		var modalInstance = $uibModal.open({
+		  animation: true,
+		  templateUrl: 'history-modal.html',
+		  controller: 'HistoryModalCtrl',
+		  size: 'lg',
+		  backdrop: 'static',
+		  scope: $scope,
+		  resolve: {
+		  }
+		});
+
+	  };
 
 });
-  app.controller('ModalCtrl', function ($scope,$http, $uibModalInstance, UsersService, user) {
+  app.controller('ImageModalCtrl', function ($scope,$http, $uibModalInstance, UsersService, user) {
 		
 		$scope.user = user;
 		$scope.comment = "";
@@ -407,4 +475,45 @@
 		$scope.refreshPlots(user.PhotoId);
   });
 
+   app.controller('HistoryModalCtrl', function ($scope,$http, $uibModalInstance, UsersService,HistoryService) {
+				
+		$scope.loggedOnUser = {};
+		var stored = localStorage['profilyzeFacebook'];
+		if (stored) {
+			$scope.loggedOnUser = JSON.parse(stored);
+		}
+		
+		HistoryService.getHistory($scope.loggedOnUser.FacebookId).then(function successCallback(data){
+			
+			var colorArr = ['#D9EDF7','white']
+			var colorInd = 0;
+			var currentSessionId = 0;
+			var order = 1;
+			for(var i in data){
+				if(currentSessionId != data[i].SessionId){
+					currentSessionId = data[i].SessionId;
+					colorInd = 1 - colorInd;
+					order = 1;
+				}
+				else
+				{
+					order = order + 1;
+				}
+				data[i].Order = order;
+				data[i].BackgroundColor = { "background-color" : colorArr[colorInd] }
+			}
+			
+			$scope.historyForUser = data;
+		});
+		
+		$scope.ok = function () {
+			
+			$uibModalInstance.close();
+		};
+
+		$scope.cancel = function () {
+			$uibModalInstance.dismiss('cancel');
+		};
+		
+  });
 })();

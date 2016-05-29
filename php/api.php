@@ -269,8 +269,7 @@ class API extends abstract_api
 
 		if ($this->method == 'GET')
 		{
-			$HistorySession = API::$myDbWrapper->InsertHistory($FacebookId, $AttributeName, $FilterValue, $SessionId);
-			return;
+			return API::$myDbWrapper->InsertHistory($FacebookId, $AttributeName, $FilterValue, $SessionId);
 		}		
 		else 
 		{

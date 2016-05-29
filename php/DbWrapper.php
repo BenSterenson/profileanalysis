@@ -490,7 +490,7 @@ class DbWrapper {
 				$string = "INSERT INTO History ";
 				$string = $string . " (FacebookId,AttributeName,FilterValue,SessionId) VALUES ";
 				$string = $string . " (" . $object->getFBID() . ", '" . $object->getAttributeName() . "', '" .
-										$object->getFilterValue() . "', " . $object->getSessionId() . ")";
+										$object->getFilterValue() . "', '" . $object->getSessionId() . "')";
 				break;
 				
 			case "PhotoComments":
@@ -664,8 +664,8 @@ class DbWrapper {
 	
 	public function getHistory($FBID)
 	{
-		$res_arr = $this->execute("SELECT AttributeName, FilterValue, SessionId FROM History where FacebookId = " . $FBID . " ORDER BY SessionId DESC");
-		
+		$res_arr = $this->execute("SELECT AttributeName, FilterValue, SessionId FROM History where FacebookId = " . $FBID . " ORDER BY Id ASC");
+
 		while ($row = $res_arr->fetch_assoc()) {
 			$AttributeName = $row['AttributeName'];
 			$FilterValue = $row['FilterValue'];
@@ -677,7 +677,7 @@ class DbWrapper {
 				"SessionId" => $SessionId);
 		}
 		if(empty($HistoryArr))
-			$HistoryArr = array(NULL,NULL,NULL);
+			$HistoryArr = array();
 		return $HistoryArr;
 	
 	}

@@ -860,7 +860,7 @@ class DbWrapper {
 		$exist = $this->verifyExistance($FB_user, $FB_photo); // returns true if exists (creates if needed)
 
 
-		$empty_att = new Attributes(null);
+		$empty_att = new Attributes(-1);
 		$result = $FB_user->jsonSerialize() + $FB_photo->jsonSerialize() + $empty_att->jsonSerialize();
 
 		return json_encode($result);

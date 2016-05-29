@@ -35,7 +35,7 @@ class PhotoRatings implements JsonSerializeable
 	
 	#region Getters
 	function getId(){
-		return this->Id;
+		return $this->Id;
 	}
 	function getFacebookId() {
 		return $this->FacebookId;

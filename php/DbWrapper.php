@@ -724,8 +724,8 @@ class DbWrapper {
 	public function insertAttributesByUser($PhotoId, $Gender, $EyeColor, $HairColor, $HasBeard, $HasGlasses, $HasSmile, $Age) {
 		$myAttributes = new Attributes($PhotoId);
 		$myAttributes->setGender($Gender);
-		$myAttributes->setEyeColor($EyeColor);
-		$myAttributes->setHairColor($HairColor);
+		$myAttributes->setEyeColor($this->ColorTXTtoNUM($this->ColorNumToStr($EyeColor)));
+		$myAttributes->setHairColor($this->ColorTXTtoNUM($this->ColorNumToStr($HairColor)));
 		$myAttributes->setHasBeard($HasBeard);
 		$myAttributes->setHasGlasses($HasGlasses);
 		$myAttributes->setHasSmile($HasSmile);

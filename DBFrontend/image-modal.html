@@ -6,7 +6,29 @@
 <div class="modal-body">
 	<section id="edituserSection">
 		<div class="row">
-			<a href='http://facebook.com/{{user.FacebookId}}'target="_blank"><img ng-src="{{user.PhotoLink}}" class="col-md-8"></a>
+			<div class="col-md-8">
+				<div class="row">
+					<a href='http://facebook.com/{{user.FacebookId}}'target="_blank">
+						<img ng-src="{{user.PhotoLink}}" class="col-md-12">
+					</a>
+				</div>
+				<div class="panel panel-info" style="margin-top:10%">
+					<div class="panel-heading">
+						Rate
+					</div>
+					<div class="panel-body" ng-if="!ratedSuccess">
+						<div class="col-md-6">
+							<img src="css/fire-icon.png" style="height:100px;height:100px; cursor:pointer;margin-left:40%;" ng-click="rate(1)">
+						</div>
+						<div class="col-md-6">
+							<img src="css/Snowflake.png" style="height:100px;height:100px; cursor:pointer;margin-left:20%;" ng-click="rate(0)">
+						</div>
+					</div>
+					<div class="panel-body bg-success" ng-if="ratedSuccess">
+						<h3>Rated Successfully</h3>
+					</div>
+				</div>
+			</div>
 			<div class="panel-body col-md-4">
 				<div class="form-group">
 					<label for="eyeColorSelect">Facebook Likes: </label>

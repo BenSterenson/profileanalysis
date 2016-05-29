@@ -60,6 +60,15 @@
 			});
 	  }
 	  
+	  this.setPhotoRatings = function(photoID, isHot, facebookId){
+		   return $http.get('../php/api/setPhotoRatings/'+photoID+'/'+isHot+'/'+facebookId).then(function successCallback(response) {
+				return response;
+			}, function errorCallback(response) {
+				alert("Error on setPhotoRatings!");
+			});
+	  }
+	  
+	  
 	  this.getComments = function(photoID){
 		   return $http.get('../php/api/getPhotoComments/'+photoID).then(function successCallback(response) {
 				return JSON.parse(response.data);
@@ -451,6 +460,14 @@
 			UsersService.addComment(user.PhotoId,$scope.loggedOnUser.FacebookId,$scope.comment).then(function successCallback(data) {	
 				$scope.commentAdded = true;
 				$scope.getComments();
+			});
+		}
+		
+		$scope.ratedSuccess = false;
+		
+		$scope.rate = function(isHot){
+			UsersService.setPhotoRatings(user.PhotoId,isHot,$scope.loggedOnUser.FacebookId).then(function successCallback(data) {	
+				$scope.ratedSuccess = true;
 			});
 		}
 		

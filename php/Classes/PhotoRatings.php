@@ -3,10 +3,10 @@
 class PhotoRatings implements JsonSerializeable
 {
 	#region	Fields
-	private Id		   = -1; 
-	private IsHot  	   = NULL;
-	private PhotoId    = -1; 
-	private FacebookId = -1;
+	private $Id		   = -1; 
+	private $IsHot  	= NULL;
+	private $PhotoId    = -1; 
+	private $FacebookId = -1;
 	#endregion	Fields
 	
 	#region	Constructors

@@ -52,6 +52,7 @@ include 'Classes/Facebook_photo.php';
 include 'Classes/Facebook_user.php';
 include 'Classes/PhotoComments.php';
 include 'Classes/History.php';
+include 'Classes/PhotoRatings.php';
 //include 'Classes/Attributes.php';
 include '../BetafaceAPI/BetafaceAPI.php';
 

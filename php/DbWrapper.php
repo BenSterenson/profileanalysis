@@ -503,7 +503,7 @@ class DbWrapper {
 			case "PhotoRatings":
 				$string = "INSERT INTO PhotoRatings ";
 				$string = $string . " (IsHot, PhotoId, FacebookId) VALUES ";
-				$string = $string . " (" . $object->IsHot() .	", '" . 
+				$string = $string . " (" . $object->getIsHot() .	", '" . 
 										$object->getPhotoId() . "', '" . $object->getFacebookId() . ")";
 				break;
 		}

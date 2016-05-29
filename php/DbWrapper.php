@@ -502,9 +502,9 @@ class DbWrapper {
 				
 			case "PhotoRatings":
 				$string = "INSERT INTO PhotoRatings ";
-				$string = $string . " (IsHot, PhotoId, FacebookId) VALUES ";
-				$string = $string . " (" . $object->getIsHot() .	", '" . 
-										$object->getPhotoId() . "', '" . $object->getFacebookId() . ")";
+				$string = $string . " (IsHot, PhotosId, FacebookId) VALUES ";
+				$string = $string . " (" . $object->getIsHot() .	", " . 
+										$object->getPhotoId() . ", " . $object->getFacebookId() . ")";
 				break;
 		}
 		$this->execute($string);

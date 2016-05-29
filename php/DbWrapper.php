@@ -684,8 +684,11 @@ class DbWrapper {
 	
 	public function getPhotoRatings($PhotoId)
 	{
-		$res_arr[] = $this->execute("SELECT count(IsHot) as cnt FROM PhotoRatings where IsHot = 1 AND PhotoId = " . $PhotoId );
-		$res_arr[] = $this->execute("SELECT count(IsHot) as cnt FROM PhotoRatings where IsHot = 0 AND PhotoId = " . $PhotoId );
+		$tmp = $this->execute("SELECT count(IsHot) as cnt FROM PhotoRatings where IsHot = 1 AND PhotosId = " . $PhotoId)->fetch_assoc();
+		$res_arr[] = $tmp['cnt'];
+		$tmp = $this->execute("SELECT count(IsHot) as cnt FROM PhotoRatings where IsHot = 0 AND PhotosId = " . $PhotoId)->fetch_assoc();
+		$res_arr[] = $tmp['cnt'];
+
 		return $res_arr;
 	}
 	

@@ -332,7 +332,18 @@ class API extends abstract_api
             return "Only accepts GET requests";
         }
 	}
-	
+	protected function searchByUrl() 
+	{	
+		$url = $this->args[1];
+		if ($this->method == 'GET')
+		{
+			return API::$myDbWrapper->searchByUrl($url);
+		}		
+		else 
+		{
+            return "Only accepts GET requests";
+        }
+	}
 	protected function login() 
 	{	
 		$FacebookId = $this->args[0];
@@ -364,8 +375,7 @@ class API extends abstract_api
             return "Only accepts GET requests";
         }
 	}
-	
-	
+
 	
 	#endregion
  }

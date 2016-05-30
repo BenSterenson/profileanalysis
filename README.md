@@ -15,7 +15,11 @@ Solution Stack:
 - Backend: PHP and MySQL
 - Frontend: Angularjs
 
-![printScreen](printScreen.PNG)
+- - - -
+
+- ![printScreen](printScreen.png)
+
+- - - -
 
 ###APIs
 * Facebook’s [Graph](https://developers.facebook.com/docs/graph-api) API:

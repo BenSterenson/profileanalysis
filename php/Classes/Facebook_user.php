@@ -66,7 +66,7 @@ class Facebook_user implements JsonSerializable {
     }
 
 	public function __construct2($row, $update) {
-		if ($row->num_rows == 1) {
+		if ($row->num_rows > 0) {
 			$row = ($row->fetch_assoc());
 			$this->FacebookId = $row['FacebookId'];
 			$FirstName = $row['FirstName'];

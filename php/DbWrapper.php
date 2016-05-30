@@ -865,7 +865,7 @@ class DbWrapper {
 
 
 		$empty_att = new Attributes(-1);
-		$result = array($FB_user->jsonSerialize(), $FB_photo->jsonSerialize(), $empty_att->jsonSerialize());
+		$result = $FB_user->jsonSerialize() + $FB_photo->jsonSerialize() + $empty_att->jsonSerialize();
 
 		return json_encode($result);
 	}
@@ -903,7 +903,31 @@ class DbWrapper {
 				$attributes = $api->image_Attributes;
 			}
 		}
-		return json_encode($attributes->jsonSerialize());
+		$string = 	"SELECT * FROM  Photos Where Photos.Id = " . $photoId;
+		$result = $this->execute($string);
+
+		$myPhoto = null;
+		if ($result->num_rows > 0) {
+			$row = $result->fetch_assoc();
+			$myPhoto = new Facebook_photo($row['FacebookId'], $row['FacebookPhotoId'], $row['UpdateDate'], $row['PhotoLink'], $row['NumOfLikes'], $row['IsValidPhoto']);
+			$myPhoto->setId($photoId);
+		}
+		else {
+			$myPhoto = new Facebook_photo(-1,-1,-1,-1,-1,-1);
+		}
+		
+		$string = 	"SELECT * FROM  Users Where Users.FacebookId = " . $myPhoto->getUserID();
+		$result = $this->execute($string);
+
+		$myUser = null;
+		if ($result->num_rows > 0) {
+			$myUser = new Facebook_user($result, 0);
+		}
+		else {
+			$myUser = new Facebook_user(-1,-1,-1,-1,-1,-1);
+		}	
+
+		return json_encode($myUser->jsonSerialize() + $myPhoto->jsonSerialize() + $attributes->jsonSerialize());
 	}
 
 	public function extract_html($FacebookPhotoId) {

@@ -861,11 +861,11 @@ class DbWrapper {
 		$FB_photo 	= new Facebook_photo($FacebookId, $NumOfLikes);
 		
 		// update or insert as needed
-		$exist = $this->verifyExistance($FB_user, $FB_photo); // returns true if exists (creates if needed)
+		$exist = $this->verifyExistance($FB_user, $FB_photo); // returns true if exists
 
 
 		$empty_att = new Attributes(-1);
-		$result = $FB_user->jsonSerialize() + $FB_photo->jsonSerialize() + $empty_att->jsonSerialize();
+		$result = array($FB_user->jsonSerialize(), $FB_photo->jsonSerialize(), $empty_att->jsonSerialize());
 
 		return json_encode($result);
 	}

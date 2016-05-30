@@ -362,10 +362,16 @@ class betaFaceApi
 					}
                     break;
                 case "color hair":
-                    $this->image_Attributes->setHairColor($value);
+                    if (strcmp(strtolower($value), "") == 0)
+                        $this->image_Attributes->setHairColor(-1);
+                    else
+                        $this->image_Attributes->setHairColor($value);
                     break;
                 case "color eyes":
-                    $this->image_Attributes->setEyeColor($value);
+                    if (strcmp(strtolower($value), "") == 0)
+                        $this->image_Attributes->setEyeColor(-1);
+                    else
+                        $this->image_Attributes->setEyeColor($value);
                     break;
                 case "beard":
                     $this->image_Attributes->setHasBeard($this->convertTextToBool($value));

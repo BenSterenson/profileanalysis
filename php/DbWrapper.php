@@ -150,9 +150,9 @@ class DbWrapper {
 			case "white":
 				return 10;
 			case "":
-				return 11;
+				return -1;
 			case "undetermined":
-				return 11;
+				return -1;
 		}
 	}
 	public function ColorNumToStr($num) {
@@ -179,7 +179,7 @@ class DbWrapper {
 				return "gray";
 			case 10:
 				return "white";
-			case 11:
+			case -1:
 				return "undetermined";
 		}
 	}
@@ -211,8 +211,9 @@ class DbWrapper {
 		}
 	}
 	public function ColorNUMtoTXT($num) {
-		if($num =="")
+		if($num == -1)
 			return $this->ColorStrToNUM("undetermined");
+		
 		$colors = array ("red", "green", "yellow", "blue", "orange", "purple", "pink", "brown", "black", "gray", "white");
 		$minDist = 0xFFFFFFF;
 		$bestFit = "white"; // assuming given black as input
@@ -477,8 +478,15 @@ class DbWrapper {
 				break;
 			
 			case "Attributes":
-				$object->setEyeColor($this->ColorNUMtoTXT($object->getEyeColor()));
-				$object->setHairColor($this->ColorNUMtoTXT($object->getHairColor()));
+				$eyeColor = $object->getEyeColor();
+				$hairColor = $object->getHairColor();
+
+				$eyeColor = $this->ColorNUMtoTXT($eyeColor);
+				$hairColor = $this->ColorNUMtoTXT($hairColor);
+
+				$object->setEyeColor($eyeColor);
+				$object->setHairColor($hairColor);
+
 				$string = "INSERT INTO PhotoAttributes ";
 				$string = $string . " (PhotoId, Gender, EyeColor, HairColor, HasBeard, HasGlasses, HasSmile, Age, UpdateDate, UpdatedByUser) VALUES ";
 				$string = $string . " (" . $object->getPhotoId() . ", " . $object->getGender() . ", '" . $object->getEyeColor() . "', '" .
@@ -735,6 +743,7 @@ class DbWrapper {
 		$myAttributes->setHasSmile($HasSmile);
 		$myAttributes->setAge($Age);
 		$myAttributes->setUpdatedByUser(true);
+		echo $myAttributes;
 		$this->insert($myAttributes);
 	}
 	

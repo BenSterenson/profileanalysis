@@ -238,7 +238,7 @@ class API extends abstract_api
 		$HasGlasses = $this->args[5];
 		$HasSmile	= $this->args[6];
 		$Age		= $this->args[7];
-	
+
 		API::$myDbWrapper->insertAttributesByUser($PhotoId, $Gender, $EyeColor, $HairColor, $HasBeard, $HasGlasses, $HasSmile, $Age);
 	}
 	protected function insertComment() 

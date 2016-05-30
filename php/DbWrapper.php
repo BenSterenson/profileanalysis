@@ -321,10 +321,7 @@ class DbWrapper {
 	
 	public function getLastPhoto($Facebook_user) {
 		$id = $Facebook_user->FacebookId;
-		$result = execute(	"SELECT * FROM " .
-								" (SELECT * FROM Photos ORDER by Photos.Id DESC) " .
-							" WHERE Photos.FacebookId = " . $id .
-							" LIMIT 1 ");
+		$result = execute("SELECT * FROM Photos WHERE FacebookId = $id ORDER BY UpdateDate DESC LIMIT 1");
 		
 		if ($result->num_rows > 0) {
 			return new Facebook_photo($result->fetch_assoc());

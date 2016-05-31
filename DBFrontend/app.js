@@ -132,7 +132,7 @@
 	// Handle Facebook
 	$scope.loggedOnUser = {};
 	var stored = localStorage['profilyzeFacebook'];
-	if (stored != "undefined") {
+	if (stored && stored != "undefined") {
 		$scope.loggedOnUser = JSON.parse(stored);
 	}
 	$scope.login = function (accessToken) {
@@ -155,7 +155,7 @@
 								if(sAtt != -1 && sAtt != 1){
 									$scope.loggedOnUser = sAtt;						
 									localStorage['profilyzeFacebook'] = JSON.stringify($scope.loggedOnUser);
-									$scope.$apply();
+									//$scope.$apply();
 								}
 								else
 								{
@@ -171,7 +171,7 @@
 					else{
 						$scope.loggedOnUser = attributes;
 						localStorage['profilyzeFacebook'] = JSON.stringify($scope.loggedOnUser);
-					    $scope.$apply();
+					    //$scope.$apply();
 					}
 					
 				});

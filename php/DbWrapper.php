@@ -1210,7 +1210,6 @@ class DbWrapper {
 
 	public function most_accurate(){
 		$string = $this->buildStrMost_accurate();
-		echo $string;
 		$result = $this->execute($string);
 		$rows = array();
 		while ($row = $result->fetch_assoc()) {

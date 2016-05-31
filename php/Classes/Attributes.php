@@ -35,6 +35,7 @@ class Attributes implements JsonSerializable {
 
 	public function __construct1($PhotoId) {
 	    $this->PhotoId = $PhotoId;
+	    $this->setUpdateDate();
 	}
 
 	public function __construct2($row, $update) {
@@ -78,8 +79,8 @@ class Attributes implements JsonSerializable {
 	function setAge($Age) {
 		$this->Age = $Age;
 	}
-	function setUpdateDate($UpdateDate) {
-		$this->UpdateDate = $UpdateDate;
+	function setUpdateDate() {
+		$this->UpdateDate = date("Y-m-d H:i:s");
 	}
 	function setUpdatedByUser($UpdatedByUser) {
 		$this->UpdatedByUser = $UpdatedByUser;

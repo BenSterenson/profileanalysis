@@ -134,7 +134,7 @@ class Attributes implements JsonSerializable {
 		   'HasGlasses' 	=> $this->HasGlasses,
 		   'HasSmile' 		=> $this->HasSmile,
 		   'Age' 			=> $this->Age + 0,
-		   'UpdateDate' 	=> $this->UpdateDate + 0,
+		   'UpdateDate' 	=> $this->UpdateDate,
 		   'UpdatedByUser' 	=> $this->UpdatedByUser
         );
     }

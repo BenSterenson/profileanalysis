@@ -660,7 +660,7 @@ class DbWrapper {
 		//function returns list of top $limit liked profile pictures arr[0]-> userid, profilepic, num of likes
 		//SELECT FacebookId, PhotoLink, NumOfLikes FROM profilyze.Photos, profilyze.PhotoAttributes where Photos.Id = PhotoAttributes.PhotoId ORDER BY NumOfLikes DESC LIMIT 10 
 
-		$string = 	"SELECT FacebookId, PhotoLink, NumOfLikes, PhotoId, Gender, EyeColor, HairColor, HasBeard, HasGlasses, HasBeard, HasSmile, Age, PhotoAttributes.UpdateDate, UpdatedByUser
+		$string = 	"SELECT DISTINCT FacebookId, PhotoLink, NumOfLikes, PhotoId, Gender, EyeColor, HairColor, HasBeard, HasGlasses, HasBeard, HasSmile, Age, PhotoAttributes.UpdateDate, UpdatedByUser
 					FROM Photos, PhotoAttributes
 					where Photos.Id = PhotoAttributes.PhotoId";
 		
@@ -1175,18 +1175,33 @@ class DbWrapper {
 
 		return $string;
 	}
+	public function avg_most_accurate(){
+
+		$string0 = "SELECT avg(p_Gender),avg(p_EyeColor),avg(p_HairColor),avg(p_HasBeard),avg(p_HasGlasses),avg(p_HasSmile),avg(p_Age),avg(avg_att) FROM (";
+		$string1 = $this->buildStrMost_accurate();
+		$string2 = ") as tmp";
+		$string = $string0 . $string1 . $string2;
+
+		$result = $this->execute($string);
+		$rows = array();
+		while ($row = $result->fetch_assoc()) {
+			$rows[] = $row;
+		}
+		return json_encode($rows);
+
+	}
 	public function buildStrMost_accurate(){
 		$string0 = "SELECT * FROM (";
 		$arr = array('Gender', 'EyeColor','HairColor', 'HasBeard','HasGlasses', 'HasSmile','Age');
 		$len_arr = count($arr);
 
 		$arr_p_str = "p_" . implode("+p_", $arr);
-		$string1 = "SELECT * , (($arr_p_str)/$len_arr) as avg_att FROM (";
+		$string1 = "SELECT * , ROUND(($arr_p_str)/$len_arr,2) as avg_att FROM (";
 
 		$string2 = "SELECT PI,";
 
 		for ($i=0; $i < $len_arr; $i++) { 
-			$string2 .= "(c_"."$arr[$i] * 100 / tmp.total) as p_"."$arr[$i]";
+			$string2 .= "ROUND(c_"."$arr[$i] * 100 / tmp.total,2) as p_"."$arr[$i]";
 			if ($i < $len_arr - 1)
 				$string2 .= ', ';
 		}

@@ -288,6 +288,17 @@ class API extends abstract_api
         }
 	}
 
+	protected function avg_most_accurate()
+	{
+		if ($this->method == 'GET')
+		{
+			return API::$myDbWrapper->avg_most_accurate();
+		}		
+		else 
+		{
+            return "Only accepts GET requests";
+        }
+	}
 
 	protected function GetPhotos() 
 	{

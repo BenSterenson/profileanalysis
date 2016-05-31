@@ -955,7 +955,8 @@ class DbWrapper {
 		$result = $this->execute($string);
 
 		if ($result->num_rows > 0) {
-			$myUser = new Facebook_user($result, 0);
+			$row = $result->fetch_assoc();
+			$myUser = new Facebook_user($row['FacebookId'], $row['FirstName'], $row['LastName']);
 		}
 		else {
 			$myUser = new Facebook_user(-1,-1,-1);

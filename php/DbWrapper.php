@@ -1175,36 +1175,7 @@ class DbWrapper {
 
 		return $string;
 	}
-
-	public function most_accurate(){
-		/*SELECT * FROM (
-
-SELECT *, ((p_Gender+p_EyeColor+p_HairColor+p_HasBeard+p_HasGlasses+p_HasSmile+p_Age)/7) as avg_att FROM (SELECT PI,(c_Gender * 100 / tmp.total) as p_Gender, (c_EyeColor * 100 / tmp.total) as p_EyeColor, (c_HairColor * 100 / tmp.total) as p_HairColor, (c_HasBeard * 100 / tmp.total) as p_HasBeard, (c_HasGlasses * 100 / tmp.total) as p_HasGlasses, (c_HasSmile * 100 / tmp.total) as p_HasSmile, (c_Age * 100 / tmp.total) as p_Age FROM (SELECT PhotoId as PI, count(*) as total, IFNULL((SELECT count(Gender) FROM PhotoAttributes
-	where PhotoId = PI and UpdatedByUser = 1
-	and Gender = (select Gender from PhotoAttributes where PhotoId = PI and UpdatedByUser = 0) 
-	group by PhotoId),0) as c_Gender, IFNULL((SELECT count(EyeColor) FROM PhotoAttributes
-	where PhotoId = PI and UpdatedByUser = 1
-	and EyeColor = (select EyeColor from PhotoAttributes where PhotoId = PI and UpdatedByUser = 0) 
-	group by PhotoId),0) as c_EyeColor, IFNULL((SELECT count(HairColor) FROM PhotoAttributes
-	where PhotoId = PI and UpdatedByUser = 1
-	and HairColor = (select HairColor from PhotoAttributes where PhotoId = PI and UpdatedByUser = 0) 
-	group by PhotoId),0) as c_HairColor, IFNULL((SELECT count(HasBeard) FROM PhotoAttributes
-	where PhotoId = PI and UpdatedByUser = 1
-	and HasBeard = (select HasBeard from PhotoAttributes where PhotoId = PI and UpdatedByUser = 0) 
-	group by PhotoId),0) as c_HasBeard, IFNULL((SELECT count(HasGlasses) FROM PhotoAttributes
-	where PhotoId = PI and UpdatedByUser = 1
-	and HasGlasses = (select HasGlasses from PhotoAttributes where PhotoId = PI and UpdatedByUser = 0) 
-	group by PhotoId),0) as c_HasGlasses, IFNULL((SELECT count(HasSmile) FROM PhotoAttributes
-	where PhotoId = PI and UpdatedByUser = 1
-	and HasSmile = (select HasSmile from PhotoAttributes where PhotoId = PI and UpdatedByUser = 0) 
-	group by PhotoId),0) as c_HasSmile, IFNULL((SELECT count(Age) FROM PhotoAttributes
-	where PhotoId = PI and UpdatedByUser = 1
-	and Age = (select Age from PhotoAttributes where PhotoId = PI and UpdatedByUser = 0) 
-	group by PhotoId),0) as c_Age FROM PhotoAttributes where UpdatedByUser = 1 GROUP BY PI) as tmp ) as tmp1 ORDER BY avg_att DESC LIMIT 10
-    
-    ) as main, (SELECT Id, FacebookId, PhotoLink FROM Photos) as secondary
-    
-    WHERE main.PI = secondary.Id*/
+	public function buildStrMost_accurate(){
 		$string0 = "SELECT * FROM (";
 		$arr = array('Gender', 'EyeColor','HairColor', 'HasBeard','HasGlasses', 'HasSmile','Age');
 		$len_arr = count($arr);
@@ -1234,6 +1205,11 @@ SELECT *, ((p_Gender+p_EyeColor+p_HairColor+p_HasBeard+p_HasGlasses+p_HasSmile+p
 		$string5 = ") as main, (SELECT Id, FacebookId, PhotoLink FROM Photos) as secondary WHERE main.PI = secondary.Id";
 
 		$string = $string0 . $string1 . $string2 . $string3 . $string4 . $string5;
+		return $string;
+	}
+
+	public function most_accurate(){
+		$string = $this->buildStrMost_accurate();
 		$result = $this->execute($string);
 		$rows = array();
 		while ($row = $result->fetch_assoc()) {

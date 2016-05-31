@@ -8,11 +8,11 @@
 		<div class="row">
 			<div class="col-md-8">
 				<div class="row">
-					<a href='http://facebook.com/{{user.FacebookId}}'target="_blank">
+					<a href='http://facebook.com/{{user.FacebookId}}' target="_blank">
 						<img ng-src="{{user.PhotoLink}}" class="col-md-12">
 					</a>
 				</div>
-				<div class="panel panel-info" style="margin-top:10%">
+				<div class="panel panel-info" style="margin-top:10%" ng-if="loggedOnUser.FacebookId">
 					<div class="panel-heading">
 						Rate
 					</div>
@@ -24,8 +24,30 @@
 							<img src="css/Snowflake.png" style="height:100px;height:100px; cursor:pointer;margin-left:20%;" ng-click="rate(0)">
 						</div>
 					</div>
+					
 					<div class="panel-body bg-success" ng-if="ratedSuccess">
 						<h3>Rated Successfully</h3>
+					</div>
+				</div>
+				<div class="panel panel-primary">
+					<div class="panel-heading">
+						People's Ratings:							
+					</div>
+					<div class="panel-body">
+						<div class="col-md-6">
+							<b>Hot:</b>
+						    <span class="fa-stack fa-lg">
+							  <i class="fa fa-circle fa-stack-2x"></i>
+							  <i class="fa fa-inverse fa-stack-1x">{{curHot}}</i>
+							</span>
+						</div>
+						<div class="col-md-6">
+							<b>Not:</b>
+							<span class="fa-stack fa-lg">
+							  <i class="fa fa-circle fa-stack-2x"></i>
+							  <i class="fa fa-inverse fa-stack-1x">{{curNot}}</i>
+							</span>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -183,8 +205,7 @@
 		</div>
 	</div>
 </div>
-<div class="bg-warning" ng-hide="loggedOnUser.FacebookId" style="margin: 10px;">
-	You must be logged on to view and add comments
+<div class="bg-warning" ng-hide="loggedOnUser.FacebookId" style="margin: 10px;padding:15px;font-size:18px">
+	You must be logged on to view/add comments and to rate the user
 </div>
-{{loggedOnUser.FacebookId}}
 </div>

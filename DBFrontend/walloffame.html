@@ -1,0 +1,158 @@
+﻿<!DOCTYPE html>
+<html>
+<head lang="en">
+  <meta charset="UTF-8">
+  <title>Facebook Analysis Project - Wall of Fame</title>
+  <link rel="stylesheet" href="css/angular-chart.min.css">
+  <script src="https://use.fontawesome.com/1b5f59f5ad.js"></script>
+  <link href="css/ui-bootstrap-csp.css" rel="stylesheet">
+  <link href="css/bootstrap.css" rel="stylesheet">
+  <link href="app.css" rel="stylesheet">
+    <script src="js/Chart.js"></script>
+    <script src="js/smoothscroll.min.js"></script>
+    <script src="js/angular.min.js"></script>
+    <script src="js/ui-bootstrap.min.js"></script>
+    <script src="js/ui-bootstrap-tpls.min.js"></script>
+    <script src="js/angular-chart.min.js"></script>
+    <script src="app.js"></script>
+</head>
+<body ng-app="profileanalysis" id="top" ng-controller="WallOfFameCtrl">
+   <div class="container">
+		<div class="panel panel-info pull-right" style="padding:10px;margin-top:10px;">
+			<a href="index.html" class="btn btn-primary" >Home</a>
+		</div>
+        <div class="page-header">
+            <h1>Profilyze - Wall of Fame</h1>
+        </div>		
+		<ul class="nav nav-pills">
+		  <li ng-class="{'active' : currentPage=='mostAccurate'}" style="cursor:pointer" ng-click="currentPage='mostAccurate'"><a>Most Accurate</a></li>
+		  <li ng-class="{'active' : currentPage=='mostLikedWomen'}" style="cursor:pointer" ng-click="currentPage='mostLikedWomen'"><a>Most Liked Women</a></li>
+		  <li ng-class="{'active' : currentPage=='mostLikedMen'}" style="cursor:pointer" ng-click="currentPage='mostLikedMen'"><a>Most Liked Men</a></li>
+		</ul>
+		
+		<div ng-if="currentPage=='mostAccurate'">
+			<div class="panel panel-info" style="margin-top:10px">
+				<div class="panel-heading" style="height:50px;font-weight:bold;">
+					<div class="col-md-3">
+						
+					</div>
+					<div class="col-md-1">
+						Gender
+					</div>
+					<div class="col-md-1">
+						Eye Color
+					</div>
+					<div class="col-md-1">
+						Hair Color
+					</div>
+					<div class="col-md-1">
+						Beard
+					</div>
+					<div class="col-md-1">
+						Glasses
+					</div>
+					<div class="col-md-1">
+						Smile
+					</div>
+					<div class="col-md-1">
+						Age
+					</div>
+					<div class="col-md-1">
+						Average Accuracy
+					</div>
+				</div>
+				<div class="row" ng-repeat="user in mostAccurate" style="padding:5px">
+					<div class="col-md-3">
+						<a href="http://www.facebook.com/{{user.FacebookId}}" target="_blank">
+							<img ng-src="{{user.PhotoLink}}" class="col-md-12"/>
+						</a>
+					</div>
+					<div class="col-md-1">
+						{{user.p_Gender}}
+					</div>
+					<div class="col-md-1">
+						{{user.p_EyeColor}}
+					</div>
+					<div class="col-md-1">
+						{{user.p_HairColor}}
+					</div>
+					<div class="col-md-1">
+						{{user.p_HasBeard}}
+					</div>
+					<div class="col-md-1">
+						{{user.p_HasGlasses}}
+					</div>
+					<div class="col-md-1">
+						{{user.p_HasSmile}}
+					</div>
+					<div class="col-md-1">
+						{{user.p_Age}}
+					</div>
+					<div class="col-md-1">
+						<b>{{user.avg_att}}</b>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div ng-if="currentPage=='mostLikedWomen'">
+			<div class="panel panel-info" style="margin-top:10px">
+				<div class="panel-heading" style="height:50px;font-weight:bold;">
+					<div class="col-md-6">
+						
+					</div>
+					<div class="col-md-3">
+						Number of Likes
+					</div>
+				</div>
+				<div class="row" ng-repeat="user in mostLikedWomen" style="padding:5px">
+					<div class="col-md-6">
+						<a href="http://www.facebook.com/{{user[0]}}" target="_blank">
+							<img ng-src="{{user[1]}}" class="col-md-12"/>
+						</a>
+					</div>
+					<div class="col-md-3">
+						<span class="fa-stack fa-lg" style="font-size:70px" >
+						  <i class="fa fa-circle fa-stack-2x"></i>
+						  <i class="fa fa-inverse fa-stack-1x" >{{user[2]}}</i>
+						</span>
+					</div>
+				</div>
+			</div>
+		</div>
+        
+		<div ng-if="currentPage=='mostLikedMen'">
+			<div class="panel panel-info" style="margin-top:10px">
+				<div class="panel-heading" style="height:50px;font-weight:bold;">
+					<div class="col-md-6">
+						
+					</div>
+					<div class="col-md-3">
+						Number of Likes
+					</div>
+				</div>
+				<div class="row" ng-repeat="user in mostLikedMen" style="padding:5px">
+					<div class="col-md-6">
+						<a href="http://www.facebook.com/{{user[0]}}" target="_blank">
+							<img ng-src="{{user[1]}}" class="col-md-12"/>
+						</a>
+					</div>
+					<div class="col-md-3">
+						<span class="fa-stack fa-lg" style="font-size:100px" >
+						  <i class="fa fa-circle fa-stack-2x"></i>
+						  <i class="fa fa-inverse fa-stack-1x" >{{user[2]}}</i>
+						</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+    </div>
+    <footer class="footer">
+        <div class="container">
+            <p>Built by Lior Shkiller, Royee Guy, Ben Sterenson and Michael Palarya  </p>
+        </div>
+    </footer>
+    
+</body>
+</html>

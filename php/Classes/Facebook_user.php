@@ -124,7 +124,7 @@ class Facebook_user implements JsonSerializable {
 	#region Methods
 	public function jsonSerialize() {
         return Array(
-           'FacebookId'	=> $this->FacebookId + 0,
+           'FacebookId'	=> $this->FacebookId,
            'FirstName'  => $this->FirstName,
            'LastName' 	=> $this->LastName
         );

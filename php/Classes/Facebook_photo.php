@@ -100,9 +100,9 @@ class Facebook_photo implements JsonSerializable {
 		public function jsonSerialize() {
         return Array(
         	'Id'				=> $this->Id + 0,
-           'FacebookId'			=> $this->FacebookId + 0,
-           'FacebookPhotoId' 	=> $this->FacebookPhotoId + 0,
-           'UpdateDate' 		=> $this->UpdateDate + 0,
+           'FacebookId'			=> $this->FacebookId,
+           'FacebookPhotoId' 	=> $this->FacebookPhotoId,
+           'UpdateDate' 		=> $this->UpdateDate,
 		   'PhotoLink' 			=> $this->PhotoLink,
 		   'NumOfLikes'			=> $this->NumOfLikes + 0,
 		   'isValidPhoto'		=> $this->isValidPhoto
@@ -158,7 +158,10 @@ class Facebook_photo implements JsonSerializable {
 			return;
 		}
 		$this->PhotoLink = $this->get_redirectURL($profile_pic);
+<<<<<<< HEAD
 		//echo $this->PhotoLink;
+=======
+>>>>>>> 70d2a3c46db158ba9d8e293ff1cdc987ee03cc2a
 		preg_match('/_(\d+)_/', $this->PhotoLink, $matches);
 		$this->FacebookPhotoId = $matches[1];
 		

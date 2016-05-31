@@ -182,11 +182,10 @@
 	  FB.api('/me?fields=picture,first_name,last_name', function (response) {
 		  if(response.first_name){		
 			UsersService.login(response.id,response.first_name,response.last_name,0).then(function successCallback(login) {
-				
-				if(login.PhotoId && login.EyeColor){					
+
+				if(login.FacebookId){					
 						$scope.loggedOnUser = login;
 						localStorage['profilyzeFacebook'] = JSON.stringify($scope.loggedOnUser);
-						return;
 				}
 				var photoID = login.Id;
 				UsersService.extractAttributes(photoID,0).then(function successCallback(attributes) {

@@ -897,18 +897,24 @@ class DbWrapper {
 	}
 
 	public function extractAttributes($photoId, $iteration) {
+
 		$skip = 0;
-		if ($iteration == 0){
+		
+		// try to find in database:
+		if ($iteration == 0) {
 			$string = 	"SELECT *
-						FROM  Users, Photos, PhotoAttributes
-						Where Users.FacebookId = Photos.FacebookId AND PhotoAttributes.PhotoId = " . $photoId . " AND PhotoAttributes.UpdatedByUser = 0 LIMIT 1";
+						FROM  PhotoAttributes
+						WHERE PhotoAttributes.PhotoId = $photoId AND PhotoAttributes.UpdatedByUser = 0";
+						// old - seems unnecessary:
+						// FROM  Users, Photos, PhotoAttributes
+						// Where Users.FacebookId = Photos.FacebookId AND PhotoAttributes.PhotoId = $photoId AND PhotoAttributes.UpdatedByUser = 0 LIMIT 1";
 
 	      	$result = $this->execute($string);
 
 	   	    // found attributes in sql betaface
 		    if ($result->num_rows > 0){
 		    	$row = $result->fetch_assoc();
-				$attributes = new attributes($row,0);
+				$attributes = new Attributes($row, 0);
 				$skip = 1;
 		    }
 		}
@@ -929,29 +935,31 @@ class DbWrapper {
 				$attributes = $api->image_Attributes;
 			}
 		}
-		$string = 	"SELECT * FROM  Photos Where Photos.Id = " . $photoId;
-		$result = $this->execute($string);
 
 		$myPhoto = null;
+		$string = "SELECT * FROM  Photos Where Photos.Id = $photoId";
+		$result = $this->execute($string);
+
 		if ($result->num_rows > 0) {
 			$row = $result->fetch_assoc();
 			$myPhoto = new Facebook_photo($row['FacebookId'], $row['FacebookPhotoId'], $row['UpdateDate'], $row['PhotoLink'], $row['NumOfLikes'], $row['IsValidPhoto']);
 			$myPhoto->setId($photoId);
 		}
 		else {
-			$myPhoto = new Facebook_photo(-1,-1,-1,-1,-1,-1);
+			$myPhoto = new Facebook_photo(-1, -1, -1, -1, -1, -1);
+			$myPhoto->setId(-1);
 		}
 		
-		$string = 	"SELECT * FROM  Users Where Users.FacebookId = " . $myPhoto->getUserID();
+		$myUser = null;
+		$string = "SELECT * FROM  Users Where Users.FacebookId = " . $myPhoto->getUserID();
 		$result = $this->execute($string);
 
-		$myUser = null;
 		if ($result->num_rows > 0) {
 			$myUser = new Facebook_user($result, 0);
 		}
 		else {
-			$myUser = new Facebook_user(-1,-1,-1,-1,-1,-1);
-		}	
+			$myUser = new Facebook_user(-1,-1,-1);
+		}
 
 		return json_encode($myUser->jsonSerialize() + $myPhoto->jsonSerialize() + $attributes->jsonSerialize());
 	}

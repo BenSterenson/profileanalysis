@@ -158,7 +158,7 @@ class Facebook_photo implements JsonSerializable {
 			return;
 		}
 		$this->PhotoLink = $this->get_redirectURL($profile_pic);
-		
+		echo $this->PhotoLink;
 		preg_match('/_(\d+)_/', $this->PhotoLink, $matches);
 		$this->FacebookPhotoId = $matches[1];
 		

@@ -134,7 +134,7 @@ class Facebook_user implements JsonSerializable {
 		$profile_url =  "http://www.facebook.com/".$this->FacebookId;
 
 		if (strcmp($profile_url,'http://www.facebook.com/') == 0){
-			echo "to delete - no data";
+			//echo "to delete - no data";
 			return;
 		}
 		$html = get_html($profile_url);

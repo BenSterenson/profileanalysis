@@ -69,6 +69,14 @@
 	  }
 	  
 	  
+	  this.getPhotoRatings = function(photoID){
+		   return $http.get('../php/api/getPhotoRatings/'+photoID).then(function successCallback(response) {
+				return JSON.parse(response.data);
+			}, function errorCallback(response) {
+				alert("Error on getPhotoRatings!");
+			});
+	  }
+	  
 	  this.getComments = function(photoID){
 		   return $http.get('../php/api/getPhotoComments/'+photoID).then(function successCallback(response) {
 				return JSON.parse(response.data);
@@ -77,7 +85,7 @@
 			});
 	  }
 	  
-		this.login = function(facebookId, firstName,lastName,numOfLikes){
+	  this.login = function(facebookId, firstName,lastName,numOfLikes){
 		   return $http.get('../php/api/login/'+facebookId+'/'+firstName+'/'+lastName+'/'+numOfLikes).then(function successCallback(response) {
 				return JSON.parse(response.data);
 			}, function errorCallback(response) {
@@ -122,6 +130,41 @@
 			});
       }
   });
+    app.service('WallOfFameService', function ($http) {
+  
+	  this.getColor = function(getVal,val){		  
+		var colorArr = ["red","green","yellow","blue","orange","purple","pink","brown","black","gray","white"];
+		if(!getVal){ // val is index in this case
+			return colorArr[val];
+		}
+		else
+		{ // val is the value and we return the index
+			for (var i in colorArr){
+				if(colorArr[i] == val){
+					return i;
+				}
+			}
+		}
+	  }
+	  
+	  this.getMostAccurate = function(){
+		   return $http.get('../php/api/most_accurate').then(function successCallback(response) {
+				return JSON.parse(response.data);
+			}, function errorCallback(response) {
+				alert("Error on getMostAccurate!");
+			});
+	  }
+	  
+	  this.getMostLiked = function(isMan){
+		   return $http.get('../php/api/getMostLiked/10/'+isMan).then(function successCallback(response) {
+				return JSON.parse(response.data);
+			}, function errorCallback(response) {
+				alert("Error on getMostLiked!");
+			});
+	  }
+	  
+  })
+  
   app.controller('MainCtrl', function ($scope,$http, $uibModal, ChartService,UsersService,HistoryService) {
 
 	// Init
@@ -402,7 +445,7 @@
 			  return user;
 			}
 		  }
-		});
+		}).result.then(function(){ $scope.refreshPlots(-1); },function(){ $scope.refreshPlots(-1); });
 
 	  };
 	  
@@ -417,7 +460,8 @@
 		  scope: $scope,
 		  resolve: {
 		  }
-		});
+		}).result.then(function(){ $scope.refreshPlots(-1); },function(){ $scope.refreshPlots(-1); });
+
 
 	  };
 
@@ -466,8 +510,22 @@
 		$scope.ratedSuccess = false;
 		
 		$scope.rate = function(isHot){
+			if(isHot){
+				$scope.curHot +=1;
+			}
+			else
+			{
+				$scope.curNot +=1;
+			}
 			UsersService.setPhotoRatings(user.PhotoId,isHot,$scope.loggedOnUser.FacebookId).then(function successCallback(data) {	
 				$scope.ratedSuccess = true;
+			});
+		}
+		
+		$scope.curPhotoRatings = function(){
+			UsersService.getPhotoRatings(user.PhotoId).then(function successCallback(data) {	
+				$scope.curHot = data.Hot;
+				$scope.curNot = data.Not;
 			});
 		}
 		
@@ -490,6 +548,7 @@
 			return true;
 		}
 		$scope.refreshPlots(user.PhotoId);
+		$scope.curPhotoRatings();
   });
 
    app.controller('HistoryModalCtrl', function ($scope,$http, $uibModalInstance, UsersService,HistoryService) {
@@ -532,5 +591,24 @@
 			$uibModalInstance.dismiss('cancel');
 		};
 		
+  });
+  app.controller('WallOfFameCtrl', function ($scope,$http, WallOfFameService) {
+	  $scope.currentPage = 'mostAccurate';
+	  $scope.mostAccurate = [];
+	  $scope.mostLikedWomen = [];
+	  $scope.mostLikedMen = [];
+
+	  
+	  WallOfFameService.getMostAccurate().then(function successCallback(data){
+		  $scope.mostAccurate = data;
+	  });
+	  
+	  WallOfFameService.getMostLiked(1).then(function successCallback(data){
+		  $scope.mostLikedMen = data;
+	  });
+	  
+	  WallOfFameService.getMostLiked(0).then(function successCallback(data){
+		  $scope.mostLikedWomen = data;
+	  });
   });
 })();

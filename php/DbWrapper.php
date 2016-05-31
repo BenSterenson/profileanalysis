@@ -760,7 +760,7 @@ class DbWrapper {
 		$myAttributes->setHasSmile($HasSmile);
 		$myAttributes->setAge($Age);
 		$myAttributes->setUpdatedByUser(true);
-		echo $myAttributes;
+		//echo $myAttributes;
 		$this->insert($myAttributes);
 	}
 	

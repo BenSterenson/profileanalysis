@@ -362,7 +362,7 @@
 		ChartService.getChart('getSmile',$scope.args).then(function successCallback(data) {		
 			$scope.smilesData = data.values;
 			$scope.smilesLabels = data.keys;
-			$scope.smilesChartColors = convertColorsToViewable(['red', 'green']);
+			$scope.smilesChartColors = ['#d3d3d3', '#007FFF'];
 		});
 		$scope.smilesClick = function (elm, evt) {
 			$scope.smilesFilter = $scope.smilesLabels.indexOf(elm[0].label);
@@ -379,7 +379,7 @@
 		ChartService.getChart('getGlasses',$scope.args).then(function successCallback(data) {		
 			$scope.glassesData = data.values;
 			$scope.glassesLabels = data.keys;
-			$scope.glassesChartColors = convertColorsToViewable(['red', 'green']);
+			$scope.glassesChartColors = ['#d3d3d3', '#007FFF'];
 		});
 		$scope.glassesClick = function (elm, evt) {
 			$scope.glassesFilter = $scope.glassesLabels.indexOf(elm[0].label);
@@ -396,7 +396,8 @@
 		ChartService.getChart('getBeard',$scope.args).then(function successCallback(data) {		
 			$scope.beardData = data.values;
 			$scope.beardLabels = data.keys;
-			$scope.beardChartColors = convertColorsToViewable(['red', 'green']);
+			$scope.beardChartColors = ['#d3d3d3', '#007FFF'];
+			
 		});
 		$scope.beardClick = function (elm, evt) {
 			$scope.beardFilter = $scope.beardLabels.indexOf(elm[0].label);

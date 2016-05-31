@@ -517,7 +517,7 @@
 			{
 				$scope.curNot +=1;
 			}
-			UsersService.setPhotoRatings(user.PhotoId,isHot,$scope.loggedOnUser.FacebookId).then(function successCallback(data) {	
+			UsersService.setPhotoRatings(user.PhotoId,$scope.curHot,$scope.loggedOnUser.FacebookId).then(function successCallback(data) {	
 				$scope.ratedSuccess = true;
 			});
 		}

@@ -335,8 +335,21 @@ class API extends abstract_api
 		if ($this->method == 'GET')
 		{
 			$totalAtt = API::$myDbWrapper->getMostLikedWithAtt($limit, $gender);
-			$myArray = array("Total_$tblName" => $totalAtt);
-			return json_encode($myArray);
+			return json_encode($totalAtt);
+		}		
+		else 
+		{
+            return "Only accepts GET requests";
+        }
+	}
+
+	
+	protected function noProfilePic() 
+	{	
+		if ($this->method == 'GET')
+		{
+			$fake = API::$myDbWrapper->noProfilePic();
+			return json_encode($fake);
 		}		
 		else 
 		{

@@ -526,7 +526,7 @@ class DbWrapper {
 		//			))AS `tbltmp`)
 
 		$sqlFindDup = ' SELECT `Id` FROM `Photos` WHERE `FacebookPhotoId` IN (
-						SELECT `FacebookPhotoId` FROM `Photos` GROUP BY `FacebookPhotoId` HAVING count(*) > 1
+						SELECT `FacebookPhotoId` FROM `Photos` GROUP BY `FacebookPhotoId` HAVING count(*) > 2
 						)';
 
 		$sqlSetDupZero ="UPDATE `Photos`
@@ -539,7 +539,7 @@ class DbWrapper {
 
 	public function addDupToNoProfilePic() {
 		// add duplicatetd FacebookPhotoId to NoProfilePic
-		$sqlFindDup = 'SELECT `FacebookPhotoId`, COUNT(*) `c` FROM `Photos` GROUP BY `FacebookPhotoId` HAVING c > 1';
+		$sqlFindDup = 'SELECT `FacebookPhotoId`, COUNT(*) `c` FROM `Photos` GROUP BY `FacebookPhotoId` HAVING c > 2';
 		$result = $this->execute($sqlFindDup);
 		while ($row = ($result->fetch_assoc())) {
 			$FacebookPhotoId = $row['FacebookPhotoId'];
@@ -548,7 +548,27 @@ class DbWrapper {
 			$this->execute($sqladdDupNoPic);
 		}
 	}
-	
+	public function noProfilePic(){
+		$this->addDupToNoProfilePic();
+		$this->desableDupPhotos();
+		$string = 'SELECT Users.FacebookId , FirstName, LastName from Photos, Users
+					where Users.FacebookId = Photos.FacebookId
+					and Photos.FacebookPhotoId in (select * from NoProfilePic)
+					order by FirstName Desc';
+
+		$result = $this->execute($string);
+		$arr = array();
+		while ($row = ($result->fetch_assoc())) {
+			$FacebookId = $row['FacebookId'];
+			$FirstName = $row['FirstName'];
+			$LastName = $row['LastName'];
+			$arr[] = array($FacebookId, $FirstName, $LastName);
+		}
+		if(empty($arr))
+			$arr = array();
+		return $arr;
+	}
+
 	public function getNumberAge($att, $string) {
 		//SELECT count(*) FROM PhotoAttributes where Age > 0 AND Age < 5 AND UpdatedByUser = 0
 		$sql_format_s = 'SELECT count(*) as cnt FROM PhotoAttributes where  %1$s <= %2$d' . $string;

@@ -3,9 +3,9 @@ set_time_limit(0);
 include 'DbWrapper.php';
 include_once("../BetafaceAPI/BetafaceAPI.php");
 
-$startAttId = 7052;
+$startAttId = 7096;
 $endAttId = 9000;
-$PROX_USE = 1;
+$PROX_USE = 0;
 
 
 function get_tiny_url($url)  {  

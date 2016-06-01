@@ -193,7 +193,7 @@
 						console.log("Waiting for betaface..");
 						setTimeout(function(){ 
 							console.log("Sending another request to betaface");
-							UsersService.extractAttributes(login.id,1).then(function successCallback(sAtt) {
+							UsersService.extractAttributes(photoID,1).then(function successCallback(sAtt) {
 								if(sAtt != -1 && sAtt != 1){
 									$scope.loggedOnUser = sAtt;						
 									localStorage['profilyzeFacebook'] = JSON.stringify($scope.loggedOnUser);

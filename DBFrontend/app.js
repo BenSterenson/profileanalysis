@@ -178,6 +178,7 @@
 	if (stored && stored != "undefined") {
 		$scope.loggedOnUser = JSON.parse(stored);
 	}
+	$scope.photoID = 0;
 	$scope.login = function (accessToken) {
 	  FB.api('/me?fields=picture,first_name,last_name', function (response) {
 		  if(response.first_name){		
@@ -187,13 +188,13 @@
 						$scope.loggedOnUser = login;
 						localStorage['profilyzeFacebook'] = JSON.stringify($scope.loggedOnUser);
 				}
-				var photoID = login.Id;
-				UsersService.extractAttributes(photoID,0).then(function successCallback(attributes) {
+				$scope.photoID = login.Id;
+				UsersService.extractAttributes($scope.photoID,0).then(function successCallback(attributes) {
 					if(attributes == 1){
 						console.log("Waiting for betaface..");
 						setTimeout(function(){ 
 							console.log("Sending another request to betaface");
-							UsersService.extractAttributes(photoID,1).then(function successCallback(sAtt) {
+							UsersService.extractAttributes($scope.photoID,1).then(function successCallback(sAtt) {
 								if(sAtt != -1 && sAtt != 1){
 									$scope.loggedOnUser = sAtt;						
 									localStorage['profilyzeFacebook'] = JSON.stringify($scope.loggedOnUser);

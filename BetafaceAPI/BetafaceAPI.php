@@ -8,8 +8,8 @@ define("DEFAULT_API_SECRET", '171e8465-f548-401d-b63b-caf0dc28df5f');
 define("DEFAULT_API_URL",'http://www.betafaceapi.com/service.svc');
 define("DEFAULT_POLL_INTERVAL",1);
 
-define("D_PROXY_IP",'42.100.36.70');
-define("D_PROXY_PORT",'8888');
+define("D_PROXY_IP",'203.66.159.46');
+define("D_PROXY_PORT",'3128');
 
 #endregion Defines
 

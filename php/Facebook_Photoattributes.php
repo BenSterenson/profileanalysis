@@ -3,9 +3,9 @@ set_time_limit(0);
 include 'DbWrapper.php';
 include_once("../BetafaceAPI/BetafaceAPI.php");
 
-$startAttId = 7726;
-$endAttId = 9000;
-$PROX_USE = 0;
+$startAttId = 9570;
+$endAttId = 10000;
+$PROX_USE = 1;
 
 
 function get_tiny_url($url)  {  
@@ -75,7 +75,7 @@ function insert_att_all_photo() {
 	$count = 1;
 	$read = 0;
 
-	for ($iter = 0; $iter <= 50; $iter++) {
+	for ($iter = 0; $iter <= 0; $iter++) {
 
 		echo "\n<br>#################################################<br>\n";
 		echo "\n<br>#################### sending ####################<br>\n";

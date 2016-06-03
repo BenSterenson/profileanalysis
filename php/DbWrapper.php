@@ -662,7 +662,7 @@ class DbWrapper {
 
 		$string = 	"SELECT DISTINCT FacebookId, PhotoLink, NumOfLikes, PhotoId, Gender, EyeColor, HairColor, HasBeard, HasGlasses, HasBeard, HasSmile, Age, PhotoAttributes.UpdateDate, UpdatedByUser
 					FROM Photos, PhotoAttributes
-					where Photos.Id = PhotoAttributes.PhotoId";
+					where Photos.Id = PhotoAttributes.PhotoId AND UpdatedByUser = 0";
 		
 		// filter by gender			
 		if ($gender != -1) 

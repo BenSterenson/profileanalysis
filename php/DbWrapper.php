@@ -332,7 +332,7 @@ class DbWrapper {
 	public function filterBy_JSON($start, $stop, $FacebookId, $FirstName, $LastName,
 						 $PhotoUpdatedDateFROM, $PhotoUpdatedDateTO, $NumOfLikesFROM, $NumOfLikesTO,
 						 $Gender, $EyeColor, $HairColor, $HasBeard, $HasGlasses, $HasSmile, $AgeFROM, $AgeTO,
-						 $AttUpdateDateFROM, $AttUpdateDateTO) {
+						 $AttUpdateDateFROM, $AttUpdateDateTO, $byalgo = 0) {
 
 		#region find a specific person
 		if ($FacebookId != NULL) {
@@ -380,7 +380,10 @@ class DbWrapper {
 		$string = " SELECT *
 					FROM Users, Photos, PhotoAttributes
 					WHERE Users.FacebookId = Photos.FacebookId AND Photos.Id = PhotoAttributes.PhotoId ";
-					
+
+		if ($byalgo == 1){
+			$string = $string . " AND PhotoAttributes.UpdatedByUser = 0";
+		}
 		if ($FirstName != NULL) {
 			$string = $string . " AND Users.FirstName = " . "\"" . $FirstName . "\"";
 		}
@@ -1083,7 +1086,7 @@ class DbWrapper {
 		$res_arr = $this->filterBy_JSON($start, $stop, $FacebookId = NULL, $FirstName = NULL, $LastName = NULL,
 						 $PhotoUpdatedDateFROM  = NULL, $PhotoUpdatedDateTO  = NULL, $NumOfLikesFROM = NULL, $NumOfLikesTO  = NULL,
 						 $Gender, $EyeColor, $HairColor, $HasBeard, $HasGlasses, $HasSmile, $age[0], $age[1],
-						 $AttUpdateDateFROM  = NULL, $AttUpdateDateTO  = NULL);
+						 $AttUpdateDateFROM  = NULL, $AttUpdateDateTO  = NULL, $byAlgo = 1);
 
 		// returns: [ {"FacebookId: Id, ... }, { ...} ]
 		return $res_arr;

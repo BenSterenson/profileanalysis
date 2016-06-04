@@ -274,7 +274,8 @@
 		$scope.glassesFilter = -1;
 		$scope.beardFilter = -1;
 		$scope.sessionId = generateUUID();
-		
+		window.resizeTo(document.body.scrollWidth, document.body.scrollHeight);
+
 		if(refresh){		
 			$scope.start = 0;
 			$scope.stop = $scope.size;

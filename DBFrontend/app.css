@@ -52,3 +52,17 @@
 	box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
 	padding:2px;
 }
+
+.numberCircle {
+    border-radius: 50%;
+    width: 400px;
+    height: 200px;
+    padding: 30px;
+	margin-top:50px;
+    background: #fff;
+    border: 2px solid #666;
+    color: #666;
+    text-align: center;
+
+    font: 100px Arial, sans-serif;
+}

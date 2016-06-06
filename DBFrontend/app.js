@@ -163,6 +163,13 @@
 			});
 	  }
 	  
+	  this.getAverageAccuracy = function(){
+		  return $http.get('../php/api/avg_most_accurate').then(function successCallback(response) {
+				return JSON.parse(response.data);
+			}, function errorCallback(response) {
+				alert("Error on getAverageAccuracy!");
+			});
+	  }
   })
   
   app.controller('MainCtrl', function ($scope,$http, $uibModal, ChartService,UsersService,HistoryService) {
@@ -598,7 +605,7 @@
 	  $scope.mostAccurate = [];
 	  $scope.mostLikedWomen = [];
 	  $scope.mostLikedMen = [];
-
+	  $scope.averageAccuracy = [];
 	  
 	  WallOfFameService.getMostAccurate().then(function successCallback(data){
 		  $scope.mostAccurate = data;
@@ -610,6 +617,10 @@
 	  
 	  WallOfFameService.getMostLiked(0).then(function successCallback(data){
 		  $scope.mostLikedWomen = data;
+	  });
+	  
+	  WallOfFameService.getAverageAccuracy().then(function successCallback(data){
+		  $scope.averageAccuracy = data;
 	  });
   });
 })();

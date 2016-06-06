@@ -28,6 +28,8 @@
 		  <li ng-class="{'active' : currentPage=='mostAccurate'}" style="cursor:pointer" ng-click="currentPage='mostAccurate'"><a>Most Accurate</a></li>
 		  <li ng-class="{'active' : currentPage=='mostLikedWomen'}" style="cursor:pointer" ng-click="currentPage='mostLikedWomen'"><a>Most Liked Women</a></li>
 		  <li ng-class="{'active' : currentPage=='mostLikedMen'}" style="cursor:pointer" ng-click="currentPage='mostLikedMen'"><a>Most Liked Men</a></li>
+		  <li ng-class="{'active' : currentPage=='averageAccuracy'}" style="cursor:pointer" ng-click="currentPage='averageAccuracy'"><a>Average accuracy for the attributes</a></li>
+		  
 		</ul>
 		
 		<div ng-if="currentPage=='mostAccurate'">
@@ -111,11 +113,8 @@
 							<img ng-src="{{user[1]}}" class="col-md-12"/>
 						</a>
 					</div>
-					<div class="col-md-3">
-						<span class="fa-stack fa-lg" style="font-size:70px" >
-						  <i class="fa fa-circle fa-stack-2x"></i>
-						  <i class="fa fa-inverse fa-stack-1x" >{{user[2]}}</i>
-						</span>
+					<div class="col-md-3 numberCircle">
+						{{user[2]}}
 					</div>
 				</div>
 			</div>
@@ -137,11 +136,91 @@
 							<img ng-src="{{user[1]}}" class="col-md-12"/>
 						</a>
 					</div>
+					<div class="col-md-3 numberCircle">
+						{{user[2]}}
+					</div>
+				</div>
+			</div>
+		</div>
+		<div ng-if="currentPage=='averageAccuracy'">
+			<div class="panel panel-info" style="margin-top:10px">
+				<div class="panel-heading" style="height:50px;font-weight:bold;">
+					<div class="col-md-6">
+						Attribute
+					</div>
 					<div class="col-md-3">
-						<span class="fa-stack fa-lg" style="font-size:100px" >
-						  <i class="fa fa-circle fa-stack-2x"></i>
-						  <i class="fa fa-inverse fa-stack-1x" >{{user[2]}}</i>
-						</span>
+						Average Accuracy
+					</div>
+				</div>
+				<div class="row" style="margin:20px">
+					<div class="col-md-6" >
+						Gender
+					</div>
+					<div class="col-md-3">
+						{{averageAccuracy[0]["avg(p_Gender)"] | number:2}}
+					</div>
+				</div>
+
+				<div class="row" style="margin:20px">
+					<div class="col-md-6" >
+						Eye Color
+					</div>
+					<div class="col-md-3">
+						{{averageAccuracy[0]["avg(p_EyeColor)"] | number:2}}
+					</div>
+				</div>
+				
+				<div class="row" style="margin:20px">
+					<div class="col-md-6" >
+						Hair Color
+					</div>
+					<div class="col-md-3">
+						{{averageAccuracy[0]["avg(p_HairColor)"] | number:2}}
+					</div>
+				</div>
+
+				<div class="row" style="margin:20px">
+					<div class="col-md-6" >
+						Has Beard
+					</div>
+					<div class="col-md-3">
+						{{averageAccuracy[0]["avg(p_HasBeard)"] | number:2}}
+					</div>
+				</div>
+				
+				<div class="row" style="margin:20px">
+					<div class="col-md-6" >
+						Has Glasses
+					</div>
+					<div class="col-md-3">
+						{{averageAccuracy[0]["avg(p_HasGlasses)"] | number:2}}
+					</div>
+				</div>
+				
+				<div class="row" style="margin:20px">
+					<div class="col-md-6" >
+						Smiles
+					</div>
+					<div class="col-md-3">
+						{{averageAccuracy[0]["avg(p_HasSmile)"] | number:2}}
+					</div>
+				</div>
+				
+				<div class="row" style="margin:20px">
+					<div class="col-md-6" >
+						Age
+					</div>
+					<div class="col-md-3">
+						{{averageAccuracy[0]["avg(p_Age)"] | number:2}}
+					</div>
+				</div>
+				
+				<div class="row" style="margin:20px;font-weight:bold">
+					<div class="col-md-6" >
+						Average Total
+					</div>
+					<div class="col-md-3" >
+						{{averageAccuracy[0]["avg(avg_att)"] | number:2}}
 					</div>
 				</div>
 			</div>

@@ -5,7 +5,7 @@ include_once("../BetafaceAPI/BetafaceAPI.php");
 
 $startAttId = 10516;
 $endAttId = 12319;
-$PROX_USE = 1;
+$PROX_USE = 0;
 
 
 function get_tiny_url($url)  {  

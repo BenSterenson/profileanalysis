@@ -228,7 +228,7 @@ class DbWrapper {
 			$curG = ($colorHex & 0x00FF00) >> 8;
 			$curB = ($colorHex & 0x0000FF);		
 			
-			$curDist = sqrt(($curR - $inR)**2 + ($curG - $inG)**2 + ($curB - $inB)**2);
+			$curDist = sqrt(($curR - $inR)*($curR - $inR) + ($curG - $inG)*($curG - $inG) + ($curB - $inB)*($curB - $inB));
 			if ($curDist < $minDist) {
 				$minDist = $curDist;
 				$bestFit = $color;

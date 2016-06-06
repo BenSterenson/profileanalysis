@@ -74,5 +74,4 @@ else {
     //example: default to something if nothing has been passed
     echo "Enter facebook URL";
 }
-
 ?>

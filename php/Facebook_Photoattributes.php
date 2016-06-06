@@ -142,4 +142,4 @@ function insert_att_all_photo() {
 //echo $num."\n";
 insert_att_all_photo();
 //insert_att_all_photo($num);
-?> 
+?>

@@ -152,8 +152,6 @@ class Attributes implements JsonSerializable {
         Update Date : " . $this->UpdateDate . " <br>
         Updated By User : " . $this->UpdatedByUser . " <br>";
     }
-	
 	#endregion Methods
-
 }
 ?>

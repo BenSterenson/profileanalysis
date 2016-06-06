@@ -60,12 +60,18 @@ define("NUMOfCOLORS",11);
 
 class DbWrapper {
 	
-	#region Fields
-	private $servername = "profilyze.cwhbbmexocbn.eu-west-1.rds.amazonaws.com:3306";//"localhost";
+/*	private $servername = "profilyze.cwhbbmexocbn.eu-west-1.rds.amazonaws.com:3306";//"localhost";
 	private $username = "profilyze";//"root";
 	private $password = "profilyze";//"";
-	private $dbname = "profilyze";//"profileanalysis";
+	private $dbname = "profilyze";//"profileanalysis"; */
 	
+	#region Fields
+	private $servername = "mysqlsrv.cs.tau.ac.il";//"localhost";
+	private $username = "DbMysql07";//"root";
+	private $password = "DbMysql07";//"";
+	private $dbname = "DbMysql07";//"profileanalysis";
+	
+
 	private $allowed_tables_array = array();
 	
 	public $connection = null;
@@ -1236,7 +1242,5 @@ class DbWrapper {
 		return json_encode($rows);
 	}
 	#endregion Methods (public)
-
 }
-
 ?>

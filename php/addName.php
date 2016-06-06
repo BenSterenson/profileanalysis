@@ -73,7 +73,5 @@ while(!feof($file)) {
 	$LikesQuery = 'UPDATE `photos` SET `NumOfLikes`= '. $likes. ' WHERE `Id`= '.$myId;
 	echo $LikesQuery . "<br>";
 	$dbWrapper->execute($LikesQuery);
-
-
 }
 ?> 

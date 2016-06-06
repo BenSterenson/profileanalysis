@@ -170,6 +170,5 @@ class Facebook_photo implements JsonSerializable {
         return "Id : " . $this->Id . " <br>FacebookId : " . $this->FacebookId . " <br>Photo Id : " . $this->FacebookPhotoId . " <br>Update Date : " . $this->UpdateDate . " <br>Photo Link : " . $this->PhotoLink . " <br>Num Of Likes : " . $this->NumOfLikes . " <br>is Valid Photo : " . $this->isValidPhoto; 
     } 
 	#endregion Methods
-} 
-
-?> 
+}
+?>

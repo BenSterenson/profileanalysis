@@ -89,5 +89,4 @@ class PhotoComments implements JsonSerializable {
 	}
 	#endregion Methods	
 }
-
 ?>

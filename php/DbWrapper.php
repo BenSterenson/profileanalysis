@@ -60,11 +60,6 @@ define("NUMOfCOLORS",11);
 
 class DbWrapper {
 	
-/*	private $servername = "profilyze.cwhbbmexocbn.eu-west-1.rds.amazonaws.com:3306";//"localhost";
-	private $username = "profilyze";//"root";
-	private $password = "profilyze";//"";
-	private $dbname = "profilyze";//"profileanalysis"; */
-	
 	#region Fields
 	private $servername = "localhost";
 	private $username = "root";
